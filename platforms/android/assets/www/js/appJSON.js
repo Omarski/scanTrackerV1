@@ -1,0 +1,5 @@
+_langJSON = [
+    {
+        "context": "config",
+    }
+];

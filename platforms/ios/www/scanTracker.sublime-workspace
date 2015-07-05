@@ -1,0 +1,717 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"re",
+				"remove〔function〕"
+			],
+			[
+				"chi",
+				"children〔function〕"
+			],
+			[
+				"f",
+				"form"
+			],
+			[
+				"swe",
+				"swedish"
+			],
+			[
+				"wa",
+				"wallCTA"
+			],
+			[
+				"de",
+				"deny"
+			],
+			[
+				"_l",
+				"_localstorage"
+			],
+			[
+				"ico",
+				"icon"
+			],
+			[
+				"fun",
+				"function〔keyword〕"
+			],
+			[
+				"deletePop",
+				"deletePopListeners"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"ta",
+				"tableHtml"
+			],
+			[
+				"m",
+				"makeTable"
+			],
+			[
+				"retu",
+				"returnFunc"
+			],
+			[
+				"A",
+				"Admin"
+			],
+			[
+				"th",
+				"this"
+			],
+			[
+				"_",
+				"_lang"
+			],
+			[
+				"_b",
+				"_blank"
+			],
+			[
+				"it",
+				"italian"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"l",
+				"load"
+			],
+			[
+				"pla",
+				"playVideo"
+			],
+			[
+				"font",
+				"font-family"
+			],
+			[
+				"font-",
+				"font-family"
+			],
+			[
+				"co",
+				"color"
+			],
+			[
+				"cont",
+				"controlOrientation"
+			],
+			[
+				"mouse",
+				"mouseover"
+			],
+			[
+				"ti",
+				"tilesCont"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"c",
+				"cursor"
+			],
+			[
+				"da",
+				"dataObj"
+			],
+			[
+				"u",
+				"urlThumb"
+			],
+			[
+				"url",
+				"urlMain"
+			],
+			[
+				"fu",
+				"function"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 4072,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Package Control: Disable Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Disable Package"
+			],
+			[
+				"package control:",
+				"Package Control: Add Channel"
+			],
+			[
+				"package control",
+				"Package Control: Install Package"
+			],
+			[
+				"comm",
+				"Toggle Comment"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 475.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Applications/MAMP/htdocs/scanTracker1_0/www/js/communicator.js",
+		"/Applications/MAMP/htdocs/scanTracker1_0/www/scripts/get_inv_data.php",
+		"/Applications/MAMP/htdocs/scanTracker1_0/platforms/ios/ScanTracker/ScanTracker-Info.plist",
+		"/Applications/MAMP/htdocs/scanTracker1_0/platforms/ios/cordova/lib/copy-www-build-step.sh",
+		"/Applications/MAMP/htdocs/scanTracker1_0/config_BU.xml",
+		"/Applications/MAMP/htdocs/scanTracker1_0/www/index_BU.html",
+		"/Applications/MAMP/htdocs/scanTracker1_0/www/js/index.js",
+		"/Applications/MAMP/htdocs/scanTracker1_0/config.xml",
+		"/Applications/MAMP/conf/apache/httpd.conf",
+		"/Applications/MAMP/htdocs/scanTracker/www/scripts/add_customer.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/communicator.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/scripts/get_user_data.php",
+		"/Applications/MAMP/htdocs/scanTracker/www/js/validate.js",
+		"/Users/omaramer/Documents/projects/Alere/dev/css/layout.css",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/tool/js/index.js",
+		"/Users/omaramer/Documents/projects/craneMorley/apps.hmaperformance.com/sim/js/index.js",
+		"/Users/omaramer/Documents/projects/App_Factory/barcode/scanTracker/www/scripts/app_config.php",
+		"/Users/omaramer/Documents/projects/App_Factory/barcode/scanTracker/www/js/loader.js",
+		"/Users/omaramer/Documents/projects/App_Factory/barcode/scanTracker/www/js/index.js",
+		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/omaramer/Documents/projects/App_Factory/barcode/scanTracker/www/scripts/get_inv_data.php",
+		"/Users/omaramer/Documents/projects/App_Factory/barcode/src/index.html",
+		"/Users/omaramer/Documents/projects/App_Factory/barcode/scanTracker/config.xml",
+		"/Users/omaramer/Documents/projects/App Factory/barcode/src/js/appJSON.js",
+		"/Users/omaramer/Documents/projects/App Factory/barcode/src/js/communicator.js",
+		"/Users/omaramer/Documents/projects/App Factory/barcode/src/js/viewBuilder.js",
+		"/Users/omaramer/Documents/projects/App Factory/barcode/src/js/scanner.js",
+		"/Users/omaramer/Documents/projects/App Factory/barcode/src/js/loader.js",
+		"/Users/omaramer/Documents/projects/App Factory/barcode/src/css/loader.css",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/au/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/sv/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/pt/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/nl/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/it/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/es-la/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/es-ca/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/de/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/br/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/______ko/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/______jp/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/______fr/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/lib/VideoOverlay.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/wallManager.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/loader.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/css/main.css",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/ko/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/path-settings.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/langJSON.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/admin/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/scripts/queries.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/popupManager.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/admin/js/admin.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/canvasManager.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/admin/scripts/queries.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/scripts/add_user.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/fr/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/main.js",
+		"/Applications/MAMP/htdocs/admin/lib/js/admin.js",
+		"/Applications/MAMP/htdocs/admin/admin.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/admin.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/jp/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/au/terms.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/sw/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/es/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/la/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/languages.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/cardgenerator/cardGenerator.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/latestJSON",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/path-settings-int.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/poster/js/cardgenerator/cardGenerator.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/poster/en/index.html",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/po/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/ge/index.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/scripts/app_config.php",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/jp/js/main.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/jp/js/languages.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/jp/css/main.css",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/jp/js/langJSON.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/js/buttons.js",
+		"/Users/omaramer/migration_script.sql",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/lib/jquery.mobile.custom.min.js",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/lib/css/bootstrap.min.css",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/css/loaderAnim.css",
+		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/scripts/connect.php",
+		"/Users/omaramer/Documents/projects/craneMorley/apps.hmaperformance.com/tool/js/summary.js",
+		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/Sublime-HTMLPrettify/.jsbeautifyrc",
+		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/User/Choose Browser.sublime-build",
+		"/Users/omaramer/Documents/projects/BLKBX/code/lib/js/jquery-2.1.3.min.js",
+		"/Users/omaramer/Documents/projects/BLKBX/code/index.html",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/sim/Global.asax",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/sim/InMemoryRepository.cs",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/sim/Global.asax.cs",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/sim/Simulation.csproj",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/sim/Simulation.csproj.user",
+		"/Users/omaramer/Documents/projects/craneMorley/hmaapps.cmclient.com/tool/js/xdr.js",
+		"/Users/omaramer/Documents/projects/Alere/Mobile/js/messengerManager.js",
+		"/Users/omaramer/Documents/projects/Alere/Mobile/css/layout.css",
+		"/Users/omaramer/Documents/projects/Alere/Mobile/index.html",
+		"/Users/omaramer/Documents/projects/Alere/Mobile/dashboard.html",
+		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/omaramer/Documents/projects/boostrap/bootstrap_Practice/02_02.html",
+		"/Users/omaramer/Documents/projects/boostrap/bootstrap/css/bootstrap-theme.css",
+		"/Users/omaramer/Documents/projects/boostrap/bootstrap/css/bootstrap.css"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"get access",
+			"_dbJSON",
+			"Directory",
+			"favicon",
+			"textarea",
+			"addScanButtons",
+			"inpItemQuan",
+			"itemQuan",
+			"scanCode",
+			"detect",
+			"mainUrlView",
+			"inTheatres.png",
+			"cookie-click",
+			"cookies_container",
+			"sCode",
+			"latamSpanish",
+			"videoOverlay_wrapper",
+			"ratingImg",
+			"display",
+			"orientationWrapper",
+			"facebook",
+			"_nextEmptySpot",
+			"outerFb",
+			"wall",
+			"  <div class=\"flagsCont\">\n                <img src=\"../images/icon_fl_am.png\" alt=\"American flag.\" class=\"icon_fl_am\">\n                <img src=\"../images/icon_fl_fr.png\" alt=\"French flag.\" class=\"icon_fl_fr\">\n                <img src=\"../images/icon_fl_ge.png\" alt=\"German flag.\" class=\"icon_fl_de\">\n                <img src=\"../images/icon_fl_it.png\" alt=\"Italian flag.\" class=\"icon_fl_it\">\n                <img src=\"../images/icon_fl_ja.png\" alt=\"Japanese flag.\" class=\"icon_fl_jp\">\n                <img src=\"../images/icon_fl_ko.png\" alt=\"Korean flag.\" class=\"icon_fl_ko\">\n\n                <img src=\"../images/icon_fl_me.png\" alt=\"Mexican flag.\" class=\"icon_fl_es-la\">\n                <img src=\"../images/icon_fl_po.png\" alt=\"Portuguese flag.\" class=\"icon_fl_pt\">\n                <img src=\"../images/icon_fl_sp.png\" alt=\"Spanish flag.\" class=\"icon_fl_es-ca\">\n                <img src=\"../images/icon_fl_ho.png\" alt=\"Netherlands flag.\" class=\"icon_fl_nl\">\n                <img src=\"../images/icon_fl_au.png\" alt=\"Australian flag.\" class=\"icon_fl_au\">\n                <img src=\"../images/icon_fl_sw.png\" alt=\"Swedish flag.\" class=\"icon_fl_sv\">\n                <img src=\"../images/icon_fl_br.png\" alt=\"Brazilian flag.\" class=\"icon_fl_br\">\n              </div>",
+			"img",
+			"alert",
+			"lang",
+			"sCode",
+			"Utilizzo dei cookie",
+			"intro",
+			"watch trailer",
+			"video",
+			"terms of",
+			"headerCtaBtn",
+			"intro",
+			"view intro",
+			"Terms of submission",
+			"reorient",
+			"orientationWrapper",
+			"legal_link",
+			"Fecha de estreno mundiales",
+			"Fechas de estreno mundiales",
+			"click here",
+			"logo",
+			"vid",
+			"#nav ",
+			"button",
+			"sp-nettrack-button",
+			"sp-nettrack",
+			"cookies_container",
+			"cookies ",
+			"vid",
+			"video",
+			"load",
+			"70",
+			"vidModalFrame",
+			"Terms of Submission  ",
+			"Terms Of Submission Link",
+			"modalCenter",
+			"trailer",
+			"wallthumb",
+			"Click Here button",
+			"click",
+			";",
+			"imageArray",
+			"LoadQueue()",
+			"createjs.LoadQueue()",
+			"imagesArray",
+			"international",
+			"Submission",
+			"trailer",
+			".icon_fl_ge,",
+			" .icon_fl_ja",
+			"french",
+			"_userAssetPath",
+			"url",
+			"images",
+			"'images/",
+			"\"images/",
+			"images",
+			"\"images/",
+			"src=\"",
+			"audio",
+			"trailer",
+			"usa",
+			"intro",
+			"click here",
+			"in aug",
+			"thea",
+			"copy",
+			"intro",
+			"video",
+			"usa",
+			"intro",
+			"trailer",
+			"headerWatchTrailer",
+			"font-family: haettenschweiler;",
+			"watch trailer",
+			"click",
+			"videoPop",
+			"slide-content",
+			"tilesCont",
+			"mainImageView",
+			"rating",
+			"52",
+			"headerIcons",
+			"audioIcon",
+			"audioDemo",
+			"wallItem",
+			"sliderContainer",
+			"img-responsive",
+			"  <link rel=\"stylesheet\" href=\"lib/css/video-js.min.css\" />\nimg-responsive",
+			"  <link rel=\"stylesheet\" href=\"lib/css/video-js.min.css\" />\n",
+			"<link rel=\"stylesheet\" href=\"lib/css/video-js.min.css\" />",
+			"vidModalFrame",
+			".item",
+			",",
+			"top:",
+			"slideHTLM",
+			":0px",
+			"px}",
+			",",
+			"}",
+			",",
+			"{",
+			")",
+			"("
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"itemQuan",
+			"inpItemQuan",
+			"barCode",
+			"bRCODE",
+			",",
+			".icon_fl_de,",
+			" .icon_fl_jp",
+			"../images",
+			"_imgPath+\"",
+			"src=\"../",
+			"",
+			"font-family: 'Squada One', cursive;",
+			"slide-content",
+			" img,",
+			":hover,",
+			":hpver,",
+			"",
+			":0",
+			"}",
+			"; ",
+			" ; ",
+			", top:",
+			"px}",
+			"px,",
+			"{ left:",
+			"}",
+			"{",
+			".R",
+			"",
+			"div"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 4072,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"devel": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": "load-save",
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 25.0
+	},
+	"output.gjslint_result_view":
+	{
+		"height": 112.0
+	},
+	"output.jslint_result_view":
+	{
+		"height": 27.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"bu",
+				"js/buttons.js"
+			],
+			[
+				"comm",
+				"js/communicator.js"
+			],
+			[
+				"w",
+				"js/wallManager.js"
+			],
+			[
+				"po",
+				"js/popupManager.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 247.0,
+	"status_bar_visible": true
+}
