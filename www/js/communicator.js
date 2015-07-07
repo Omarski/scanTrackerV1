@@ -69,9 +69,12 @@ $.ajax({
     //jsonpCallback: 'myCallback',
     dataType: 'jsonp',
     success: function(resultData) {
-        alert("Found records: " + resultData['foundRecord']);
-        // _dbJSON=jQuery.parseJSON(resultData);
-        // if (!_dbJSON['foundRecord']) _dbJSON = null;
+        alert("Found records: " + resultData['instructions']);
+        if (!_dbJSON['foundRecord']) _dbJSON = null;
+        else {
+                _dbJSON=resultData;
+                _viewBuilder.displayInvData(_dbJSON);
+              }
         returnFunc();
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
