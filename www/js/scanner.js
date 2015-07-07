@@ -37,6 +37,42 @@ Scanner.prototype.scanOut = function(){
 //                                          SCAN
 //-------------------------------------------------------------------------------------------------------------
 Scanner.prototype.scan = function(mode){
+
+   // if (true){//good read
+
+   //             var data;
+               
+   //             if (mode == "in") data = {
+   //                    customerId:$("#scanInClientId").val(), 
+   //                    barCode:"566464xz", 
+   //                    items:_viewBuilder.formatItems(),
+   //                    instructions:$("#inputInstructions").val(), 
+   //                    scanInDate:todayFormatted(),
+   //                    scanInOut:"in"};
+
+   //             else data = {barCode:result.text,scanOutDate:todayFormatted(),dateInOut:"out"};
+
+   //              displayObject(data, "Data to PHP\n");
+                
+   //              _communicator.addInvData(
+
+   //                  data,
+                    
+   //                  function(){
+   //                     _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned to Database."});
+   //                     $("#scanInFormCont").fadeOut(300);
+   //                  },
+
+   //                   function(){
+   //                     _viewBuilder.alerts({icon:"glyphicon glyphicon-ok orange", message:"Barcode already scanned to Database."});
+   //                  },
+
+   //                  function(){
+   //                     _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't save to Database."});
+   //                  }
+
+   //             );   //add inventory data
+   //        } 
 	
   cordova.plugins.barcodeScanner.scan(
       
@@ -46,7 +82,7 @@ Scanner.prototype.scan = function(mode){
                 "Format: " + result.format + "\n" +
                 "Cancelled: " + result.cancelled);
 
-          if (true){//good read
+          if (result.text.length < 1){//good read
 
                var data;
                
@@ -57,11 +93,12 @@ Scanner.prototype.scan = function(mode){
                       instructions:$("#inputInstructions").val(), 
                       scanInDate:todayFormatted(),
                       scanInOut:"in"};
-               
+
                else data = {barCode:result.text,scanOutDate:todayFormatted(),dateInOut:"out"};
 
                 displayObject(data, "Data to PHP\n");
-                _communicator.add_inv_data(
+                
+                _communicator.addInvData(
 
                     data,
                     
@@ -70,12 +107,16 @@ Scanner.prototype.scan = function(mode){
                        $("#scanInFormCont").fadeOut(300);
                     },
 
+                     function(){
+                       _viewBuilder.alerts({icon:"glyphicon glyphicon-ok orange", message:"Barcode already scanned to Database."});
+                    },
+
                     function(){
                        _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't save to Database."});
                     }
 
                );   //add inventory data
-          }else {  //if good read
+          } else {  //if bad read
                _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't read barcode - please try again."});
          }
       }, 

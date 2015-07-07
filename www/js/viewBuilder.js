@@ -249,7 +249,7 @@ ViewBuilder.prototype.formatItems = function(){
 
   var itemsColl = {};
   $("#itemsGroup div[id^='item']").each(function(i,item){
-    itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='inpItem']").val()};
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='itemQuan']").val()};
   });
 
   alert(itemsColl);

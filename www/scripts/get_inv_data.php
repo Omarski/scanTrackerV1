@@ -33,7 +33,7 @@ require_once('connect.php');
 		}
      		$json.= '}';
      		  
-    if ($rowCounter < 1) echo $_GET['callback'] . '(' . "{'foundRecord' : 'empty'}" . ')'; 
+    if ($rowCounter < 1) echo $_GET['callback'] . '(' . "{'noRecords' : 'true'}" . ')'; 
     else echo $_GET['callback'] . '(' . $json . ')'; 
 	 } else {
 	 	die("Can't get user data..");

@@ -25,7 +25,7 @@ var data = dataObj;
         alert("Add client return: " + resultData["customerId"]);
         
         if (resultData["duplicate"]) {errorFunction(); return false;}
-        else  {returnFunc(); $(".alerts").append("<p class='alertText green'>&nbsp;Customer ID: "+resultData+"</p>");}
+        else  {returnFunc(); $(".alerts").append("<p class='alertText green'>&nbsp;Customer ID: "+resultData["customerId"]+"</p>");}
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
     });
@@ -61,16 +61,19 @@ Communicator.prototype.getInvData = function(returnFunc){
 
 $.ajax({
     type: 'GET',
+    //url: "scripts/get_inv_data.php",
     url: "http://www.bluegravitymedia.com/DBST/scripts/get_inv_data.php",
-    //crossDomain: true,
-    //contentType: "application/json",
+    crossDomain: true,
+    contentType: "application/json",
     //async:false,
-    jsonpCallback: 'myCallback',
+    //jsonpCallback: 'myCallback',
     dataType: 'jsonp',
     success: function(resultData) {
-        alert("Found records: " + resultData['foundRecord']);
-        // _dbJSON=jQuery.parseJSON(resultData);
-        // if (!_dbJSON['foundRecord']) _dbJSON = null;
+        if (resultData['noRecords']) _dbJSON = null;
+        else {
+                _dbJSON=resultData;
+                //_viewBuilder.displayInvData(_dbJSON);
+              }
         returnFunc();
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
@@ -83,18 +86,21 @@ $.ajax({
 //                                     			ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.addInvData = function(dataObj,returnFunc,errorFunction){
+Communicator.prototype.addInvData = function(dataObj,returnFunc,errorPrescan,errorFunction){
 
 var data = dataObj;
 
 	$.ajax({
       type: "GET",
-      dataType: "text",
-      url: PATH+"http://www.bluegravitymedia.com/DBST/scripts/add_inv.php",
+      dataType: "jsonp",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/add_inv_data.php",
       data: data,
+      crossDomain: true,
+      contentType: "application/json",
       success: function(resultData) {
-        alert("Saved data...")
-        returnFunc();
+        alert("Saved data...");
+         if (resultData["foundScan"]) {errorPrescan(); return false;}
+         else returnFunc();
       },
       error: function(jqXHR, textStatus, errorThrown){
         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);

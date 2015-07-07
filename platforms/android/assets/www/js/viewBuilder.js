@@ -247,14 +247,14 @@ ViewBuilder.prototype.itemDeleteListener = function(deleteBtnId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.formatItems = function(){
 
-  var itemsColl = [];
+  var itemsColl = {};
   $("#itemsGroup div[id^='item']").each(function(i,item){
-    itemsColl.push({itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='inpItem']").val()});
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='inpItem']").val()};
   });
 
   alert(itemsColl);
-
-  return itemsColl;
+  //return itemsColl;
+  return JSON.stringify(itemsColl);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -422,7 +422,7 @@ ViewBuilder.prototype.addLogView = function(){
             "<div class='table-responsive'>"+
               "<table class='table table-condensed table-hover'>"+
                 "<thead>"+
-                  "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business Name</th><th style='width:70%'>Logs</th></tr>"+
+                  "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business Name</th><th style='width:70%'>Items</th><th>Scan in date</th><th>Scan out date</th></tr>"+
                 "</thead>"+
                 "<tbody id='logTableBodyCont'>"+
                 "</tbody>"+
@@ -526,8 +526,25 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY TRANSACTIONS
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.displayInvData = function(){
+ViewBuilder.prototype.displayInvData = function(dbJSON){
+  
+  var tbodyHTML="";
+  $.each(dbJSON, function(key,orderObj){
+    
+    var itemsToText="";
+    $.each(JSON.parse(orderObj.items), function(itemKey,itemObj){
+      itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.itemUnits + "<br>";
+    });
 
+      tbodyHTML+= "<tr><td>"+orderObj.customerId+
+                  "</td><td>"+orderObj.customerName+ 
+                  "</td><td>"+itemsToText+ 
+                  "</td><td>"+orderObj.scanInDate+
+                  "</td><td>"+orderObj.scanOutDate+
+                  "</td></tr>";
+  });  
+
+$("#logTableBodyCont").html(tbodyHTML);
 }
 
 //-------------------------------------------------------------------------------------------------------------

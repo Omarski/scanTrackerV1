@@ -46,8 +46,8 @@ function init(){
 	_viewBuilder = new ViewBuilder();
     _communicator = new Communicator();
     _validate = new Validate();
-    databaseConnect();
     //$(".loaderBlock").remove(); $(".wrapper").fadeIn(1000);
+    databaseConnect();
 	_scanner = new Scanner();
 }
 

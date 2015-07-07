@@ -57,10 +57,11 @@ Scanner.prototype.scan = function(mode){
                       instructions:$("#inputInstructions").val(), 
                       scanInDate:todayFormatted(),
                       scanInOut:"in"};
-               
+
                else data = {barCode:result.text,scanOutDate:todayFormatted(),dateInOut:"out"};
 
                 displayObject(data, "Data to PHP\n");
+                
                 _communicator.add_inv_data(
 
                     data,
@@ -68,6 +69,10 @@ Scanner.prototype.scan = function(mode){
                     function(){
                        _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned to Database."});
                        $("#scanInFormCont").fadeOut(300);
+                    },
+
+                     function(){
+                       _viewBuilder.alerts({icon:"glyphicon glyphicon-ok orange", message:"Barcode already scanned to Database."});
                     },
 
                     function(){
