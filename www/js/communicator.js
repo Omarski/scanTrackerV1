@@ -71,11 +71,11 @@ $.ajax({
     success: function(resultData) {
         if (resultData['noRecords']) _dbJSON = null;
         else {
-                displayObject(resultData.scanId44,"");
+                //displayObject(resultData.scanId44,""); 
+                //displayObject(resultData.idNamePairs,"");
                 _dbJSON=resultData;
-                //_idNamePairs = JSON.parse(resultData['idNamePairs']);
-                //displayObject(_idNamePairs);                         
-                //_viewBuilder.displayInvData(_dbJSON);
+                _idNamePairs = resultData.idNamePairs;                
+                _viewBuilder.displayInvData(_dbJSON);
               }
         returnFunc();
       },

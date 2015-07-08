@@ -16,7 +16,7 @@ ViewBuilder.prototype.init = function(){
 	this.addScanInInput();
 	this.addClientInput();
   this.addClientLookup();
-  //this.addLogView();
+  this.addLogView();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -414,26 +414,6 @@ ViewBuilder.prototype.clientAddListeners = function(){
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                                ADD LOG VIEW
-//-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.addLogView = function(){
-
-  html = "<div class='col-xs-12'>"+
-            "<div class='table-responsive'>"+
-              "<table class='table table-condensed table-hover'>"+
-                "<thead>"+
-                  "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business Name</th><th style='width:70%'>Items</th><th>Scan in date</th><th>Scan out date</th></tr>"+
-                "</thead>"+
-                "<tbody id='logTableBodyCont'>"+
-                "</tbody>"+
-              "</table>"+
-            "</div>"+
-          "</div>";
-
-    $("#invDataCont").html(html);
-}
-
-//-------------------------------------------------------------------------------------------------------------
 //                                          ADD SCAN IN INPUT
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addClientLookup = function(){
@@ -524,27 +504,66 @@ ViewBuilder.prototype.clearForm = function(formId){
 }
 
 //-------------------------------------------------------------------------------------------------------------
+//                                                ADD LOG VIEW
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.addLogView = function(){
+
+  html = "<div class='col-xs-12'>"+
+            "<div class=''>"+
+              "<table class='table table-hover'>"+
+                "<thead>"+
+                  "<tr><th style='width:10%'>Customer<br>ID</th><th style='width:20%'>Business<br>Name</th><th style='width:40%'>Items<br>list</th><th style='width:20%'>Scan in<br>date</th><th style='width:10%'>Scanned<br>out</th></tr>"+
+                "</thead>"+
+                "<tbody id='logTableBodyCont'>"+
+                "</tbody>"+
+              "</table>"+
+            "</div>"+
+          "</div>";
+
+    $("#invDataCont").html(html);
+}
+
+//-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY TRANSACTIONS
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayInvData = function(dbJSON){
   
   var tbodyHTML="";
+  
+  var jsonLength = Object.keys(dbJSON).length;
+  var counter=1;
+
   $.each(dbJSON, function(key,orderObj){
-    
-    var itemsToText="";
-    $.each(JSON.parse(orderObj.items), function(itemKey,itemObj){
-      itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.itemUnits + "<br>";
-    });
+   
+    if (counter < jsonLength){ //skip last json item (pairs)
+        
+        counter++;
+        var itemsToText="";
+      
+      $.each(orderObj.items, function(itemKey,itemObj){
+        itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
+      });
 
       tbodyHTML+= "<tr><td>"+orderObj.customerId+
-                  "</td><td>"+orderObj.customerName+ 
+                  "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
                   "</td><td>"+itemsToText+ 
                   "</td><td>"+orderObj.scanInDate+
                   "</td><td>"+orderObj.scanOutDate+
                   "</td></tr>";
+     }
+    
   });  
+    
+  alert(tbodyHTML);
+  $("#logTableBodyCont").html(tbodyHTML);
+}
 
-$("#logTableBodyCont").html(tbodyHTML);
+//-------------------------------------------------------------------------------------------------------------
+//                                                NAME FROM ID
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.nameFromId = function(id){
+
+  return _idNamePairs[id.toString()];
 }
 
 //-------------------------------------------------------------------------------------------------------------

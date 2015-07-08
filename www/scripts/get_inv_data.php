@@ -13,9 +13,9 @@ require_once('connect.php');
 	
 	//get businessId - name pairs
 	$pairs='{';
-	$getBusinessNameIDPairs =  mysql_query("SELECT businessName AND customerId FROM customer;");
+	$getBusinessNameIDPairs =  mysql_query("SELECT businessName, customerId FROM customer;");
 	
-	while ($pairsRow = mysql_fetch_row($getBusinessNameIDPairs)){
+	while ($pairsRow = mysql_fetch_assoc($getBusinessNameIDPairs)){
 		$pairs.= '"'.$pairsRow["customerId"].'":"'.$pairsRow["businessName"].'",';
 	}
 	$pairs = substr_replace($pairs, '', -1);
@@ -34,7 +34,6 @@ require_once('connect.php');
 	 		$rowCounter++;
 	 		$json.= '"scanId'.$row['scanId'].'":{';
 	 		$json.= '"customerId":' . '"' . $row['customerId'] . '",';
-	 		//$json.= '"customerName":' . '"' . getCustomerName($row['customerId']) . '",';
 	 		$json.= '"barCode":' . '"' . $row['barCode'] . '",';
 	 		$json.= '"items":' . $row['items'] . ',';
 	 		$json.= '"instructions":' . '"' . $row['instructions'] . '",';
