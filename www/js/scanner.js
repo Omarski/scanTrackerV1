@@ -96,7 +96,7 @@ Scanner.prototype.scan = function(mode){
 
                else data = {barCode:result.text,scanOutDate:todayFormatted(),dateInOut:"out"};
 
-                displayObject(data, "Data to PHP\n");
+                //displayObject(data, "Data to PHP\n");
                 
                 _communicator.addInvData(
 

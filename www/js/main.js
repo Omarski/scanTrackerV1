@@ -2,6 +2,7 @@ var _communicator;
 var _viewBuilder;
 var _scanner;
 var _dbJSON;
+var _idNamePairs;
 var _validate;
 
 var PATH="";
@@ -71,6 +72,21 @@ function displayObject(obj,intro) {
             info += "Lable: " + x + " Val: " + obj[x] + "\n";
         }
         //console.log(obj);
+        alert(info);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                              SHOW DISCRIPTOR
+//-------------------------------------------------------------------------------------------------------------
+function displayJSON(json,intro) {
+    
+    var info="";
+
+    $.each(json,function(index,obj){
+
+        //info+= "var: " + 
+
+    });
         alert(info);
 }
 
