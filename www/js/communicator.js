@@ -36,16 +36,20 @@ var data = dataObj;
 //                                          ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.findClient = function(type,key){
+Communicator.prototype.findClient = function(type,key,returnFunc){
 
 var data = {type:type, key:key};
+  
   $.ajax({
       type: "GET",
       dataType: "jsonp",
-      url: PATH+"http://www.bluegravitymedia.com/DBST/scripts/find_customer.php",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/find_customer.php",
       data: data,
+      crossDomain: true,
+      contentType: "application/json",
       success: function(resultData) {
-        alert("Found customer: " + resultData);
+        //alert(resultData);
+        displayObject(resultData,"");
         returnFunc(); 
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}

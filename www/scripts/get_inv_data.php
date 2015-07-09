@@ -51,14 +51,4 @@ require_once('connect.php');
 	 	die("Can't get user data..");
 	 }
 
-// function getCustomerName($customerId){
-
-// 	$nameResult = mysql_query("SELECT businessName FROM customer WHERE customerId='".$customerId."';");
-// 	while($businessRow = mysql_fetch_row($nameResult)){
-// 		$businessName = $businessRow["businessName"];
-// 	}
-
-// 	return $businessName;
-// }
-
 ?> 

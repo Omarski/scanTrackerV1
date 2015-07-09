@@ -425,7 +425,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                "<div class='row'>"+
                     "<div class='col-xs-12 col-sm-6'>"+
                       "<form class='form-inline'>"+
-                        "<div class='radio'><label><input type='radio' value='byId' name='companyLookupRad' checked='checked'><span class='formLabels'>Lookup by ID</span></label></div>"+
+                        "<div class='radio'><label><input type='radio' value='byId' id='byIdRadio' name='companyLookupRad' checked='checked'><span class='formLabels'>Lookup by ID</span></label></div>"+
                          "<div class='form-group'>"+
                               "<input type='text' class='form-control' placeholder='Company ID' id='lookupByCustomerId'>"+
                          "</div>"+
@@ -434,7 +434,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                     "<div class='col-xs-12 col-sm-6'>"+
                        "<form class='form-inline'>"+
                          "<div class='form-group'>"+
-                               "<div class='radio'><label><input type='radio' value='byName' name='companyLookupRad'><span class='formLabels'>Lookup by company name</span></label></div>"+
+                               "<div class='radio'><label><input type='radio' value='byName' id='byNameRadio' name='companyLookupRad'><span class='formLabels'>Lookup by company name</span></label></div>"+
                               "<input type='text' class='form-control' placeholder='Company name' id='lookupByCustomerName'>"+
                          "</div>"+
                     "</div>"+
@@ -451,6 +451,11 @@ ViewBuilder.prototype.addClientLookup = function(){
     $("#customerLookupFormCont").html(html);
 
        //listeners
+
+       $("#lookupByCustomerId, #lookupByCustomerName").focus(function(){
+          ($(this).attr("id").indexOf("Name") != -1) ? $("#byNameRadio").prop("checked",true):$("#byIdRadio").prop("checked",true)
+       });
+
        $("#clientLookupBtn").click(function(){
 
             var selected = $("input[type='radio'][name='companyLookupRad']:checked");
@@ -466,7 +471,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                 ], 
 
                 onPass:function(){
-                    _communicator.findClient("byId",$("#lookupByCustomerId".val()));
+                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){});
                 }
       
                 }); //validate steps
@@ -478,7 +483,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                  ], 
 
                   onPass:function(){ 
-                     _communicator.findClient("byName",$("#lookupByCustomerName".val()));
+                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){});
                   }
       
                 }); //validate steps
@@ -510,9 +515,9 @@ ViewBuilder.prototype.addLogView = function(){
 
   html = "<div class='col-xs-12'>"+
             "<div class=''>"+
-              "<table class='table table-hover'>"+
+              "<table class='table table-striped table-hover'>"+
                 "<thead>"+
-                  "<tr><th style='width:10%'>Customer<br>ID</th><th style='width:20%'>Business<br>Name</th><th style='width:40%'>Items<br>list</th><th style='width:20%'>Scan in<br>date</th><th style='width:10%'>Scanned<br>out</th></tr>"+
+                  "<tr><th style='width:10%'>Cust.<br>ID</th><th style='width:20%'>Bu.<br>name</th><th style='width:40%'>Items<br>list</th><th style='width:20%'>Scan in<br>date</th><th style='width:10%'>Scan<br>out</th></tr>"+
                 "</thead>"+
                 "<tbody id='logTableBodyCont'>"+
                 "</tbody>"+
@@ -554,7 +559,6 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
     
   });  
     
-  alert(tbodyHTML);
   $("#logTableBodyCont").html(tbodyHTML);
 }
 
