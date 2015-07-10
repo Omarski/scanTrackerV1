@@ -16,7 +16,7 @@ ViewBuilder.prototype.init = function(){
 	this.addScanInInput();
 	this.addClientInput();
   this.addClientLookup();
-  this.addLogView();
+  //this.addLogView("#invDataCont");
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -76,6 +76,8 @@ ViewBuilder.prototype.addNav = function(){
           break;
 
           case "navCheckLogsBtn" :
+             _viewBuilder.addLogView("#invDataCont");
+             _viewBuilder.displayInvData(_dbJSON);
             $("#invDataCont").slideDown(1000);
           break;
 
@@ -322,8 +324,8 @@ ViewBuilder.prototype.addClientInput = function(){
 
                "<p id='clientAddBtns'>"+
                     "<button type='button' class='btn btn-success' id='addClientBtn'>Add client</button>"+
-     			           "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'>Clear</button>"+
-                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'>Cancel</button>"+
+     			           "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'><span class='allBtn'>Clear</span></button>"+
+                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'><span class='allBtn'>Cancel</span></button>"+
 			         "</p>"+
           "</div>";
 
@@ -441,9 +443,9 @@ ViewBuilder.prototype.addClientLookup = function(){
                "</div>"+
 
                "<p id='clientLookupBtns'>"+
-                    "<button type='button' class='btn btn-success' id='clientLookupBtn'>Lookup</button>"+
-                    "<button type='button' class='btn btn-primary' style='margin-left:3%'id='clientLookupClearBtn'>Clear</button>"+
-                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelLookupBtn'>Cancel</button>"+
+                    "<button type='button' class='btn btn-success' id='clientLookupBtn'><span class='allBtn'>Lookup</span></button>"+
+                    "<button type='button' class='btn btn-primary' style='margin-left:3%'id='clientLookupClearBtn'><span class='allBtn'>Clear</span></button>"+
+                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelLookupBtn'><span class='allBtn'>Cancel</span></button>"+
                "</p>"+
           "</div>";
 
@@ -471,7 +473,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                 ], 
 
                 onPass:function(){
-                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){});
+                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()});
                 }
       
                 }); //validate steps
@@ -483,7 +485,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                  ], 
 
                   onPass:function(){ 
-                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){});
+                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()});
                   }
       
                 }); //validate steps
@@ -511,7 +513,7 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 //                                                ADD LOG VIEW
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.addLogView = function(){
+ViewBuilder.prototype.addLogView = function(contId){
 
   html = "<div class='col-xs-12'>"+
             "<div class=''>"+
@@ -525,14 +527,14 @@ ViewBuilder.prototype.addLogView = function(){
             "</div>"+
           "</div>";
 
-    $("#invDataCont").html(html);
+    $(contId).html(html);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY TRANSACTIONS
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayInvData = function(dbJSON){
-  
+
   var tbodyHTML="";
   
   var jsonLength = Object.keys(dbJSON).length;
@@ -558,8 +560,51 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
      }
     
   });  
-    
+   //alert(tbodyHTML); 
   $("#logTableBodyCont").html(tbodyHTML);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY CUSTOMER DATA
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayCustData = function(){
+
+  this.addLogView("#custDataCont");
+  this.displayCustomerData(_companyJSON);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY Company TRANSACTIONS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayCustomerData = function(dbJSON){
+
+  var tbodyHTML="";
+
+  var jsonLength = Object.keys(dbJSON).length;
+
+  if (Object.keys(dbJSON)) $.each(dbJSON, function(key,orderObj){
+   
+      var itemsToText="";
+      
+      $.each(orderObj.items, function(itemKey,itemObj){
+        itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
+      });
+
+      tbodyHTML+= "<tr><td>"+orderObj.companyId+
+                  "</td><td>"+orderObj.companyName+ 
+                  "</td><td>"+itemsToText+ 
+                  "</td><td>"+orderObj.scanInDate+
+                  "</td><td>"+orderObj.scanOutDate+
+                  "</td></tr>";    
+  });
+
+  $("#logTableBodyCont").html(tbodyHTML);
+   
+   if (jsonLength > 0) {
+    $("#scanInFormCont").fadeOut(300);
+  }else{
+      _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
+  }
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -571,7 +616,7 @@ ViewBuilder.prototype.nameFromId = function(id){
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                                DISPLAY TRANSACTIONS
+//                                                DISPLAY ALERTS
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.alerts = function(alertObj){
   alertHTML = "<div class='alerts'><span class='" + alertObj.icon + "'></span>&nbsp;&nbsp;<p class='alertText'>"+alertObj.message+"</p></div>";
@@ -579,31 +624,3 @@ ViewBuilder.prototype.alerts = function(alertObj){
   $("#alertsCont").html(alertHTML).show();
 
 }
-
-  // aValidate.test({collection:[
-  //     {inputCont:$("#goalGroupSelector"), message:"Select a circle", style:{left:'40px', top:'445px'},
-  //     check:{valid:["Select a circle to support your goal","", null], inputType:"select", checkType:null, range:null}},
-  //     {inputCont:$("#goalPopTitleInput"), message:"Enter a goal title", style:{left:'150px', top:'90px'},
-  //     check:{valid:[""], inputType:"text", checkType:null, range:null}},
-  //     {inputCont:$("#goalPopStatementInput"), message:"Describe goal", style:{left:'150px', top:'170px'},
-  //     check:{valid:[""], inputType:"text", checkType:null, range:null}},
-  //     {inputCont:$("#goalPopStepsInput"), style:{left:'10px', top:'515px'},
-  //     check:{valid:["","00"], inputType:"number", checkType:"number", range:null}},
-  //     ], 
-
-  //     onPass:function(){
-        
-  //       $(".goalPopSubheadCont, .goalPopBodyCont").children().remove();
-  
-  //       //get page 2 Subhead
-  //       aGoalAddPopManager.addHtml({template:"stepsSurveySubhead", cont:".goalPopSubheadCont", addAs:"html"});
-  
-  //       //survey
-  //       aGoalAddPopManager.addHtml({template:"stepsSurveyBody", cont:".goalPopBodyCont", addAs:"html"});
-  
-  //       //clear vav block
-  //       $(".goalPopNavCont").children().remove();
-  //       aGoalAddPopManager.addHtml({template:"backCreateButtons", cont:".goalPopNavCont", addAs:"html"});
-  //     }
-      
-  //     }); //validate steps

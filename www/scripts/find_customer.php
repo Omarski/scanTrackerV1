@@ -21,6 +21,7 @@ require_once('connect.php');
 	}else if ($_GET['type'] == "byName"){
 
 		 $getCustomer_sql = "SELECT businessName, customerId FROM customer WHERE businessName LIKE '%".$_GET['key']."%';";
+		 //$getCustomer_sql = "SELECT businessName, customerId FROM customer WHERE businessName = '".$_GET['key']."';";
 		 $result=mysql_query($getCustomer_sql);
 	}
 
@@ -42,7 +43,7 @@ require_once('connect.php');
 			     while($row = mysql_fetch_array($getOrdersResult)){
 
 				 	$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
-				 									 '"companyId":"'.$row['companyId'].'",'.
+				 									 '"companyId":"'.$row['customerId'].'",'.
 				 									 '"barCode":"'.$row['barCode'].'",'.
 				 									 '"items":'.$row['items'] . ','.
 				 									 '"instructions":"'.$row['instructions'].'",'.

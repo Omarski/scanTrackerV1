@@ -3,6 +3,7 @@ var _viewBuilder;
 var _scanner;
 var _dbJSON;
 var _idNamePairs;
+var _companyJSON;
 var _validate;
 
 var PATH="";

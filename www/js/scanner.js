@@ -64,7 +64,7 @@ Scanner.prototype.scan = function(mode){
                     },
 
                      function(){
-                       _viewBuilder.alerts({icon:"glyphicon glyphicon-ok orange", message:"Barcode already scanned to Database."});
+                       _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});
                     },
 
                     function(){
@@ -108,7 +108,7 @@ Scanner.prototype.scan = function(mode){
   //                   },
 
   //                    function(){
-  //                      _viewBuilder.alerts({icon:"glyphicon glyphicon-ok orange", message:"Barcode already scanned to Database."});
+  //                      _viewBuilder.alerts({icon:"glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});
   //                   },
 
   //                   function(){

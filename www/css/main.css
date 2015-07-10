@@ -119,9 +119,10 @@ body {
 }
 
 .lrgScanBtn{
+	display:block;
 	background-image: url("../img/barcodeBg.png");
 	margin-top:5%;
-	width:60%;
+	width:40%;
 }
 
 .allBtn {

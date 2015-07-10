@@ -48,8 +48,7 @@ var data = {type:type, key:key};
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
-        //alert(resultData);
-        displayObject(resultData,"");
+        _companyJSON = resultData;
         returnFunc(); 
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
