@@ -36,7 +36,7 @@ var data = dataObj;
 //                                          ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.findClient = function(type,key,returnFunc){
+Communicator.prototype.findClient = function(type,key,returnFunc,returnEmpty){
 
 var data = {type:type, key:key};
   
@@ -48,8 +48,10 @@ var data = {type:type, key:key};
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
-        _companyJSON = resultData;
-        returnFunc(); 
+        //alert(resultData.foundMatch);
+        if (resultData["foundRecord"] == "empty") {returnEmpty(); return false;}
+        else {_companyJSON = resultData;
+        returnFunc();} 
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
     });

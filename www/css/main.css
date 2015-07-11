@@ -122,7 +122,7 @@ body {
 	display:block;
 	background-image: url("../img/barcodeBg.png");
 	margin-top:5%;
-	width:40%;
+	width:60%;
 }
 
 .allBtn {
@@ -208,7 +208,7 @@ body {
 }
 
 .centerItem, .buttonWidth70 {
-	width:100%;
+	
 	display: block;
 	position: relative;
 	margin-left: auto;

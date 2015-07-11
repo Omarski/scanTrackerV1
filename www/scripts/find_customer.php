@@ -20,8 +20,7 @@ require_once('connect.php');
 
 	}else if ($_GET['type'] == "byName"){
 
-		 $getCustomer_sql = "SELECT businessName, customerId FROM customer WHERE businessName LIKE '%".$_GET['key']."%';";
-		 //$getCustomer_sql = "SELECT businessName, customerId FROM customer WHERE businessName = '".$_GET['key']."';";
+		 $getCustomer_sql = "SELECT businessName, customerId FROM customer WHERE businessName LIKE '%".$_GET['key']."%' ;";
 		 $result=mysql_query($getCustomer_sql);
 	}
 
@@ -31,7 +30,6 @@ require_once('connect.php');
 	 	$companyIdColl[]   = $row['customerId'];
 	 }
 
-	 //echo $_GET['callback'] . '(' . "{'foundMatch' : '".$companyNameColl[0]."'}" . ')';
 	 $arrlength = count($companyNameColl);
 
 	 if (count($companyNameColl) > 0){
@@ -40,23 +38,36 @@ require_once('connect.php');
 	     
 		     $getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '".$companyIdColl[$x]."';");
 
-			     while($row = mysql_fetch_array($getOrdersResult)){
+			     if (mysql_num_rows($getOrdersResult)>0){
 
-				 	$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
-				 									 '"companyId":"'.$row['customerId'].'",'.
-				 									 '"barCode":"'.$row['barCode'].'",'.
-				 									 '"items":'.$row['items'] . ','.
-				 									 '"instructions":"'.$row['instructions'].'",'.
-				 									 '"scanInDate":"'.$row['scanInDate'].'",'.
-				 									 '"scanOutDate":"'.$row['scanOutDate'].'"}';
+				     while($row = mysql_fetch_array($getOrdersResult)){
 
-				 }
+					 	$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
+					 									 '"companyId":"'.$row['customerId'].'",'.
+					 									 '"barCode":"'.$row['barCode'].'",'.
+					 									 '"items":'.$row['items'] . ','.
+					 									 '"instructions":"'.$row['instructions'].'",'.
+					 									 '"scanInDate":"'.$row['scanInDate'].'",'.
+					 									 '"scanOutDate":"'.$row['scanOutDate'].'"},';
 
-				 $json.="}";
+					 }
+				}else { //no results
+
+						$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
+						 									 '"companyId":"'. $companyIdColl[$x] .'",'.
+						 									 '"barCode":"",'.
+						 									 '"items":"'.null.'",'.
+						 									 '"instructions":"",'.
+						 									 '"scanInDate":"",'.
+						 									 '"scanOutDate":""},';
+				}
 		}
 
+		 substr_replace($json, '', -1);
+		 $json.="}";
+
 		echo $_GET['callback'] . '(' . $json . ')';  
-		//echo $_GET['callback'] . '(' . "{'foundMatch' : '".$companyIdColl[0]."'}" . ')';
+		//echo $_GET['callback'] . '(' . "{'foundMatch' : '".count($companyNameColl)."'}" . ')';
 
 	} else echo $_GET['callback'] . '(' . "{'foundRecord' : 'empty'}" . ')';  
 

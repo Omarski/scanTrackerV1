@@ -473,7 +473,8 @@ ViewBuilder.prototype.addClientLookup = function(){
                 ], 
 
                 onPass:function(){
-                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()});
+                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()},
+                    function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
                 }
       
                 }); //validate steps
@@ -485,7 +486,8 @@ ViewBuilder.prototype.addClientLookup = function(){
                  ], 
 
                   onPass:function(){ 
-                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()});
+                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()},
+                     function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
                   }
       
                 }); //validate steps
@@ -537,7 +539,7 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
 
   var tbodyHTML="";
   
-  var jsonLength = Object.keys(dbJSON).length;
+  if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
   var counter=1;
 
   $.each(dbJSON, function(key,orderObj){
@@ -569,6 +571,8 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayCustData = function(){
 
+  _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign green", message:"Found match."});
+  $("#customerLookupFormCont").hide();
   this.addLogView("#custDataCont");
   this.displayCustomerData(_companyJSON);
 }
@@ -578,15 +582,15 @@ ViewBuilder.prototype.displayCustData = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayCustomerData = function(dbJSON){
 
-  var tbodyHTML="";
+   var tbodyHTML="";
 
-  var jsonLength = Object.keys(dbJSON).length;
+   if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
 
-  if (Object.keys(dbJSON)) $.each(dbJSON, function(key,orderObj){
+   $.each(dbJSON, function(key,orderObj){
    
       var itemsToText="";
       
-      $.each(orderObj.items, function(itemKey,itemObj){
+      if (orderObj.items) $.each(orderObj.items, function(itemKey,itemObj){
         itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
       });
 
