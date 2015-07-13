@@ -36,17 +36,22 @@ var data = dataObj;
 //                                          ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.findClient = function(type,key){
+Communicator.prototype.findClient = function(type,key,returnFunc,returnEmpty){
 
 var data = {type:type, key:key};
+  
   $.ajax({
       type: "GET",
       dataType: "jsonp",
-      url: PATH+"http://www.bluegravitymedia.com/DBST/scripts/find_customer.php",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/find_customer.php",
       data: data,
+      crossDomain: true,
+      contentType: "application/json",
       success: function(resultData) {
-        alert("Found customer: " + resultData);
-        returnFunc(); 
+        //alert(resultData.foundMatch);
+        if (resultData["foundRecord"] == "empty") {returnEmpty(); return false;}
+        else {_companyJSON = resultData;
+        returnFunc();} 
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
     });
@@ -71,8 +76,11 @@ $.ajax({
     success: function(resultData) {
         if (resultData['noRecords']) _dbJSON = null;
         else {
+                //displayObject(resultData.scanId44,""); 
+                //displayObject(resultData.idNamePairs,"");
                 _dbJSON=resultData;
-                //_viewBuilder.displayInvData(_dbJSON);
+                _idNamePairs = resultData.idNamePairs;                
+                _viewBuilder.displayInvData(_dbJSON);
               }
         returnFunc();
       },

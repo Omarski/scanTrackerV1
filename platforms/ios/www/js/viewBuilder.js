@@ -16,7 +16,7 @@ ViewBuilder.prototype.init = function(){
 	this.addScanInInput();
 	this.addClientInput();
   this.addClientLookup();
-  //this.addLogView();
+  //this.addLogView("#invDataCont");
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -76,6 +76,8 @@ ViewBuilder.prototype.addNav = function(){
           break;
 
           case "navCheckLogsBtn" :
+             _viewBuilder.addLogView("#invDataCont");
+             _viewBuilder.displayInvData(_dbJSON);
             $("#invDataCont").slideDown(1000);
           break;
 
@@ -249,7 +251,7 @@ ViewBuilder.prototype.formatItems = function(){
 
   var itemsColl = {};
   $("#itemsGroup div[id^='item']").each(function(i,item){
-    itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='inpItem']").val()};
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='itemQuan']").val()};
   });
 
   alert(itemsColl);
@@ -322,8 +324,8 @@ ViewBuilder.prototype.addClientInput = function(){
 
                "<p id='clientAddBtns'>"+
                     "<button type='button' class='btn btn-success' id='addClientBtn'>Add client</button>"+
-     			           "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'>Clear</button>"+
-                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'>Cancel</button>"+
+     			           "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'><span class='allBtn'>Clear</span></button>"+
+                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'><span class='allBtn'>Cancel</span></button>"+
 			         "</p>"+
           "</div>";
 
@@ -414,26 +416,6 @@ ViewBuilder.prototype.clientAddListeners = function(){
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                                ADD LOG VIEW
-//-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.addLogView = function(){
-
-  html = "<div class='col-xs-12'>"+
-            "<div class='table-responsive'>"+
-              "<table class='table table-condensed table-hover'>"+
-                "<thead>"+
-                  "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business Name</th><th style='width:70%'>Items</th><th>Scan in date</th><th>Scan out date</th></tr>"+
-                "</thead>"+
-                "<tbody id='logTableBodyCont'>"+
-                "</tbody>"+
-              "</table>"+
-            "</div>"+
-          "</div>";
-
-    $("#invDataCont").html(html);
-}
-
-//-------------------------------------------------------------------------------------------------------------
 //                                          ADD SCAN IN INPUT
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addClientLookup = function(){
@@ -445,7 +427,7 @@ ViewBuilder.prototype.addClientLookup = function(){
                "<div class='row'>"+
                     "<div class='col-xs-12 col-sm-6'>"+
                       "<form class='form-inline'>"+
-                        "<div class='radio'><label><input type='radio' value='byId' name='companyLookupRad' checked='checked'><span class='formLabels'>Lookup by ID</span></label></div>"+
+                        "<div class='radio'><label><input type='radio' value='byId' id='byIdRadio' name='companyLookupRad' checked='checked'><span class='formLabels'>Lookup by ID</span></label></div>"+
                          "<div class='form-group'>"+
                               "<input type='text' class='form-control' placeholder='Company ID' id='lookupByCustomerId'>"+
                          "</div>"+
@@ -454,16 +436,16 @@ ViewBuilder.prototype.addClientLookup = function(){
                     "<div class='col-xs-12 col-sm-6'>"+
                        "<form class='form-inline'>"+
                          "<div class='form-group'>"+
-                               "<div class='radio'><label><input type='radio' value='byName' name='companyLookupRad'><span class='formLabels'>Lookup by company name</span></label></div>"+
+                               "<div class='radio'><label><input type='radio' value='byName' id='byNameRadio' name='companyLookupRad'><span class='formLabels'>Lookup by company name</span></label></div>"+
                               "<input type='text' class='form-control' placeholder='Company name' id='lookupByCustomerName'>"+
                          "</div>"+
                     "</div>"+
                "</div>"+
 
                "<p id='clientLookupBtns'>"+
-                    "<button type='button' class='btn btn-success' id='clientLookupBtn'>Lookup</button>"+
-                    "<button type='button' class='btn btn-primary' style='margin-left:3%'id='clientLookupClearBtn'>Clear</button>"+
-                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelLookupBtn'>Cancel</button>"+
+                    "<button type='button' class='btn btn-success' id='clientLookupBtn'><span class='allBtn'>Lookup</span></button>"+
+                    "<button type='button' class='btn btn-primary' style='margin-left:3%'id='clientLookupClearBtn'><span class='allBtn'>Clear</span></button>"+
+                    "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelLookupBtn'><span class='allBtn'>Cancel</span></button>"+
                "</p>"+
           "</div>";
 
@@ -471,6 +453,11 @@ ViewBuilder.prototype.addClientLookup = function(){
     $("#customerLookupFormCont").html(html);
 
        //listeners
+
+       $("#lookupByCustomerId, #lookupByCustomerName").focus(function(){
+          ($(this).attr("id").indexOf("Name") != -1) ? $("#byNameRadio").prop("checked",true):$("#byIdRadio").prop("checked",true)
+       });
+
        $("#clientLookupBtn").click(function(){
 
             var selected = $("input[type='radio'][name='companyLookupRad']:checked");
@@ -486,7 +473,8 @@ ViewBuilder.prototype.addClientLookup = function(){
                 ], 
 
                 onPass:function(){
-                    _communicator.findClient("byId",$("#lookupByCustomerId".val()));
+                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()},
+                    function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
                 }
       
                 }); //validate steps
@@ -498,7 +486,8 @@ ViewBuilder.prototype.addClientLookup = function(){
                  ], 
 
                   onPass:function(){ 
-                     _communicator.findClient("byName",$("#lookupByCustomerName".val()));
+                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()},
+                     function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
                   }
       
                 }); //validate steps
@@ -524,31 +513,114 @@ ViewBuilder.prototype.clearForm = function(formId){
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                                DISPLAY TRANSACTIONS
+//                                                ADD LOG VIEW
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.displayInvData = function(dbJSON){
-  
-  var tbodyHTML="";
-  $.each(dbJSON, function(key,orderObj){
-    
-    var itemsToText="";
-    $.each(JSON.parse(orderObj.items), function(itemKey,itemObj){
-      itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.itemUnits + "<br>";
-    });
+ViewBuilder.prototype.addLogView = function(contId){
 
-      tbodyHTML+= "<tr><td>"+orderObj.customerId+
-                  "</td><td>"+orderObj.customerName+ 
-                  "</td><td>"+itemsToText+ 
-                  "</td><td>"+orderObj.scanInDate+
-                  "</td><td>"+orderObj.scanOutDate+
-                  "</td></tr>";
-  });  
+  html = "<div class='col-xs-12'>"+
+            "<div class=''>"+
+              "<table class='table table-striped table-hover'>"+
+                "<thead>"+
+                  "<tr><th style='width:10%'>Cust.<br>ID</th><th style='width:20%'>Bu.<br>name</th><th style='width:40%'>Items<br>list</th><th style='width:20%'>Scan in<br>date</th><th style='width:10%'>Scan<br>out</th></tr>"+
+                "</thead>"+
+                "<tbody id='logTableBodyCont'>"+
+                "</tbody>"+
+              "</table>"+
+            "</div>"+
+          "</div>";
 
-$("#logTableBodyCont").html(tbodyHTML);
+    $(contId).html(html);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY TRANSACTIONS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayInvData = function(dbJSON){
+
+  var tbodyHTML="";
+  
+  if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
+  var counter=1;
+
+  $.each(dbJSON, function(key,orderObj){
+   
+    if (counter < jsonLength){ //skip last json item (pairs)
+        
+        counter++;
+        var itemsToText="";
+      
+      $.each(orderObj.items, function(itemKey,itemObj){
+        itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
+      });
+
+      tbodyHTML+= "<tr><td>"+orderObj.customerId+
+                  "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
+                  "</td><td>"+itemsToText+ 
+                  "</td><td>"+orderObj.scanInDate+
+                  "</td><td>"+orderObj.scanOutDate+
+                  "</td></tr>";
+     }
+    
+  });  
+   //alert(tbodyHTML); 
+  $("#logTableBodyCont").html(tbodyHTML);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY CUSTOMER DATA
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayCustData = function(){
+
+  _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign green", message:"Found match."});
+  $("#customerLookupFormCont").hide();
+  this.addLogView("#custDataCont");
+  this.displayCustomerData(_companyJSON);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY Company TRANSACTIONS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayCustomerData = function(dbJSON){
+
+   var tbodyHTML="";
+
+   if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
+
+   $.each(dbJSON, function(key,orderObj){
+   
+      var itemsToText="";
+      
+      if (orderObj.items) $.each(orderObj.items, function(itemKey,itemObj){
+        itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
+      });
+
+      tbodyHTML+= "<tr><td>"+orderObj.companyId+
+                  "</td><td>"+orderObj.companyName+ 
+                  "</td><td>"+itemsToText+ 
+                  "</td><td>"+orderObj.scanInDate+
+                  "</td><td>"+orderObj.scanOutDate+
+                  "</td></tr>";    
+  });
+
+  $("#logTableBodyCont").html(tbodyHTML);
+   
+   if (jsonLength > 0) {
+    $("#scanInFormCont").fadeOut(300);
+  }else{
+      _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
+  }
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                NAME FROM ID
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.nameFromId = function(id){
+
+  return _idNamePairs[id.toString()];
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY ALERTS
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.alerts = function(alertObj){
   alertHTML = "<div class='alerts'><span class='" + alertObj.icon + "'></span>&nbsp;&nbsp;<p class='alertText'>"+alertObj.message+"</p></div>";
@@ -556,31 +628,3 @@ ViewBuilder.prototype.alerts = function(alertObj){
   $("#alertsCont").html(alertHTML).show();
 
 }
-
-  // aValidate.test({collection:[
-  //     {inputCont:$("#goalGroupSelector"), message:"Select a circle", style:{left:'40px', top:'445px'},
-  //     check:{valid:["Select a circle to support your goal","", null], inputType:"select", checkType:null, range:null}},
-  //     {inputCont:$("#goalPopTitleInput"), message:"Enter a goal title", style:{left:'150px', top:'90px'},
-  //     check:{valid:[""], inputType:"text", checkType:null, range:null}},
-  //     {inputCont:$("#goalPopStatementInput"), message:"Describe goal", style:{left:'150px', top:'170px'},
-  //     check:{valid:[""], inputType:"text", checkType:null, range:null}},
-  //     {inputCont:$("#goalPopStepsInput"), style:{left:'10px', top:'515px'},
-  //     check:{valid:["","00"], inputType:"number", checkType:"number", range:null}},
-  //     ], 
-
-  //     onPass:function(){
-        
-  //       $(".goalPopSubheadCont, .goalPopBodyCont").children().remove();
-  
-  //       //get page 2 Subhead
-  //       aGoalAddPopManager.addHtml({template:"stepsSurveySubhead", cont:".goalPopSubheadCont", addAs:"html"});
-  
-  //       //survey
-  //       aGoalAddPopManager.addHtml({template:"stepsSurveyBody", cont:".goalPopBodyCont", addAs:"html"});
-  
-  //       //clear vav block
-  //       $(".goalPopNavCont").children().remove();
-  //       aGoalAddPopManager.addHtml({template:"backCreateButtons", cont:".goalPopNavCont", addAs:"html"});
-  //     }
-      
-  //     }); //validate steps

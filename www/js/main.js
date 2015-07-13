@@ -36,9 +36,9 @@ var app = {
     }
 };
 
-//app.initialize();
+app.initialize();
 
- $(document).ready(function(){init();})
+ //$(document).ready(function(){init();})
  //remove
 //-------------------------------------------------------------------------------------------------------------
 //                                     			INIT
@@ -48,7 +48,6 @@ function init(){
 	_viewBuilder = new ViewBuilder();
     _communicator = new Communicator();
     _validate = new Validate();
-    //$(".loaderBlock").remove(); $(".wrapper").fadeIn(1000);
     databaseConnect();
 	_scanner = new Scanner();
 }
