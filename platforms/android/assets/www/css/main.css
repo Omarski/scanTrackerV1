@@ -154,6 +154,12 @@ body {
  	background: #fff;
  }
 
+/*.table-responsive
+{
+    max-width: 100%
+    overflow-x:scroll;
+}*/
+
 /*forms*/
 /*---------------------------------------------------------------*/
 .requiredField{

@@ -5,6 +5,7 @@ var _dbJSON;
 var _idNamePairs;
 var _companyJSON;
 var _validate;
+var _platform="desktop";
 
 var PATH="";
 
@@ -45,13 +46,25 @@ app.initialize();
 //-------------------------------------------------------------------------------------------------------------
 function init(){
 
+    detectMobile();
 	_viewBuilder = new ViewBuilder();
     _communicator = new Communicator();
     _validate = new Validate();
+    //$(".loaderBlock").remove(); $(".wrapper").fadeIn(1000);
     databaseConnect();
 	_scanner = new Scanner();
 }
 
+//-------------------------------------------------------------------------------------------------------------
+//                                              DB CONNECT
+//-------------------------------------------------------------------------------------------------------------
+function detectMobile(){
+
+    var app = (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/));
+    //var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+    if ( app ) _platform = "mobile";
+}  
+   
 //-------------------------------------------------------------------------------------------------------------
 //                                     			DB CONNECT
 //-------------------------------------------------------------------------------------------------------------

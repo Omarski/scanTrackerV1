@@ -24,7 +24,7 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = [".scanBtns","#scanInFormCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#alertsCont"];
+  var mainContainersColl = [".scanBtns","#scanInFormCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#alertsCont"];
   var navBtnColl = ["#navScanBtn","#navCustomersBtn","#navCheckLogsBtn"];
 
   var html = "<div class='btn-group btn-group-justified btn-group-lg' role='group' aria-label=''>"+
@@ -32,7 +32,7 @@ ViewBuilder.prototype.addNav = function(){
                 "<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='navBtn'>Scan Item</span></button>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                  "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Customers<span class='caret'></span></span></button>"+
+                  "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Customers</span></span></button>"+
                   "<ul class='dropdown-menu'>"+
                   "<li><a href='#' id='navCustomerAddBtn'>Add Customer</a></li>"+
                   "<li><a href='#' id='navCustomerLookupBtn'>Lookup Customer</a></li>"+
@@ -146,6 +146,12 @@ ViewBuilder.prototype.addScanInInput = function(){
                                    "<textarea class='form-control' rows='2' id='inputInstructions' placeholder='Special instructions'></textarea>"+
                               "</div>"+
                          "</div>"+
+
+                          "<div class='row'>"+//instructions
+                              "<div class='col-xs-12 form-group'>"+
+                                   "<input class='form-control' id='inputBarcode' placeholder='Barcode' style='display:none'>"+
+                              "</div>"+
+                         "</div>"+
                          
                          "<p>"+
                               "<button type='button' class='btn btn-primary' id='addItemBtn'><span class='glyphicon glyphicon-plus'></span><span class='allBtn'>Add Item</span></button>"+
@@ -158,6 +164,8 @@ ViewBuilder.prototype.addScanInInput = function(){
                "</div>";
 
     $("#scanInFormCont").html(html);
+
+    if (_platform == "desktop") $("#inputBarcode").show();
 
     this.scanInListeners();
 }
@@ -199,11 +207,19 @@ ViewBuilder.prototype.scanInListeners = function(){
   //sumbit scan info
    $("#executeScanInBtn").click(function(){
          
-          _validate.test({collection:[
-                
-                {inputCont:$("#scanInClientId"), message:"Enter customer ID", style:null,
-                check:{valid:["Customer ID","", null], inputType:"text", checkType:null, range:null}}
-                ], 
+         var coll;
+
+         if (_platform == "mobile"){
+            coll =[{inputCont:$("#scanInClientId"), message:"Enter customer ID", style:null,
+                  check:{valid:["Customer ID","", null], inputType:"text", checkType:null, range:null}}];
+         }else{
+            coll =[{inputCont:$("#scanInClientId"), message:"Enter customer ID", style:null,
+                  check:{valid:["Customer ID","", null], inputType:"text", checkType:null, range:null}},
+                  {inputCont:$("#inputBarcode"), message:"Use scanner to input barcode", style:null,
+                  check:{valid:["Barcode","", null], inputType:"text", checkType:null, range:null}}];
+         }
+                  
+          _validate.test({collection:coll,
 
                 onPass:function(){ 
 
@@ -254,8 +270,6 @@ ViewBuilder.prototype.formatItems = function(){
     itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='itemQuan']").val()};
   });
 
-  alert(itemsColl);
-  //return itemsColl;
   return JSON.stringify(itemsColl);
 }
 
@@ -324,7 +338,7 @@ ViewBuilder.prototype.addClientInput = function(){
 
                "<p id='clientAddBtns'>"+
                     "<button type='button' class='btn btn-success' id='addClientBtn'>Add client</button>"+
-     			           "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'><span class='allBtn'>Clear</span></button>"+
+     			          "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'><span class='allBtn'>Clear</span></button>"+
                     "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'><span class='allBtn'>Cancel</span></button>"+
 			         "</p>"+
           "</div>";
@@ -444,7 +458,7 @@ ViewBuilder.prototype.addClientLookup = function(){
 
                "<p id='clientLookupBtns'>"+
                     "<button type='button' class='btn btn-success' id='clientLookupBtn'><span class='allBtn'>Lookup</span></button>"+
-                    "<button type='button' class='btn btn-primary' style='margin-left:3%'id='clientLookupClearBtn'><span class='allBtn'>Clear</span></button>"+
+                    "<button type='button' class='btn btn-primary' style='margin-left:3%' id='clientLookupClearBtn'><span class='allBtn'>Clear</span></button>"+
                     "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelLookupBtn'><span class='allBtn'>Cancel</span></button>"+
                "</p>"+
           "</div>";
@@ -517,13 +531,14 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addLogView = function(contId){
 
-  html = "<div class='col-xs-12'>"+
-            "<div class=''>"+
+  html = "<div class='col-xs-12 no-padding'>"+
+            "<div class='table-responsive' style='overflow:auto'>"+
               "<table class='table table-striped table-hover'>"+
                 "<thead>"+
-                  "<tr><th style='width:10%'>Cust.<br>ID</th><th style='width:20%'>Bu.<br>name</th><th style='width:40%'>Items<br>list</th><th style='width:20%'>Scan in<br>date</th><th style='width:10%'>Scan<br>out</th></tr>"+
+                 "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business name</th><th style='width:20%'>Items list</th><th style='width:20%'>Scan in date</th><th style='width:10%'>Scan out</th><th style='width:20%'>Instructions</th></tr>"+
                 "</thead>"+
                 "<tbody id='logTableBodyCont'>"+
+                //"<tr><td>Progressive media inc.</td><td>23222334 43344322</td><td>item1: xxxxxxxccccccccvvvvvvvvzzzzzzzzzzzzzzzz</td><td>11/23/2022</td><td>33/33/3232</td></tr>"+
                 "</tbody>"+
               "</table>"+
             "</div>"+
@@ -558,6 +573,7 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
                   "</td><td>"+itemsToText+ 
                   "</td><td>"+orderObj.scanInDate+
                   "</td><td>"+orderObj.scanOutDate+
+                  "</td><td>"+orderObj.instructions+
                   "</td></tr>";
      }
     
@@ -599,11 +615,13 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
                   "</td><td>"+itemsToText+ 
                   "</td><td>"+orderObj.scanInDate+
                   "</td><td>"+orderObj.scanOutDate+
+                  "</td><td>"+orderObj.instructions+
                   "</td></tr>";    
   });
 
   $("#logTableBodyCont").html(tbodyHTML);
-   
+  
+   //$("#tableLog").css("max-width:100%");
    if (jsonLength > 0) {
     $("#scanInFormCont").fadeOut(300);
   }else{

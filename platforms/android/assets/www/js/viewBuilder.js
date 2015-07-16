@@ -533,6 +533,26 @@ ViewBuilder.prototype.addLogView = function(contId){
 }
 
 //-------------------------------------------------------------------------------------------------------------
+//                                                ADD LOG VIEW
+//-------------------------------------------------------------------------------------------------------------
+// ViewBuilder.prototype.addLogView = function(contId){
+
+//   html = "<div class='col-xs-12'>"+
+//             "<div class='table-responsive'>"+
+//               "<table class='table table-striped table-hover'>"+
+//                 "<thead>"+
+//                   "<tr><th style='width:10%'>Cust.<br>ID</th><th style='width:20%'>Bu.<br>name</th><th style='width:40%'>Items<br>list</th><th style='width:20%'>Scan in<br>date</th><th style='width:10%'>Scan<br>out</th></tr>"+
+//                 "</thead>"+
+//                 "<tbody id='logTableBodyCont'>"+
+//                 "</tbody>"+
+//               "</table>"+
+//             "</div>"+
+//           "</div>";
+
+//     $(contId).html(html);
+// }
+
+//-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY TRANSACTIONS
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayInvData = function(dbJSON){
@@ -603,7 +623,8 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
   });
 
   $("#logTableBodyCont").html(tbodyHTML);
-   
+  
+   //$("#tableLog").css("max-width:100%");
    if (jsonLength > 0) {
     $("#scanInFormCont").fadeOut(300);
   }else{
