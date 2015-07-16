@@ -18,7 +18,7 @@ $dup = mysql_query("SELECT barCode FROM orders WHERE barCode='".$_GET['barCode']
                    "VALUES ('{$_GET['customerId']}','{$_GET['barCode']}','{$_GET['items']}',".
                    "'{$_GET['instructions']}','{$_GET['scanInDate']}');";
 		}else if ($_GET['scanInOut'] == "out"){
-			$insert_sql = "INSERT INTO orders (scanOutDate) VALUES('{$_GET['scanOutDate']}') WHERE barCode='".$_GET['barCode']."';";
+			$insert_sql = "UPDATE orders SET scanOutDate = '{$_GET['scanOutDate']}' WHERE barCode = '{$_GET['barCode']}';";
 		}
 			
 			$result = mysql_query($insert_sql);

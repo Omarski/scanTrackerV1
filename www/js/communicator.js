@@ -82,6 +82,7 @@ $.ajax({
                 _idNamePairs = resultData.idNamePairs;                
                 _viewBuilder.displayInvData(_dbJSON);
               }
+        
         returnFunc();
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
@@ -106,7 +107,7 @@ var data = dataObj;
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
-        alert("Saved data...");
+        //alert("Saved data...");
          if (resultData["foundScan"]) {errorPrescan(); return false;}
          else returnFunc();
       },

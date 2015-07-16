@@ -36,13 +36,15 @@ require_once('connect.php');
 	 
 		 for ($x = 0; $x < $arrlength; $x++) {
 	     
+		     //$getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '".$companyIdColl[$x]."';");
 		     $getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '".$companyIdColl[$x]."';");
+		 	 //$getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '212286';");
 
 			     if (mysql_num_rows($getOrdersResult)>0){
 
-				     while($row = mysql_fetch_array($getOrdersResult)){
-
-					 	$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
+				     while($row = mysql_fetch_assoc($getOrdersResult)){
+				     
+					 	$json.= '"'.$row['scanId'].'":{"companyName":"'.$companyNameColl[$x].'",'.
 					 									 '"companyId":"'.$row['customerId'].'",'.
 					 									 '"barCode":"'.$row['barCode'].'",'.
 					 									 '"items":'.$row['items'] . ','.
@@ -67,7 +69,7 @@ require_once('connect.php');
 		 $json.="}";
 
 		echo $_GET['callback'] . '(' . $json . ')';  
-		//echo $_GET['callback'] . '(' . "{'foundMatch' : '".count($companyNameColl)."'}" . ')';
+		//echo $_GET['callback'] . '(' . "{'foundMatch' : '".$Counter."'}" . ')';
 
 	} else echo $_GET['callback'] . '(' . "{'foundRecord' : 'empty'}" . ')';  
 

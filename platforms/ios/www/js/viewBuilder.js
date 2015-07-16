@@ -16,7 +16,6 @@ ViewBuilder.prototype.init = function(){
 	this.addScanInInput();
 	this.addClientInput();
   this.addClientLookup();
-  //this.addLogView("#invDataCont");
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -32,11 +31,11 @@ ViewBuilder.prototype.addNav = function(){
                 "<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='navBtn'>Scan Item</span></button>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                  "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Customers</span></span></button>"+
-                  "<ul class='dropdown-menu'>"+
-                  "<li><a href='#' id='navCustomerAddBtn'>Add Customer</a></li>"+
-                  "<li><a href='#' id='navCustomerLookupBtn'>Lookup Customer</a></li>"+
-                  "</ul>"+
+                    "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Customers</span></span></button>"+
+                    "<ul class='dropdown-menu'>"+
+                    "<li><a href='#' id='navCustomerAddBtn'>Add Customer</a></li>"+
+                    "<li><a href='#' id='navCustomerLookupBtn'>Lookup Customer</a></li>"+
+                    "</ul>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
                 "<button type='button' class='btn btn-default' id='navCheckLogsBtn'><span class='glyphicon glyphicon-cloud-download'></span><span class='navBtn'>Check Logs</span></button>"+
@@ -49,11 +48,9 @@ ViewBuilder.prototype.addNav = function(){
     $("#navScanBtn, #navCustomerAddBtn, #navCustomerLookupBtn, #navCheckLogsBtn").click(function(){
         
         var btnPressed = $(this);
-        for (var i=0; i < mainContainersColl.length; i++){ 
+        for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
 
-           $(mainContainersColl[i]).hide();
-
-         };
+        //if ($("#logTableBodyCont").children()) $("#logTableBodyCont").children().remove();
 
         for (var b=0; b < navBtnColl.length; b++){ $(navBtnColl[b]).removeClass("active");}
 
@@ -94,10 +91,10 @@ ViewBuilder.prototype.addScanButtons = function(){
 	
   var html =  "<div class='row'>"+
                 "<div class='col-xs-12'>"+
-                    "<button type='button' id='scanInBtn' class='btn btn-primary centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan in</span></button>"+
+                    "<button type='button' id='scanInBtn' class='btn btn-success centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan in</span></button>"+
                 "</div>"+
                 "<div class='col-xs-12'>"+
-                     "<button type='button' id='scanOutBtn' class='btn btn-primary centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan out</span></button>"+
+                     "<button type='button' id='scanOutBtn' class='btn btn-primary centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan out</span></button>"+
                 "</div>"+
             "</div>";
 
@@ -222,7 +219,7 @@ ViewBuilder.prototype.scanInListeners = function(){
           _validate.test({collection:coll,
 
                 onPass:function(){ 
-
+                    
                     var itemVarColl = [];
                     $("#itemsGroup input[id^='inpItem']").each(function(i,item){
                       itemVarColl.push({inputCont:$(item), message:"Enter item ID", style:null,
@@ -230,7 +227,7 @@ ViewBuilder.prototype.scanInListeners = function(){
                     });
 
                        _validate.test({collection:itemVarColl, onPass:function(){ 
-                       
+                          
                           _scanner.scanIn();
 
                       }});
@@ -337,7 +334,7 @@ ViewBuilder.prototype.addClientInput = function(){
                "</div>"+
 
                "<p id='clientAddBtns'>"+
-                    "<button type='button' class='btn btn-success' id='addClientBtn'>Add client</button>"+
+                    "<button type='button' class='btn btn-success' id='addClientBtn'><span class='allBtn'>Add client</span></button>"+
      			          "<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'><span class='allBtn'>Clear</span></button>"+
                     "<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'><span class='allBtn'>Cancel</span></button>"+
 			         "</p>"+
@@ -434,7 +431,7 @@ ViewBuilder.prototype.clientAddListeners = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addClientLookup = function(){
   
-  if ($("#customerLookupFormCont").children()) $("#customerLookupFormCont").children().remove();
+  //if ($("#customerLookupFormCont").children()) $("#customerLookupFormCont").children().remove();
   var html = "<form id='clientLookupForm'>"+
           
            "<div class='col-xs-12'>"+
@@ -519,6 +516,17 @@ ViewBuilder.prototype.addClientLookup = function(){
   }
 
 //-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY CUSTOMER DATA
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayCustData = function(){
+
+  _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Found match."});
+  $("#customerLookupFormCont").hide();
+  this.addLogView("#custDataCont");
+  this.displayCustomerData(_companyJSON);
+}
+
+//-------------------------------------------------------------------------------------------------------------
 //                                                CLEAR FORM
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.clearForm = function(formId){
@@ -531,14 +539,16 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addLogView = function(contId){
 
+
+  if ($(contId).children()) $(contId).children().remove();
+  var tableBodyCont = (contId.indexOf("cust") == -1)? "bodyForInvData" : "bodyForCustData";
   html = "<div class='col-xs-12 no-padding'>"+
             "<div class='table-responsive' style='overflow:auto'>"+
               "<table class='table table-striped table-hover'>"+
                 "<thead>"+
                  "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business name</th><th style='width:20%'>Items list</th><th style='width:20%'>Scan in date</th><th style='width:10%'>Scan out</th><th style='width:20%'>Instructions</th></tr>"+
                 "</thead>"+
-                "<tbody id='logTableBodyCont'>"+
-                //"<tr><td>Progressive media inc.</td><td>23222334 43344322</td><td>item1: xxxxxxxccccccccvvvvvvvvzzzzzzzzzzzzzzzz</td><td>11/23/2022</td><td>33/33/3232</td></tr>"+
+                "<tbody id='" + tableBodyCont+ "'>"+
                 "</tbody>"+
               "</table>"+
             "</div>"+
@@ -577,20 +587,9 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
                   "</td></tr>";
      }
     
-  });  
-   //alert(tbodyHTML); 
-  $("#logTableBodyCont").html(tbodyHTML);
-}
+  }); 
 
-//-------------------------------------------------------------------------------------------------------------
-//                                                DISPLAY CUSTOMER DATA
-//-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.displayCustData = function(){
-
-  _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign green", message:"Found match."});
-  $("#customerLookupFormCont").hide();
-  this.addLogView("#custDataCont");
-  this.displayCustomerData(_companyJSON);
+  $("#bodyForInvData").html(tbodyHTML);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -619,11 +618,11 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
                   "</td></tr>";    
   });
 
-  $("#logTableBodyCont").html(tbodyHTML);
-  
-   //$("#tableLog").css("max-width:100%");
+
+  $("#bodyForCustData").html(tbodyHTML);
+  $("#custDataCont").slideDown(1000);
    if (jsonLength > 0) {
-    $("#scanInFormCont").fadeOut(300);
+    $("#customerLookupFormCont").fadeOut(300);
   }else{
       _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
   }

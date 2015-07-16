@@ -147,6 +147,16 @@ body {
    outline: none !important;
 }
 
+span.glyphicon-barcode, span.glyphicon-ok, 
+span.glyphicon-barcode, span.glyphicon-cloud-download, 
+span.glyphicon-user, 
+span.glyphicon-warning-sign,
+span.glyphicon-remove, span.glyphicon-plus{
+    font-size: 2.3vw;
+}
+
+span.largeBars {font-size:4vw; line-height:2}
+
 /*Main*/
 /*---------------------------------------------------------------*/
 .scanInContBlock, #addClientFormCont, #invDataCont, #customerLookupFormCont {
@@ -181,7 +191,7 @@ body {
 .alertText {
 	display: inline;
 	font-family:'love_of_thunder';
-	font-size: 1.7vw;
+	font-size: 2.4vw;
 }
 
 .green {
