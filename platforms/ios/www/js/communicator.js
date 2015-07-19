@@ -95,10 +95,10 @@ $.ajax({
 //                                     			ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.addInvData = function(dataObj,returnFunc,errorPrescan,errorFunction){
+Communicator.prototype.addInvData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorInvalidCustID,errorNoInScan){
 
 var data = dataObj;
-
+  //displayObject(data,"");
 	$.ajax({
       type: "GET",
       dataType: "jsonp",
@@ -107,9 +107,15 @@ var data = dataObj;
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
-        //alert("Saved data...");
          if (resultData["foundScan"]) {errorPrescan(); return false;}
-         else returnFunc();
+         else if (resultData["invalidCustId"]) {errorInvalidCustID(); return false;}
+         else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
+
+         else {
+          returnFunc();
+          if (resultData["orderId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - order #"+resultData.orderId+"."});
+          if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
+        }
       },
       error: function(jqXHR, textStatus, errorThrown){
         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);

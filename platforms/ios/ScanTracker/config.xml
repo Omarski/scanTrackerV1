@@ -58,6 +58,13 @@
     <feature name="Battery">
         <param name="ios-package" value="CDVBattery" />
     </feature>
+    <feature name="SplashScreen">
+        <param name="ios-package" value="CDVSplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
+    <preference name="SplashScreenBackgroundColor" value="white" />
+    <preference name="ShowSplashScreen" value="true" />
+    <preference name="FadeSplashScreen" value="false" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <name>ScanTracker</name>
@@ -69,16 +76,11 @@
     </author>
     <content src="index.html" />
     <icon height="200" src="www/img/logo.png" width="170" />
-    <gap:splash gap:platform="ios" height="480" src="www/img/splashPhone4.png" width="320" />
-    <gap:splash gap:platform="ios" height="960" src="www/img/splashPad4.png" width="640" />
-    <gap:splash gap:platform="ios" height="1136" src="Default-568h@2x.png" width="640" />
-    <gap:splash gap:platform="ios" height="1334" src="Default-667h@2x.png" width="750" />
-    <gap:splash gap:platform="ios" height="2208" src="Default-Portrait-736h@3x.png" width="1242" />
-    <gap:splash gap:platform="ios" height="1242" src="Default-Landscape-736h@3x.png" width="2208" />
-    <gap:splash gap:platform="ios" height="1024" src="Default-Portrait.png" width="768" />
-    <gap:splash gap:platform="ios" height="768" src="Default-Landscape.png" width="1024" />
-    <gap:splash gap:platform="ios" height="2048" src="Default-Portrait@2x.png" width="1536" />
-    <gap:splash gap:platform="ios" height="1536" src="Default-Landscape@2x.png" width="2048" />
+    <preference name="SplashScreen" value="www/img/splashPhone300x600.png" />
+    <preference name="SplashScreenDelay" value="5000" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="SplashScreenWidth" value="600" />
+    <preference name="SplashScreenHeight" value="300" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
