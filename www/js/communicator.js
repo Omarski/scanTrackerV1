@@ -124,3 +124,32 @@ var data = dataObj;
     });
     return false;
 }
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          GET ADDRESS
+//-------------------------------------------------------------------------------------------------------------
+
+Communicator.prototype.getAddress = function(customerId){
+
+//alert("check for: " + customerId);
+
+var data = {queryName:"getAddress",customerId:customerId};
+
+$.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/queries.php",
+      data: data,
+      crossDomain: true,
+      contentType: "application/json",
+      success: function(resultData){
+  
+        $("#labelAddress").html("Address:\n"+resultData.address);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
+      }
+    });
+    return false;
+
+}

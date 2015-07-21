@@ -148,14 +148,18 @@ body {
 }
 
 span.glyphicon-barcode, span.glyphicon-ok, 
-span.glyphicon-barcode, span.glyphicon-cloud-download, 
+span.glyphicon-barcode, span.glyphicon-cloud-download, span.glyphicon-shopping-cart, 
 span.glyphicon-user, 
 span.glyphicon-warning-sign,
 span.glyphicon-remove, span.glyphicon-plus{
-    font-size: 2.3vw;
+    font-size: 2.5vw;
 }
 
 span.largeBars {font-size:4vw; line-height:2}
+
+.submenu {
+	font-weight: 800;
+}
 
 /*Main*/
 /*---------------------------------------------------------------*/
@@ -169,6 +173,31 @@ span.largeBars {font-size:4vw; line-height:2}
  #invDataCont {
  	background: #fff;
  }
+
+ #barcodeGenCont{
+ 	padding: 5% 0 5% 5%;
+ }
+
+ .barCodeImage{
+ 	display: block;
+ 	min-width:400px;
+ 	padding-left: 0;
+ 	padding-bottom: 20px;
+ }
+
+ #labelAddress{
+ 	font-size: 20px;
+ 	font-weight: 800;
+ 	margin-left: 20px;
+ }
+
+ .inputCustomerId{
+ 	width:50%; margin-bottom:20px; font-size:3vw; padding-left:5%
+ }
+
+.labelAddress{
+	width:90%; margin-bottom:20px; padding:5px; border:none
+}
 
 /*forms*/
 /*---------------------------------------------------------------*/

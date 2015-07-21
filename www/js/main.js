@@ -6,6 +6,7 @@ var _idNamePairs;
 var _companyJSON;
 var _validate;
 var _platform="desktop";
+var _barCodeGenerator;
 
 var PATH="";
 
@@ -38,9 +39,9 @@ var app = {
     }
 };
 
-app.initialize();
+//app.initialize();
 
- //$(document).ready(function(){init();})
+ $(document).ready(function(){init();})
  //remove
 //-------------------------------------------------------------------------------------------------------------
 //                                     			INIT
@@ -48,10 +49,11 @@ app.initialize();
 function init(){
 
     detectMobile();
+    _barCodeGenerator = new BarCodeGenerator();
 	_viewBuilder = new ViewBuilder();
     _communicator = new Communicator();
     _validate = new Validate();
-    //$(".loaderBlock").remove(); $(".wrapper").fadeIn(1000);
+    $(".loaderBlock").remove(); $(".wrapper").fadeIn(1000);
     databaseConnect();
 	_scanner = new Scanner();
 }

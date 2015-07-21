@@ -23,8 +23,8 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = [".scanBtns","#scanInFormCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#alertsCont"];
-  var navBtnColl = ["#navScanBtn","#navCustomersBtn","#navCheckLogsBtn"];
+  var mainContainersColl = [".scanBtns","#scanInFormCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#barcodeGenCont","#alertsCont"];
+  var navBtnColl = ["#navScanBtn","#navCustomersBtn","#ordersBtn"];
 
   var html = "<div class='btn-group btn-group-justified btn-group-lg' role='group' aria-label=''>"+
                 "<div class='btn-group' role='group'>"+
@@ -33,19 +33,23 @@ ViewBuilder.prototype.addNav = function(){
                 "<div class='btn-group' role='group'>"+
                     "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Customers</span></span></button>"+
                     "<ul class='dropdown-menu'>"+
-                    "<li><a href='#' id='navCustomerAddBtn'>Add Customer</a></li>"+
-                    "<li><a href='#' id='navCustomerLookupBtn'>Lookup Customer</a></li>"+
+                      "<li><a href='#' id='navCustomerAddBtn'>Add Customer</a></li>"+
+                      "<li><a href='#' id='navCustomerLookupBtn'>Lookup Customer</a></li>"+
+                      "<li><a href='#' id='navCheckLogsBtn'>All customer orders</a></li>"+
                     "</ul>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                "<button type='button' class='btn btn-default' id='navCheckLogsBtn'><span class='glyphicon glyphicon-cloud-download'></span><span class='navBtn'>Check Logs</span></button>"+
+                "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='ordersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
+                 "<ul class='dropdown-menu'>"+
+                    "<li><a href='#' id='navPrintBarcodeBtn'>Print barcode</a></li>"+
+                    "</ul>"+
                 "</div>"+
               "</div>";
 
     $("#navBtnsCont").html(html);
 
     // listeners
-    $("#navScanBtn, #navCustomerAddBtn, #navCustomerLookupBtn, #navCheckLogsBtn").click(function(){
+    $("#navScanBtn, #navCustomerAddBtn, #navCustomerLookupBtn, #navCheckLogsBtn, #navPrintBarcodeBtn").click(function(){
         
         var btnPressed = $(this);
         for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
@@ -75,7 +79,14 @@ ViewBuilder.prototype.addNav = function(){
           case "navCheckLogsBtn" :
              _viewBuilder.addLogView("#invDataCont");
              _viewBuilder.displayInvData(_dbJSON);
+             $("#navCustomersBtn").addClass("active");
             $("#invDataCont").slideDown(1000);
+          break;
+
+           case "navPrintBarcodeBtn" :
+             _barCodeGenerator.generate();
+             $("#ordersBtn").addClass("active");
+             $("#barcodeGenCont").slideDown(1000);
           break;
 
         }

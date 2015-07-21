@@ -62,9 +62,20 @@
         <param name="ios-package" value="CDVSplashScreen" />
         <param name="onload" value="true" />
     </feature>
-    <preference name="SplashScreenBackgroundColor" value="white" />
-    <preference name="ShowSplashScreen" value="true" />
-    <preference name="FadeSplashScreen" value="false" />
+    <icon height="60" src="platforms/ios/ScanTracker/Resources/icons/icon-60.png" width="60" />
+    <icon height="120" src="platforms/ios/ScanTracker/Resources/icons/icon-60@2x.png" width="120" />
+    <icon height="76" src="platforms/ios/ScanTracker/Resources/icons/icon-76.png" width="76" />
+    <icon height="152" src="platforms/ios/ScanTracker/Resources/icons/icon-76@2x.png" width="152" />
+    <icon height="40" src="platforms/ios/ScanTracker/Resources/icons/icon-40.png" width="40" />
+    <icon height="80" src="platforms/ios/ScanTracker/Resources/icons/icon-40@2x.png" width="80" />
+    <icon height="57" src="platforms/ios/ScanTracker/Resources/icons/icon.png" width="57" />
+    <icon height="114" src="platforms/ios/ScanTracker/Resources/icons/icon@2x.png" width="114" />
+    <icon height="72" src="platforms/ios/ScanTracker/Resources/icons/icon-72.png" width="72" />
+    <icon height="144" src="platforms/ios/ScanTracker/Resources/icons/icon-72@2x.png" width="144" />
+    <icon height="29" src="platforms/ios/ScanTracker/Resources/icons/icon-small.png" width="29" />
+    <icon height="58" src="platforms/ios/ScanTracker/Resources/icons/icon-small@2x.png" width="58" />
+    <icon height="50" src="platforms/ios/ScanTracker/Resources/icons/icon-50.png" width="50" />
+    <icon height="100" src="platforms/ios/ScanTracker/Resources/icons/icon-50@2x.png" width="100" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <name>ScanTracker</name>
@@ -75,12 +86,10 @@
         Apache Cordova Team
     </author>
     <content src="index.html" />
-    <icon height="200" src="www/img/logo.png" width="170" />
-    <preference name="SplashScreen" value="www/img/splashPhone300x600.png" />
-    <preference name="SplashScreenDelay" value="5000" />
+    <icon height="200" src="res/icon.png" width="170" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="10000" />
     <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="SplashScreenWidth" value="600" />
-    <preference name="SplashScreenHeight" value="300" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

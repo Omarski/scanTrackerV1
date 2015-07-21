@@ -148,11 +148,11 @@ body {
 }
 
 span.glyphicon-barcode, span.glyphicon-ok, 
-span.glyphicon-barcode, span.glyphicon-cloud-download, 
+span.glyphicon-barcode, span.glyphicon-cloud-download, span.glyphicon-shopping-cart, 
 span.glyphicon-user, 
 span.glyphicon-warning-sign,
 span.glyphicon-remove, span.glyphicon-plus{
-    font-size: 2.3vw;
+    font-size: 2.5vw;
 }
 
 span.largeBars {font-size:4vw; line-height:2}
@@ -168,6 +168,16 @@ span.largeBars {font-size:4vw; line-height:2}
 
  #invDataCont {
  	background: #fff;
+ }
+
+ #barcodeGenCont{
+ 	padding: 5% 0 5% 2%
+ }
+
+ .barCodeImage{
+ 	display: block;
+ 	min-width:300px;
+ 	padding-bottom: 20px
  }
 
 /*forms*/

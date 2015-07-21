@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>B280629C-B539-45A1-8A14-E4599353E5E4</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>ScanTracker</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>369B1B379A41481DDA8E82E7795C9137EFCD3876</key>
 		<string>https://github.com/Omarski/scanTrackerV1.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>platforms/ios/ScanTracker.xcodeproj/project.xcworkspace</string>
+	<string>platforms/ios/ScanTracker.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>369B1B379A41481DDA8E82E7795C9137EFCD3876</key>
