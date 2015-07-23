@@ -163,7 +163,7 @@ span.largeBars {font-size:4vw; line-height:2}
 
 /*Main*/
 /*---------------------------------------------------------------*/
-.scanInContBlock, #addClientFormCont, #invDataCont, #customerLookupFormCont {
+.formsContBlock, #addClientFormCont, #invDataCont, #customerLookupFormCont {
 	display: none;
 	background: #dedede;
 	padding: 5% 0 5% 0;

@@ -77,7 +77,7 @@ $.ajax({
         if (resultData['noRecords']) _dbJSON = null;
         else {
                 //displayObject(resultData.scanId44,""); 
-                //displayObject(resultData.idNamePairs,"");
+                //displayObject(resultData.orderId45,"");
                 _dbJSON=resultData;
                 _idNamePairs = resultData.idNamePairs;                
                 _viewBuilder.displayInvData(_dbJSON);

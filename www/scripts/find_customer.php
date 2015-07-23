@@ -42,9 +42,9 @@ require_once('connect.php');
 
 				     while($row = mysql_fetch_assoc($getOrdersResult)){
 				     
-					 	$json.= '"'.$row['scanId'].'":{"companyName":"'.$companyNameColl[$x].'",'.
+					 	$json.= '"'.$row['orderId'].'":{"companyName":"'.$companyNameColl[$x].'",'.
 					 									 '"orderId":"'.$row['orderId'].'",'.
-					 									 '"companyId":"'.$row['customerId'].'",'.
+					 									 '"customerId":"'.$row['customerId'].'",'.
 					 									 '"items":'.$row['items'] . ','.
 					 									 '"instructions":"'.$row['instructions'].'",'.
 					 									 '"status":"'.$row['status'].'"},';
@@ -54,7 +54,7 @@ require_once('connect.php');
 
 						$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
 						 									 '"orderId":"",'.
-						 									 '"companyId":"'. $companyIdColl[$x] .'",'.
+						 									 '"customerId":"'. $companyIdColl[$x] .'",'.
 						 									 '"items":"'.null.'",'.
 						 									 '"instructions":"'.null.'",'.
 						 									 '"status":""},';

@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 require_once('connect.php');
 	
 	//get record count
-	$totalRecords = mysql_query( "select count(scanId) as num_rows from orders;" );
+	$totalRecords = mysql_query( "select count(orderId) as num_rows from orders;" );
 	$rows = mysql_fetch_object( $totalRecords );
 	$total = $rows->num_rows;
 	
@@ -21,7 +21,7 @@ require_once('connect.php');
 	$pairs = substr_replace($pairs, '', -1);
 	$pairs.='}';
 
-	$get_data_sql = "SELECT * FROM orders ORDER BY scanId ASC;";
+	$get_data_sql = "SELECT * FROM orders ORDER BY orderId ASC;";
 	$result = mysql_query($get_data_sql);
 	
 	 if ($result){
@@ -33,6 +33,7 @@ require_once('connect.php');
 	 	while($row = mysql_fetch_assoc($result)){
 	 		$rowCounter++;
 	 		$json.= '"orderId'.$row['orderId'].'":{';
+	 		$json.= '"orderId":' . '"' . $row['orderId'] . '",';
 	 		$json.= '"customerId":' . '"' . $row['customerId'] . '",';
 	 		$json.= '"items":' . $row['items'] . ',';
 	 		$json.= '"instructions":' . '"' . $row['instructions'] . '",';

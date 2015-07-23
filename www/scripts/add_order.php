@@ -7,7 +7,7 @@ require_once('connect.php');
 				 
 			 if (mysql_num_rows($validId_result) > 0){
 
-				$insert_sql = "INSERT INTO orders (customerId,items,instructions,scanInDate)" .
+				$insert_sql = "INSERT INTO orders (customerId,items,instructions,orderDate)" .
 											
 				                   "VALUES ('{$_GET['customerId']}','{$_GET['items']}',".
 				                   "'{$_GET['instructions']}','{$_GET['orderDate']}');";
