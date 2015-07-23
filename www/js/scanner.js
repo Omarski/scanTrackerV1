@@ -63,7 +63,7 @@ Scanner.prototype.scan = function(mode){
       }
    );
   }else{ //not mobile
-      _scanner.sendScanData(mode,$("#barcodeInput").val());
+      _scanner.sendScanData(mode,$("#inputShipBarcode").val());
   }
 }
 

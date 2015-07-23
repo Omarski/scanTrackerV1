@@ -82,11 +82,11 @@ ViewBuilder.prototype.addNav = function(){
              $("#invDataCont").slideDown(1000);
           break;
 
-           case "navPrintBarcodeBtn" :
-             _barCodeGenerator.generate();
-             $("#navOrdersBtn").addClass("active");
-             $("#barcodeGenCont").slideDown(1000);
-          break;
+          //  case "navPrintBarcodeBtn" :
+          //    _barCodeGenerator.generate();
+          //    $("#navOrdersBtn").addClass("active");
+          //    $("#barcodeGenCont").slideDown(1000);
+          // break;
 
            case "navTakeOrderBtn" :
              _viewBuilder.addNewOrder();
@@ -278,7 +278,8 @@ ViewBuilder.prototype.formatItems = function(){
 
   var itemsColl = {};
   $("#orderItemsGroup div[id^='orderItem']").each(function(i,item){
-    itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),units:$(item).find("[id^='orderItemQuan']").val()};
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),totalUnits:$(item).find("[id^='orderItemQuan']").val(),
+                          shippedUnits:"",deliveredUnits:""};
   });
 
   return JSON.stringify(itemsColl);
@@ -308,7 +309,6 @@ ViewBuilder.prototype.addShipmentInput = function(orderId){
                               "<button type='button' class='btn btn-primary' id='shipPrintLabelBtn'><span class='glyphicon glyphicon-plus'></span><span class='allBtn'>Print label</span></button>"+
                          "</p>"+
                          "<p>"+
-                              "<button type='button' class='btn btn-success' id='executeScanInBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan Container</span></button>"+
                               "<button type='button' class='btn btn-warning' style='margin-left:6%' id='shipCancelBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel</span></button>"+
                         "</p>"+
                     "</form>"+
@@ -316,6 +316,7 @@ ViewBuilder.prototype.addShipmentInput = function(orderId){
 
     $("#shipFormCont").html(html);
     this.generateShipItemList(orderId);
+    this.shipmentViewListeners();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -323,13 +324,13 @@ ViewBuilder.prototype.addShipmentInput = function(orderId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.generateShipItemList = function(orderId){
 
-   var itemsObj = _dbJSON[orderId];
+   var itemsObj = _dbJSON[orderId]["items"];
    var counter = 0;
 
    $.each(itemsObj,function(key,itemObj){
 
      counter++;
-     var itemHTML = "<div id='item"+_viewBuilder.itemCount+"'>"+
+     var itemHTML = "<div id='item"+_viewBuilder.counter+"'>"+
                       "<div class='col-xs-3'>"+
                         "<div class=''>Item id: "+ itemObj.itemId + "</div>"+  
                       "</div>"+
@@ -341,6 +342,22 @@ ViewBuilder.prototype.generateShipItemList = function(orderId){
 
    $("#shipItemsGroup").html(itemHTML);
   
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          SHIPMENT LISTENERS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.shipmentViewListeners = function(){
+
+  $("#shipCancelBtn").click(function(){
+      $("#shipFormCont").fadeOut(300,function(){_viewBuilder.addShipmentInput()});
+      $("#navOrdersBtn").removeClass("active");
+  });
+
+  $("#shipPrintLabelBtn").click(function(){
+       $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(); $("#barcodeGenCont").slideDown(700);});   
+  });
+
 }
 
 //-------------------------------------------------------------------------------------------------------------
