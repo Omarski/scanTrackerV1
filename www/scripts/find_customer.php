@@ -36,32 +36,28 @@ require_once('connect.php');
 	 
 		 for ($x = 0; $x < $arrlength; $x++) {
 	     
-		     //$getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '".$companyIdColl[$x]."';");
 		     $getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '".$companyIdColl[$x]."';");
-		 	 //$getOrdersResult = mysql_query("SELECT * FROM orders WHERE customerId = '212286';");
 
 			     if (mysql_num_rows($getOrdersResult)>0){
 
 				     while($row = mysql_fetch_assoc($getOrdersResult)){
 				     
 					 	$json.= '"'.$row['scanId'].'":{"companyName":"'.$companyNameColl[$x].'",'.
+					 									 '"orderId":"'.$row['orderId'].'",'.
 					 									 '"companyId":"'.$row['customerId'].'",'.
-					 									 '"barCode":"'.$row['barCode'].'",'.
 					 									 '"items":'.$row['items'] . ','.
 					 									 '"instructions":"'.$row['instructions'].'",'.
-					 									 '"scanInDate":"'.$row['scanInDate'].'",'.
-					 									 '"scanOutDate":"'.$row['scanOutDate'].'"},';
+					 									 '"status":"'.$row['status'].'"},';
 
 					 }
 				}else { //no results
 
 						$json.= '"'.$companyNameColl[$x].'":{"companyName":"'.$companyNameColl[$x].'",'.
+						 									 '"orderId":"",'.
 						 									 '"companyId":"'. $companyIdColl[$x] .'",'.
-						 									 '"barCode":"",'.
 						 									 '"items":"'.null.'",'.
-						 									 '"instructions":"",'.
-						 									 '"scanInDate":"",'.
-						 									 '"scanOutDate":""},';
+						 									 '"instructions":"'.null.'",'.
+						 									 '"status":""},';
 				}
 		}
 

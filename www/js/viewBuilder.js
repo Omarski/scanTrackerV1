@@ -2,7 +2,7 @@
 function ViewBuilder(){
 	
 	this.itemCount = 1;
-
+  this.orderItemCount = 1;
 	this.init();
 }
 
@@ -23,8 +23,8 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = [".scanBtns","#scanInFormCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#barcodeGenCont","#alertsCont"];
-  var navBtnColl = ["#navScanBtn","#navCustomersBtn","#ordersBtn"];
+  var mainContainersColl = [".scanBtns","#scanInFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#barcodeGenCont","#alertsCont"];
+  var navBtnColl = ["#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
 
   var html = "<div class='btn-group btn-group-justified btn-group-lg' role='group' aria-label=''>"+
                 "<div class='btn-group' role='group'>"+
@@ -39,10 +39,10 @@ ViewBuilder.prototype.addNav = function(){
                     "</ul>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='ordersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
+                "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
                  "<ul class='dropdown-menu'>"+
-                    "<li><a href='#' id='navPrintBarcodeBtn'>Print barcode</a></li>"+
-                    // "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
+                    "<li><a href='#' id='navPrintBarcodeBtn'>Process order</a></li>"+
+                    "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
                     "</ul>"+
                 "</div>"+
               "</div>";
@@ -50,12 +50,10 @@ ViewBuilder.prototype.addNav = function(){
     $("#navBtnsCont").html(html);
 
     // listeners
-    $("#navScanBtn, #navCustomerAddBtn, #navCustomerLookupBtn, #navCheckLogsBtn, #navPrintBarcodeBtn").click(function(){ //, #navTakeOrderBtn
+    $("#navScanBtn, #navCustomerAddBtn, #navCustomerLookupBtn, #navCheckLogsBtn, #navTakeOrderBtn, #navPrintBarcodeBtn").click(function(){ //, #navTakeOrderBtn
         
         var btnPressed = $(this);
         for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
-
-        //if ($("#logTableBodyCont").children()) $("#logTableBodyCont").children().remove();
 
         for (var b=0; b < navBtnColl.length; b++){ $(navBtnColl[b]).removeClass("active");}
 
@@ -86,8 +84,14 @@ ViewBuilder.prototype.addNav = function(){
 
            case "navPrintBarcodeBtn" :
              _barCodeGenerator.generate();
-             $("#ordersBtn").addClass("active");
+             $("#navOrdersBtn").addClass("active");
              $("#barcodeGenCont").slideDown(1000);
+          break;
+
+           case "navTakeOrderBtn" :
+            _viewBuilder.addNewOrder();
+             $("#navOrdersBtn").addClass("active");
+             $("#newOrderCont").slideDown(1000);
           break;
 
         }
@@ -112,6 +116,172 @@ ViewBuilder.prototype.addScanButtons = function(){
 
     $(".scanBtns").html(html);
 
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          ADD NEW ORDER
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.addNewOrder = function(){
+  
+  if ($("#newOrderCont").children()) $("#newOrderCont").children().remove();
+  
+  var html = "<div class='col-xs-12'>"+
+                     "<form id='newOrderForm'>"+
+                         "<div class='row'>"+
+                              "<div class='col-xs-12'>"+
+                                   "<div class='form-group'>"+
+                                        "<input type='text' class='form-control' placeholder='Customer ID' id='newOrderClientId'>"+
+                                   "</div>"+
+                              "</div>"+
+                         "</div>"+
+
+                         "<div class='row' id='orderItemsGroup'>"+
+                            "<div id='orderItem1'>"+
+                              "<div class='col-xs-7'>"+
+                                    "<div class='form-group'>"+
+                                         "<input type='text' class='form-control' placeholder='Item ID/description' name='boxItem' id='orderInpItem1'>"+
+                                    "</div>"+  
+                              "</div>"+   
+                               "<div class='col-xs-3'>"+
+                                 "<div class='form-group'>"+
+                                      "<input type='number' class='form-control' placeholder='Units' value=1 name='boxItemQuantity' id='orderItemQuan1'>"+
+                                  "</div>"+
+                              "</div>"+
+                              "<div class='col-xs-2'>"+
+                                 "<button type='button' class='btn btn-warning' style='float:right' name='deleteItemBtn' id='orderInpItemDel1'><span class='glyphicon glyphicon-remove'></span></button>"+
+                              "</div>"+
+                            "</div>"+ //item1
+
+                          "</div>"+ //row-itemsGroup   
+                          
+                          "<div class='row'>"+//instructions
+                              "<div class='col-xs-12 form-group'>"+
+                                   "<textarea class='form-control' rows='2' id='orderInputInstructions' placeholder='Special instructions'></textarea>"+
+                              "</div>"+
+                         "</div>"+
+
+                         "<p>"+
+                              "<button type='button' class='btn btn-primary' id='orderAddItemBtn'><span class='glyphicon glyphicon-plus'></span><span class='allBtn'>Add Item</span></button>"+
+                         "</p>"+
+                         "<p>"+
+                              "<button type='button' class='btn btn-success' id='executeNewOrderBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Enter order</span></button>"+
+                              "<button type='button' class='btn btn-warning' style='margin-left:6%' id='cancelOrderBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel Scan</span></button>"+
+                        "</p>"+
+                    "</form>"+
+               "</div>";
+
+    $("#newOrderCont").html(html);
+
+    this.newOrderListeners();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          NEW ORDER LISTENERS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.newOrderListeners = function(){
+
+  // add item               
+  $("#orderAddItemBtn").click(function(){
+
+    _viewBuilder.orderItemCount++;
+    
+    var itemHTML = "<div id='orderItem"+_viewBuilder.orderItemCount+"'>"+
+                      "<div class='col-xs-7'>"+
+                        "<div class='form-group'>"+
+                             "<input type='text' class='form-control' placeholder='Item ID/description' name='boxItem' id='orderInpItem"+_viewBuilder.orderItemCount+"'>"+
+                        "</div>"+  
+                      "</div>"+   
+                      "<div class='col-xs-3'>"+
+                         "<div class='form-group'>"+
+                              "<input type='number' class='form-control' placeholder='Units' value=1 name='boxItemQuantity' id='orderItemQuan"+_viewBuilder.orderItemCount+"'>"+
+                          "</div>"+
+                      "</div>"+
+                      "<div class='col-xs-2'>"+
+                         "<button type='button' class='btn btn-warning' style='float:right' name='deleteItemBtn' id='orderInpItemDel"+_viewBuilder.orderItemCount+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                      "</div>"+
+                  "</div>";
+
+    $("#orderItemsGroup").append(itemHTML);
+
+    _viewBuilder.itemDeleteListener("#orderInpItemDel"+_viewBuilder.orderItemCount);
+
+  });
+
+  this.itemDeleteListener("#orderInpItemDel1");
+
+  //sumbit scan info
+   $("#executeNewOrderBtn").click(function(){
+         
+         var coll;
+
+            coll =[{inputCont:$("#newOrderClientId"), message:"Enter customer ID", style:null,
+                  check:{valid:["Customer ID","", null], inputType:"text", checkType:null, range:null}}];
+                  
+          _validate.test({collection:coll,
+
+                onPass:function(){ 
+                    
+                    var itemVarColl = [];
+                    $("#orderItemsGroup input[id^='orderInpItem']").each(function(i,item){
+                      itemVarColl.push({inputCont:$(item), message:"Enter item ID", style:null,
+                      check:{valid:["Item ID","", null], inputType:"text", checkType:null, range:null}});
+                    });
+
+                       _validate.test({collection:itemVarColl, onPass:function(){ 
+                          
+                          data = {
+                                    customerId:$("#newOrderClientId").val(),  
+                                    items:_viewBuilder.formatItems(),
+                                    instructions:$("#orderInputInstructions").val(), 
+                                    orderDate:todayFormatted()
+                                    }
+
+                                     _communicator.addOrder(
+
+                                      data,
+                                      
+                                      function(){
+
+                                          $("#newOrderCont").fadeOut(300);
+                                         _viewBuilder.addNewOrder();//reset
+                                          $(".scanBtns").slideDown(700);//default screen
+                                          databaseConnect();
+                                      },
+
+                                      function(){
+                                         _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't save to Database."});
+                                      },
+                                      
+                                      function(){
+                                         _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Invalid customer ID."});
+                                      }
+
+                                 );   //add order data
+
+                      }});
+                }
+      
+                }); //validate steps
+          });
+
+  // delete order
+  $("#cancelOrderBtn").click(function(){
+      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder()});
+      $("#navOrdersBtn").removeClass("active");
+  });
+}  
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          FORMAT ITEMS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.formatItems = function(){
+
+  var itemsColl = {};
+  $("#orderItemsGroup div[id^='orderItem']").each(function(i,item){
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),units:$(item).find("[id^='orderItemQuan']").val()};
+  });
+
+  return JSON.stringify(itemsColl);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -264,22 +434,9 @@ ViewBuilder.prototype.itemDeleteListener = function(deleteBtnId){
   // remove item
   $(deleteBtnId).click(function(){
     var itemNumber = deleteBtnId.substring(deleteBtnId.length -1);
-    $("#item"+itemNumber).fadeOut(200,function(){$("#item"+itemNumber).remove();});
+    $("#orderItem"+itemNumber).fadeOut(200,function(){$("#item"+itemNumber).remove();});
     _viewBuilder.itemCount--;
   });
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//                                          FORMAT ITEMS
-//-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.formatItems = function(){
-
-  var itemsColl = {};
-  $("#itemsGroup div[id^='item']").each(function(i,item){
-    itemsColl["item"+i] = {itemId:$(item).find("[id^='inpItem']").val(),units:$(item).find("[id^='itemQuan']").val()};
-  });
-
-  return JSON.stringify(itemsColl);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -558,7 +715,8 @@ ViewBuilder.prototype.addLogView = function(contId){
             "<div class='table-responsive' style='overflow:auto'>"+
               "<table class='table table-striped table-hover'>"+
                 "<thead>"+
-                 "<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business name</th><th style='width:20%'>Items list</th><th style='width:20%'>Scan in date</th><th style='width:10%'>Scan out</th><th style='width:20%'>Instructions</th></tr>"+
+                 //"<tr><th style='width:10%'>Customer ID</th><th style='width:20%'>Business name</th><th style='width:20%'>Items list</th><th style='width:20%'>Scan in date</th><th style='width:10%'>Scan out</th><th style='width:20%'>Instructions</th></tr>"+
+                "<tr><th style='width:10%'>Delete</th><th style='width:10%'>Order #</th><th style='width:10%'>Customer ID</th><th style='width:20%'>Business name</th><th style='width:20%'>Items list</th><th style='width:20%'>Instructions</th><th style='width:10%'>Status</th></tr>"+
                 "</thead>"+
                 "<tbody id='" + tableBodyCont+ "'>"+
                 "</tbody>"+
@@ -590,13 +748,14 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
         itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
       });
 
-      tbodyHTML+= "<tr><td>"+orderObj.customerId+
+       tbodyHTML+= "<tr><td><button type='button' class='btn btn-warning' id='delOrder"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                  "</td><td>"+orderObj.orderId+
+                  "</td><td>"+orderObj.customerId+
                   "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
                   "</td><td>"+itemsToText+ 
-                  "</td><td>"+orderObj.scanInDate+
-                  "</td><td>"+orderObj.scanOutDate+
                   "</td><td>"+orderObj.instructions+
-                  "</td></tr>";
+                  "</td><td>"+orderObj.status+
+                  "</td></tr>";    
      }
     
   }); 
@@ -621,12 +780,13 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
         itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
       });
 
-      tbodyHTML+= "<tr><td>"+orderObj.companyId+
-                  "</td><td>"+orderObj.companyName+ 
+      tbodyHTML+= "<tr><td><button type='button' class='btn btn-warning' id='delOrder"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                  "</td><td>"+orderObj.orderId+
+                  "</td><td>"+orderObj.customerId+
+                  "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
                   "</td><td>"+itemsToText+ 
-                  "</td><td>"+orderObj.scanInDate+
-                  "</td><td>"+orderObj.scanOutDate+
                   "</td><td>"+orderObj.instructions+
+                  "</td><td>"+orderObj.status+
                   "</td></tr>";    
   });
 

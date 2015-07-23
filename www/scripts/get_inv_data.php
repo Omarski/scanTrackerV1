@@ -32,13 +32,11 @@ require_once('connect.php');
 	 	
 	 	while($row = mysql_fetch_assoc($result)){
 	 		$rowCounter++;
-	 		$json.= '"scanId'.$row['scanId'].'":{';
+	 		$json.= '"orderId'.$row['orderId'].'":{';
 	 		$json.= '"customerId":' . '"' . $row['customerId'] . '",';
-	 		$json.= '"barCode":' . '"' . $row['barCode'] . '",';
 	 		$json.= '"items":' . $row['items'] . ',';
 	 		$json.= '"instructions":' . '"' . $row['instructions'] . '",';
-			$json.= '"scanInDate":' . '"' . $row['scanInDate'] . '",';
-	 		$json.= '"scanOutDate":' . '"' . $row['scanOutDate'] . '",';	 		
+			$json.= '"status":' . '"' . $row['status'] . '",';
 	 		$json.= ($rowCounter < $total) ? '},' : '}';
 		}
      		$json.= ',"idNamePairs":' . $pairs;

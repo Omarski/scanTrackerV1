@@ -92,6 +92,38 @@ $.ajax({
 }
 
 //-------------------------------------------------------------------------------------------------------------
+//                                          ADD ORDER
+//-------------------------------------------------------------------------------------------------------------
+
+Communicator.prototype.addOrder = function(dataObj,returnFunc,errorFunction,errorInvalidCustID){
+
+var data = dataObj;
+  //displayObject(data,"");
+  $.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/add_order.php",
+      data: data,
+      crossDomain: true,
+      contentType: "application/json",
+      success: function(resultData) {
+
+         if (resultData["invalidCustId"]) {errorInvalidCustID(); return false;}
+
+         else {
+          returnFunc();
+          if (resultData["orderId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Order placed - order #"+resultData.orderId+"."});
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
+        errorFunction();
+      }
+    });
+    return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
 //                                     			ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
