@@ -6,7 +6,7 @@ function BarCodeGenerator(){
 //-------------------------------------------------------------------------------------------------------------
 //                                     			GENERATE
 //-------------------------------------------------------------------------------------------------------------
-BarCodeGenerator.prototype.generate = function(){
+BarCodeGenerator.prototype.generate = function(orderData){
 
 	if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
 	
@@ -36,12 +36,6 @@ BarCodeGenerator.prototype.generate = function(){
 	
 	var date = new Date();
 	$("#barcodeImgCont").JsBarcode(date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
-	
-	// $("#inputCustomerId4address").keyup(function(){
-	// 	if ($(this).val().length == 6){
-	// 		_communicator.getAddress($(this).val().replace(/\s+/g, ''));
-	// 	}
-	// });
 
 	$('#labelPrintBtn').click(function(){
 		$('#labelCont').printElement();
@@ -50,7 +44,7 @@ BarCodeGenerator.prototype.generate = function(){
 
 	$('#labelScanBtn').click(function(){
 		
-		  var coll;
+		 var coll;
 
          if (_platform == "desktop"){
              
@@ -60,12 +54,12 @@ BarCodeGenerator.prototype.generate = function(){
                   
           _validate.test({collection:coll,
 
-                onPass:function(){_scanner.scanIn();}
+                onPass:function(){_scanner.scanIn(orderData);}
       
                 }); //validate steps
 
            }else{
-           		_scanner.scanIn();
+           		_scanner.scanIn(orderData);
            }
 	});
 

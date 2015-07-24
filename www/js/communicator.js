@@ -124,6 +124,39 @@ var data = dataObj;
 }
 
 //-------------------------------------------------------------------------------------------------------------
+//                                          ADD USER DATA
+//-------------------------------------------------------------------------------------------------------------
+
+Communicator.prototype.addShipmentData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorNoInScan){
+
+var data = dataObj;
+  //displayObject(data,"");
+  $.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/add_shipment_data.php",
+      data: data,
+      crossDomain: true,
+      contentType: "application/json",
+      success: function(resultData) {
+         if (resultData["foundScan"]) {errorPrescan(); return false;}
+         else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
+
+         else {
+          returnFunc();
+          if (resultData["shipmentId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - shipment #"+resultData.shipmentId+"."});
+          if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
+        errorFunction();
+      }
+    });
+    return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
 //                                     			ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 

@@ -79,9 +79,11 @@ body {
 	letter-spacing:.1em; 
 }
 
-/*.navBtn {
-	font-size: 90%;
-}*/
+.fieldText {
+	font-family:'helveticaNeue';
+	font-size: 12px;
+	font-weight: bold;
+}
 
 .allBtn {
 	font-size: 3vw;

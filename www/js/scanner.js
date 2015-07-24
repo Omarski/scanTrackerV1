@@ -20,9 +20,9 @@ Scanner.prototype.scanListener = function(){
 //-------------------------------------------------------------------------------------------------------------
 //                                     			SCAN IN
 //-------------------------------------------------------------------------------------------------------------
-Scanner.prototype.scanIn = function(){
+Scanner.prototype.scanIn = function(orderData){
 	
-	this.scan("in");
+	this.scan("in",orderData);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ Scanner.prototype.scanOut = function(){
 //-------------------------------------------------------------------------------------------------------------
 //                                          SCAN
 //-------------------------------------------------------------------------------------------------------------
-Scanner.prototype.scan = function(mode){
+Scanner.prototype.scan = function(mode,orderData){
 
 	
   if (_platform == "mobile") {
@@ -51,7 +51,7 @@ Scanner.prototype.scan = function(mode){
 
           if (result.text.length > 1){//good read
 
-              _scanner.sendScanData(mode,result.text);
+              _scanner.sendScanData(mode,result.text,orderData);
 
           } else {  //if bad read
                _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't read barcode - please try again."});
@@ -63,39 +63,41 @@ Scanner.prototype.scan = function(mode){
       }
    );
   }else{ //not mobile
-      _scanner.sendScanData(mode,$("#inputShipBarcode").val());
+      _scanner.sendScanData(mode,$("#inputShipBarcode").val(),orderData);
   }
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                          SCAN OUT
 //-------------------------------------------------------------------------------------------------------------
-Scanner.prototype.sendScanData = function(mode,barcode){
+Scanner.prototype.sendScanData = function(mode,barcode,orderData){
   
    var data;
                
    if (mode == "in") data = {
-          customerId:$("#scanInClientId").val(), 
+          customerId:orderData.customerId, 
+          orderId:orderData.orderId,
           barCode: barcode, 
-          items:_viewBuilder.formatItems(),
-          instructions:$("#inputInstructions").val(), 
+          items:orderData.items,
           scanInDate:todayFormatted(),
           scanInOut:"in"}
 
    else data = {barCode:barcode,scanOutDate:todayFormatted(),scanInOut:"out"};
 
-    //displayObject(data, "Data to PHP\n");
+    displayObject(data, "Data to PHP\n");
     
-    _communicator.addInvData(
+    _communicator.addShipmentData(
 
         data,
         
         function(){
-           //_viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned to Database."});
-            $("#scanInFormCont").fadeOut(300);
-           _viewBuilder.addScanInInput();//reset
-            $(".scanBtns").slideDown(700);//default screen
-           databaseConnect();
+            
+            $("#barcodeGenCont").fadeOut(300,function(){
+               if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
+               if ($("#shipFormCont").children())$("#shipFormCont").children().remove();
+            });
+
+            databaseConnect();
         },
 
          function(){
@@ -105,10 +107,7 @@ Scanner.prototype.sendScanData = function(mode,barcode){
         function(){
            _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't save to Database."});
         },
-
-        function(){
-           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Invalid customer ID."});
-        },
+        
         function(){
            _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"This barcode wasn't scanned in."});
         }

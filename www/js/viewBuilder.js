@@ -3,6 +3,7 @@ function ViewBuilder(){
 	
 	this.itemCount = 1;
   this.orderItemCount = 1;
+  this.ordersListingTableObj = {};
 	this.init();
 }
 
@@ -129,8 +130,8 @@ ViewBuilder.prototype.addNewOrder = function(){
                      "<form id='newOrderForm'>"+
                          "<div class='row'>"+
                               "<div class='col-xs-12'>"+
-                                   "<div class='form-group'>"+
-                                        "<input type='text' class='form-control' placeholder='Customer ID' id='newOrderClientId'>"+
+                                   "<div class='form-group' id='NewOrderCompanyListCont'>"+
+                                        //"<input type='text' class='form-control' placeholder='Customer ID' id='newOrderClientId'>"+
                                    "</div>"+
                               "</div>"+
                          "</div>"+
@@ -171,7 +172,7 @@ ViewBuilder.prototype.addNewOrder = function(){
                "</div>";
 
     $("#newOrderCont").html(html);
-
+    this.generateCustomerDropdown("NewOrderCompanyListCont");
     this.newOrderListeners();
 }
 
@@ -230,8 +231,8 @@ ViewBuilder.prototype.newOrderListeners = function(){
                        _validate.test({collection:itemVarColl, onPass:function(){ 
                           
                           data = {
-                                    customerId:$("#newOrderClientId").val(),  
-                                    items:_viewBuilder.formatItems(),
+                                    customerId:$("#selectNewOrderCompanyListCont option:selected").text(),  
+                                    items:_viewBuilder.formatOrderItems(),
                                     instructions:$("#orderInputInstructions").val(), 
                                     orderDate:todayFormatted()
                                     }
@@ -274,7 +275,7 @@ ViewBuilder.prototype.newOrderListeners = function(){
 //-------------------------------------------------------------------------------------------------------------
 //                                          FORMAT ITEMS
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.formatItems = function(){
+ViewBuilder.prototype.formatOrderItems = function(){
 
   var itemsColl = {};
   $("#orderItemsGroup div[id^='orderItem']").each(function(i,item){
@@ -288,18 +289,31 @@ ViewBuilder.prototype.formatItems = function(){
 //-------------------------------------------------------------------------------------------------------------
 //                                          ADD SCAN IN INPUT
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.addShipmentInput = function(orderId){
+ViewBuilder.prototype.addShipmentInput = function(orderData){
   
   if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
   
   var html = "<div class='col-xs-12'>"+
                      "<form id='shipForm'>"+
                          "<div class='row'>"+
-                              "<div class='col-xs-12'>"+
-                                   "<div class='form-group'>"+
-                                        "<input type='text' class='form-control' placeholder='Order #' id='shipOrderNum'>"+
+                              "<div class='col-xs-4'>"+
+                                   "<div class='fieldText'>"+
+                                      "Order #: "+orderData.orderId+
                                    "</div>"+
                               "</div>"+
+
+                               "<div class='col-xs-4'>"+
+                                   "<div class='fieldText'>"+
+                                      "Customer ID: "+orderData.customerId+
+                                   "</div>"+
+                              "</div>"+
+
+                                "<div class='col-xs-4'>"+
+                                   "<div class='fieldText'>"+
+                                      "Customer Name: "+orderData.customerName+
+                                   "</div>"+
+                              "</div>"+
+
                          "</div>"+
 
                          "<div class='row' id='shipItemsGroup'>"+
@@ -315,27 +329,27 @@ ViewBuilder.prototype.addShipmentInput = function(orderId){
                "</div>";
 
     $("#shipFormCont").html(html);
-    this.generateShipItemList(orderId);
-    this.shipmentViewListeners();
+    this.generateShipItemList(orderData);
+    this.shipmentViewListeners(orderData);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                          GENERATE SHIP ITEM
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.generateShipItemList = function(orderId){
+ViewBuilder.prototype.generateShipItemList = function(orderData["orderId"]){
 
-   var itemsObj = _dbJSON[orderId]["items"];
+   var itemsObj = _dbJSON[orderData["orderId"]]["items"];
    var counter = 0;
 
    $.each(itemsObj,function(key,itemObj){
 
      counter++;
-     var itemHTML = "<div id='item"+_viewBuilder.counter+"'>"+
+     var itemHTML = "<div id='item"+counter+"'>"+
                       "<div class='col-xs-3'>"+
-                        "<div class=''>Item id: "+ itemObj.itemId + "</div>"+  
+                        "<div class='fieldText'>Item id: "+ itemObj.itemId + "</div>"+  
                       "</div>"+
                        "<div class='col-xs-9'>"+
-                        "<div class=''>Delivering: <input class='form-control' type='number' value=0 id='shipItemUnits"+counter+"'> out of " + Number(itemObj.unitsTotal - itemObj.unitsShipped) +" units remaining.</div>"+  
+                        "<div class='fieldText'>Delivering: <input class='form-control' type='number' value=0 max='"+itemObj.unitsTotal+"' min='0' id='shipItemUnits"+counter+"'> out of " + Number(itemObj.unitsTotal - itemObj.unitsShipped) +" units remaining.</div>"+  
                       "</div>"+    
                   "</div>";
   });
@@ -347,7 +361,7 @@ ViewBuilder.prototype.generateShipItemList = function(orderId){
 //-------------------------------------------------------------------------------------------------------------
 //                                          SHIPMENT LISTENERS
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.shipmentViewListeners = function(){
+ViewBuilder.prototype.shipmentViewListeners = function(orderData){
 
   $("#shipCancelBtn").click(function(){
       $("#shipFormCont").fadeOut(300,function(){_viewBuilder.addShipmentInput()});
@@ -355,9 +369,23 @@ ViewBuilder.prototype.shipmentViewListeners = function(){
   });
 
   $("#shipPrintLabelBtn").click(function(){
-       $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(); $("#barcodeGenCont").slideDown(700);});   
+       $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(orderData); $("#barcodeGenCont").slideDown(700);});   
   });
 
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          FORMAT ITEMS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.formatShipmentItems = function(){
+
+  var itemsColl = {};
+  $("#orderItemsGroup div[id^='orderItem']").each(function(i,item){
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),totalUnits:$(item).find("[id^='orderItemQuan']").val(),
+                          shippedUnits:"",deliveredUnits:""};
+  });
+
+  return JSON.stringify(itemsColl);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -844,7 +872,10 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayCustomerData = function(dbJSON){
 
+   _viewBuilder.ordersListingTableObj={};
+   
    var tbodyHTML="";
+
    if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
 
    $.each(dbJSON, function(key,orderObj){
@@ -863,20 +894,30 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
                   "</td><td>"+orderObj.instructions+
                   "</td><td>"+orderObj.status+
                   "<td><button type='button' class='btn btn-warning' id='delOrderCustView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
-                  "</td></tr>";    
+                  "</td></tr>";  
+
+                  _viewBuilder.ordersListingTableObj[orderObj.orderId] = {orderId:orderObj.orderId,
+                                                                          customerId:orderObj.customerId,
+                                                                          customerName:_viewBuilder.nameFromId(orderObj.customerId),
+                                                                          items:itemsToText,
+                                                                          instructions:orderObj.instructions,
+                                                                          status:orderObj.status}; 
   });
+
+  //data attrib to buttons
+
 
 
   $("#bodyForCustData").html(tbodyHTML);
   $("#custDataCont").slideDown(1000);
   $("[id^='shipOrderCustView']").click(function(){
-      var orderId = $(this).attr("id").substring(17);
-      _viewBuilder.addShipmentInput("orderId"+orderId);
+      var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderCustView","")];
+      _viewBuilder.addShipmentInput(orderData);
       $("#shipFormCont").slideDown(1000);
   });
 
   $("[id^='delOrderCustView']").click(function(){
-      alert("del..");   
+         
   });
 
    if (jsonLength > 0) {
@@ -892,6 +933,26 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
 ViewBuilder.prototype.nameFromId = function(id){
   //alert(id);
   return _idNamePairs[id.toString()];
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                CUSTOMER LIST
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.generateCustomerDropdown = function(contId){
+
+  dropHTML = "<div class='input-group'>"+
+  "<span class='input-group-addon' id='basic-addon1'>Select a customer: </span>"+
+  "<select class='form-control' id='companySelect"+contId+"'>";
+  
+  $.each(_idNamePairs,function(customerId,customerName){
+
+    dropHTML+= "<option>"+customerName +" - " + customerId + "</option>";
+  });
+
+   dropHTML+="</div></select>";
+
+   $("#"+contId).html(dropHTML);
+
 }
 
 //-------------------------------------------------------------------------------------------------------------
