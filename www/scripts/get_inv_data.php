@@ -14,40 +14,49 @@ require_once('connect.php');
 	//get businessId - name pairs
 	$pairs='{';
 	$getBusinessNameIDPairs =  mysql_query("SELECT businessName, customerId FROM customer;");
-	
-	while ($pairsRow = mysql_fetch_assoc($getBusinessNameIDPairs)){
-		$pairs.= '"'.$pairsRow["customerId"].'":"'.$pairsRow["businessName"].'",';
+	if (mysql_num_rows($getBusinessNameIDPairs) > 0){
+		while ($pairsRow = mysql_fetch_assoc($getBusinessNameIDPairs)){
+			$pairs.= '"'.$pairsRow["customerId"].'":"'.$pairsRow["businessName"].'",';
+		}
+		$pairs = substr_replace($pairs, '', -1);
+		$pairs.='}';
+	}else{
+		$pairs = "noCompanies";
 	}
-	$pairs = substr_replace($pairs, '', -1);
-	$pairs.='}';
-
 	$get_data_sql = "SELECT * FROM orders ORDER BY orderId ASC;";
 	$result = mysql_query($get_data_sql);
 	
-	 if ($result){
+	 //if ($result){
 	 	
 	 	$json = '{';
 	 	
-	 	$rowCounter = 0;
+	 	//$rowCounter = 0;
 	 	
 	 	while($row = mysql_fetch_assoc($result)){
-	 		$rowCounter++;
+	 		//$rowCounter++;
 	 		$json.= '"orderId'.$row['orderId'].'":{';
 	 		$json.= '"orderId":' . '"' . $row['orderId'] . '",';
 	 		$json.= '"customerId":' . '"' . $row['customerId'] . '",';
 	 		$json.= '"items":' . $row['items'] . ',';
 	 		$json.= '"instructions":' . '"' . $row['instructions'] . '",';
-			$json.= '"status":' . '"' . $row['status'] . '",';
-	 		$json.= ($rowCounter < $total) ? '},' : '}';
-		}
+			$json.= '"status":' . '"' . $row['status'] . '"},';
+	 		//$json.= ($rowCounter < $total) ? '},' : '}';
+		};
+
+			if (mysql_num_rows($result) < 1){
+				$json.= '"noOrders":"true"';
+			}else $json = substr_replace($json, '', -1);
+
      		$json.= ',"idNamePairs":' . $pairs;
      		$json.= '}';
 
-    	if ($rowCounter < 1) echo $_GET['callback'] . '(' . "{'noRecords' : 'true'}" . ')'; 
-    	else echo $_GET['callback'] . '(' . $json . ')'; 
+    	//if ($rowCounter < 1) echo $_GET['callback'] . '(' . "{'noRecords' : 'true'}" . ')';
+     	//if (mysql_num_rows($result) < 1) echo $_GET['callback'] . '(' . "{'noRecords' : 'true'}" . ')'; 
+    	echo $_GET['callback'] . '(' . $json . ')'; 
 	 
-	 } else {
-	 	die("Can't get user data..");
-	 }
+	 //} 
+	 // else {
+	 // 	echo $_GET['callback'] . '(' . "{'foundRecord' : 'empty'}" . ')'; 
+	 // }
 
 ?> 

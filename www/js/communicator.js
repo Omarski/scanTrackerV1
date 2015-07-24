@@ -70,18 +70,20 @@ $.ajax({
     url: "http://www.bluegravitymedia.com/DBST/scripts/get_inv_data.php",
     crossDomain: true,
     contentType: "application/json",
-    //async:false,
-    //jsonpCallback: 'myCallback',
     dataType: 'jsonp',
     success: function(resultData) {
-        if (resultData['noRecords']) _dbJSON = null;
-        else {
+         // alert("idNamePairs: " + resultData['idNamePairs']);
+         // alert("noOrders: " + resultData['noOrders']);
+
+        if (resultData['idNamePairs'] == "noCompanies") _idNamePairs = null;
+        else _idNamePairs = resultData.idNamePairs;
+
+        if (resultData['noOrders'] == "true")  _dbJSON = null;
+        else  _dbJSON=resultData;
+        
                 //displayObject(resultData.scanId44,""); 
-                //displayObject(resultData.orderId45,"");
-                _dbJSON=resultData;
-                _idNamePairs = resultData.idNamePairs;                
-                _viewBuilder.displayInvData(_dbJSON);
-              }
+                //displayObject(resultData.orderId45,"");               
+                if (_dbJSON) _viewBuilder.displayInvData(_dbJSON);
         
         returnFunc();
       },
@@ -98,7 +100,7 @@ $.ajax({
 Communicator.prototype.addOrder = function(dataObj,returnFunc,errorFunction,errorInvalidCustID){
 
 var data = dataObj;
-  //displayObject(data,"");
+  displayObject(data,"");
   $.ajax({
       type: "GET",
       dataType: "jsonp",

@@ -83,12 +83,6 @@ ViewBuilder.prototype.addNav = function(){
              $("#invDataCont").slideDown(1000);
           break;
 
-          //  case "navPrintBarcodeBtn" :
-          //    _barCodeGenerator.generate();
-          //    $("#navOrdersBtn").addClass("active");
-          //    $("#barcodeGenCont").slideDown(1000);
-          // break;
-
            case "navTakeOrderBtn" :
              _viewBuilder.addNewOrder();
              $("#navOrdersBtn").addClass("active");
@@ -215,8 +209,8 @@ ViewBuilder.prototype.newOrderListeners = function(){
          
          var coll;
 
-            coll =[{inputCont:$("#newOrderClientId"), message:"Enter customer ID", style:null,
-                  check:{valid:["Customer ID","", null], inputType:"text", checkType:null, range:null}}];
+            coll =[{inputCont:$("#selectNewOrderCompanyListCont"), message:"Select a customer.", style:null,
+                  check:{valid:["", null], inputType:"select", checkType:null, range:null}}];
                   
           _validate.test({collection:coll,
 
@@ -231,7 +225,7 @@ ViewBuilder.prototype.newOrderListeners = function(){
                        _validate.test({collection:itemVarColl, onPass:function(){ 
                           
                           data = {
-                                    customerId:$("#selectNewOrderCompanyListCont option:selected").text(),  
+                                    customerId:$("#selectNewOrderCompanyListCont option:selected").text().substring(Number($("#selectNewOrderCompanyListCont option:selected").text().indexOf(" - "))+3),  
                                     items:_viewBuilder.formatOrderItems(),
                                     instructions:$("#orderInputInstructions").val(), 
                                     orderDate:todayFormatted()
@@ -336,7 +330,7 @@ ViewBuilder.prototype.addShipmentInput = function(orderData){
 //-------------------------------------------------------------------------------------------------------------
 //                                          GENERATE SHIP ITEM
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.generateShipItemList = function(orderData["orderId"]){
+ViewBuilder.prototype.generateShipItemList = function(orderData){
 
    var itemsObj = _dbJSON[orderData["orderId"]]["items"];
    var counter = 0;
@@ -819,7 +813,7 @@ ViewBuilder.prototype.addLogView = function(contId){
             "<div class='table-responsive' style='overflow:auto'>"+
               "<table class='table table-striped table-hover'>"+
                 "<thead>"+
-                "<tr><th style='width:10%'>Ship order</th><th style='width:10%'>Order #</th><th style='width:10%'>Customer ID</th><th style='width:10%'>Business name</th><th style='width:20%'>Items list</th><th style='width:20%'>Instructions</th><th style='width:10%'>Status</th><th style='width:10%'>Delete</th></tr>"+
+                "<tr><th nowrap style='width:10%'>Ship order</th><th nowrap style='width:10%'>Order #</th><th nowrap style='width:10%'>Customer ID</th><th nowrap style='width:10%'>Business name</th><th nowrap style='width:20%'>Items list</th><th nowrap style='width:20%'>Instructions</th><th nowrap style='width:10%'>Status</th><th nowrap style='width:10%'>Delete</th></tr>"+
                 "</thead>"+
                 "<tbody id='" + tableBodyCont+ "'>"+
                 "</tbody>"+
@@ -835,36 +829,38 @@ ViewBuilder.prototype.addLogView = function(contId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayInvData = function(dbJSON){
 
-  var tbodyHTML="";
-  
-  if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
-  var counter=1;
-
-  $.each(dbJSON, function(key,orderObj){
-   
-    if (counter < jsonLength){ //skip last json item (pairs)
-        
-        counter++;
-        var itemsToText="";
+  if(dbJSON){
+        var tbodyHTML="";
       
-      $.each(orderObj.items, function(itemKey,itemObj){
-        itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.units + "<br>";
-      });
+      if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
+      var counter=1;
 
-      tbodyHTML+= "<tr><td><button type='button' class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
-                  "</td><td>"+orderObj.orderId+
-                  "</td><td>"+orderObj.customerId+
-                  "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
-                  "</td><td>"+itemsToText+ 
-                  "</td><td>"+orderObj.instructions+
-                  "</td><td>"+orderObj.status+
-                  "<td><button type='button' class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
-                  "</td></tr>";    
-     }
-    
-  }); 
+        $.each(dbJSON, function(key,orderObj){
+       
+        if (counter < jsonLength){ //skip last json item (pairs)
+            
+            counter++;
+            var itemsToText="";
+          
+          $.each(orderObj.items, function(itemKey,itemObj){
+            itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.totalUnits + "<br>";
+          });
 
-  $("#bodyForInvData").html(tbodyHTML);
+          tbodyHTML+= "<tr><td><button type='button' class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
+                      "</td><td>"+orderObj.orderId+
+                      "</td><td>"+orderObj.customerId+
+                      "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
+                      "</td><td>"+itemsToText+ 
+                      "</td><td>"+orderObj.instructions+
+                      "</td><td>"+orderObj.status+
+                      "<td><button type='button' class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                      "</td></tr>";    
+         }
+        
+      }); 
+
+      $("#bodyForInvData").html(tbodyHTML);
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -941,13 +937,17 @@ ViewBuilder.prototype.nameFromId = function(id){
 ViewBuilder.prototype.generateCustomerDropdown = function(contId){
 
   dropHTML = "<div class='input-group'>"+
-  "<span class='input-group-addon' id='basic-addon1'>Select a customer: </span>"+
-  "<select class='form-control' id='companySelect"+contId+"'>";
+  "<span class='input-group-addon'>Select a customer: </span>"+
+  "<select class='form-control' style='border-left:none' id='select"+contId+"'>"+
+  "<option></option>";
   
-  $.each(_idNamePairs,function(customerId,customerName){
+  if (_idNamePairs) {
 
+    $.each(_idNamePairs,function(customerId,customerName){
     dropHTML+= "<option>"+customerName +" - " + customerId + "</option>";
-  });
+    });
+
+  }
 
    dropHTML+="</div></select>";
 

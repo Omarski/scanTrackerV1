@@ -266,3 +266,8 @@ span.largeBars {font-size:4vw; line-height:2}
 	width:99%;
 }
 
+select {
+  -webkit-appearance: none;
+  -webkit-border-radius: 0 6px 6px 0;
+}
+
