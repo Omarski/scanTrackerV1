@@ -80,9 +80,11 @@ body {
 }
 
 .fieldText {
-	font-family:'helveticaNeue';
+	font-family:'love_of_thunder';
 	font-size: 12px;
-	font-weight: bold;
+	font-weight: 500;
+	padding-left:10px;
+	float:left;
 }
 
 .allBtn {
@@ -199,6 +201,10 @@ span.largeBars {font-size:4vw; line-height:2}
 
 .labelAddress{
 	width:90%; margin-bottom:20px; padding:5px; border:none
+}
+
+#nowrap td {
+	display:inline;
 }
 
 /*forms*/

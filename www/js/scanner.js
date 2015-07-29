@@ -94,7 +94,10 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
             
             $("#barcodeGenCont").fadeOut(300,function(){
                if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
-               if ($("#shipFormCont").children())$("#shipFormCont").children().remove();
+               if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
+
+               //update the order
+                _communicator.updateOrder(orderData.orderId,updateOrderItems(orderData.items),function({}));
             });
 
             databaseConnect();

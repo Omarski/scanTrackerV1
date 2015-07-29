@@ -159,38 +159,66 @@ var data = dataObj;
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                     			ADD USER DATA
+//                                          GET ADDRESS
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.addInvData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorInvalidCustID,errorNoInScan){
+Communicator.prototype.updateOrder = function(orderId,items){
 
-var data = dataObj;
-  //displayObject(data,"");
-	$.ajax({
+//alert("check for: " + customerId);
+
+var data = {queryName:"updateOrder",orderId:orderId,items:items};
+
+$.ajax({
       type: "GET",
       dataType: "jsonp",
-      url: "http://www.bluegravitymedia.com/DBST/scripts/add_inv_data.php",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/queries.php",
       data: data,
       crossDomain: true,
       contentType: "application/json",
-      success: function(resultData) {
-         if (resultData["foundScan"]) {errorPrescan(); return false;}
-         else if (resultData["invalidCustId"]) {errorInvalidCustID(); return false;}
-         else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
-
-         else {
-          returnFunc();
-          if (resultData["orderId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - order #"+resultData.orderId+"."});
-          if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
-        }
+      success: function(resultData){
+  
+        returnFunc();
       },
       error: function(jqXHR, textStatus, errorThrown){
         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
-        errorFunction();
       }
     });
     return false;
+
 }
+//-------------------------------------------------------------------------------------------------------------
+//                                     			ADD USER DATA
+//-------------------------------------------------------------------------------------------------------------
+
+// Communicator.prototype.addInvData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorInvalidCustID,errorNoInScan){
+
+// var data = dataObj;
+//   //displayObject(data,"");
+// 	$.ajax({
+//       type: "GET",
+//       dataType: "jsonp",
+//       url: "http://www.bluegravitymedia.com/DBST/scripts/add_inv_data.php",
+//       data: data,
+//       crossDomain: true,
+//       contentType: "application/json",
+//       success: function(resultData) {
+//          if (resultData["foundScan"]) {errorPrescan(); return false;}
+//          else if (resultData["invalidCustId"]) {errorInvalidCustID(); return false;}
+//          else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
+
+//          else {
+//           returnFunc();
+//           if (resultData["orderId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - order #"+resultData.orderId+"."});
+//           if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
+//         }
+//       },
+//       error: function(jqXHR, textStatus, errorThrown){
+//         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
+//         errorFunction();
+//       }
+//     });
+//     return false;
+// }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                          GET ADDRESS

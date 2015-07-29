@@ -24,13 +24,16 @@ BarCodeGenerator.prototype.generate = function(orderData){
                               "</div>"+
                          "</div>"+
 
-		                "<button type='button' class='btn btn-success' id='labelPrintBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Print label</span></button>"+
+		                "<button type='button' class='btn btn-primary' id='labelPrintBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Print label</span></button>"+
 		                "<button type='button' class='btn btn-success' style='margin-left:6%' id='labelScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan label</span></button>"+
 	                    "<button type='button' class='btn btn-warning' style='margin-left:6%' id='labelCancelBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel</span></button>"+
                 "</div>"+
 			"</div>";
 	
 	$("#barcodeGenCont").html(html);
+
+	//place address
+	_communicator.getAddress(orderData.customerId);
 
 	if (_platform == "desktop") $("#inputShipBarcode").show();
 	
