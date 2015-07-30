@@ -362,7 +362,28 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
   });
 
   $("#shipPrintLabelBtn").click(function(){
-       $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(orderData); $("#barcodeGenCont").slideDown(700);});   
+       
+       //validate shipping order
+       //save all totalUnits
+       var unitsTotalColl = [];
+       for (var x in orderData.items){
+          unitsTotalColl.push(parseInt(orderData.items[x].totalUnits));
+       }
+
+       var validateColl = [];
+       $("[id^='shipItemUnits']").each(function(i,unitsInput){
+          validateColl.push({inputCont:$(unitsInput), message:"Enter valid number", style:null,
+                check:{valid:["", null], inputType:"number", checkType:true, range:{maxi:unitsTotalColl[i],mini:0}}});
+       });
+
+         _validate.test({collection:validateColl,
+
+                onPass:function(){
+                  $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(orderData); $("#barcodeGenCont").slideDown(700);});   
+                }
+
+         });
+
   });
 
 }
@@ -374,6 +395,20 @@ ViewBuilder.prototype.formatShipmentItems = function(){
 
   var itemsColl = {};
   $("#orderItemsGroup div[id^='orderItem']").each(function(i,item){
+    itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),totalUnits:$(item).find("[id^='orderItemQuan']").val(),
+                          shippedUnits:"",deliveredUnits:""};
+  });
+
+  return JSON.stringify(itemsColl);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          FORMAT ITEMS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.updateOrderItems = function(itemsObj){
+
+  var itemsColl = {};
+  $.each(itemsObj,function(i,item){
     itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),totalUnits:$(item).find("[id^='orderItemQuan']").val(),
                           shippedUnits:"",deliveredUnits:""};
   });

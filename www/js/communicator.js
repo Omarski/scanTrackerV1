@@ -162,7 +162,7 @@ var data = dataObj;
 //                                          GET ADDRESS
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.updateOrder = function(orderId,items){
+Communicator.prototype.updateOrder = function(orderId,items,returnFunc){
 
 //alert("check for: " + customerId);
 

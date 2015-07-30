@@ -36,7 +36,7 @@ Validate.prototype.test = function(data){
 			
 			if (data.collection[i].check.checkType != null){
 				
-				console.log("type: " + data.collection[i].check.checkType + "   actual type is number: " + $.isNumeric(testedVal));
+				//console.log("type: " + data.collection[i].check.checkType + "   actual type is number: " + $.isNumeric(testedVal));
 				if (data.collection[i].check.checkType == "number" && $.isNumeric(testedVal) == false) {
 					violationColl.push({violator:$(data.collection[i].inputCont), inputType:data.collection[i].inputType, 
 					errorText:"Enter a number", style:style});
@@ -52,8 +52,8 @@ Validate.prototype.test = function(data){
 			
 			if (data.collection[i].check.range != null){
 				
-				console.log("Entry: " + testedVal + "   ranges: " + data.collection[i].check.range.mini + " to " + 
-				data.collection[i].check.range.maxi);
+				//console.log("Entry: " + testedVal + "   ranges: " + data.collection[i].check.range.mini + " to " + 
+				//data.collection[i].check.range.maxi);
 				if (testedVal){
 					if (parseFloat(testedVal) > data.collection[i].check.range.maxi || parseFloat(testedVal) < data.collection[i].check.range.mini) {
 						violationColl.push({violator:$(data.collection[i].inputCont), inputType:data.collection[i].inputType, 
