@@ -11,24 +11,34 @@ BarCodeGenerator.prototype.generate = function(orderData){
 	if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
 	
 	html =  "<div class='row'>"+
-                "<div class='col-xs-12' id=''>"+
-		                "<input class='inputCustomerId' id='inputCustomerId4address' placeholder='Customer ID'>"+
+                "<div class='col-xs-12'>"+
+		            "<p><span class='bolded'>Customer name: </span>"+_viewBuilder.nameFromId(orderData.customerId)+ "<span class='bolded'> Order number: </span>" +orderData.orderId+"</p>"+
+		        "</div>"+
+		     "</div>"+
+
+		            
+            "<div class='row'>"+
+               "<div class='col-xs-12'>"+
 		            "<div id='labelCont'>"+
 		                "<img id='barcodeImgCont' class='barCodeImage'>"+
 		                "<p id='labelAddress' class='labelAddress'>Send to:</p>"+
 		            "</div>"+
-		            	  
-		            	  "<div class='row'>"+//instructions
-                              "<div class='col-xs-12 form-group'>"+
-                                   "<input class='form-control' id='inputShipBarcode' placeholder='Barcode' style='display:none'>"+
-                              "</div>"+
-                         "</div>"+
+		       "</div>"+
+      		"</div>"+
+            	  
+        	  "<div class='row'>"+//instructions
+                  "<div class='col-xs-12 form-group'>"+
+                       "<input class='form-control' id='inputShipBarcode' placeholder='Barcode' style='display:none'>"+
+                  "</div>"+
+             "</div>"+
 
-		                "<button type='button' class='btn btn-primary' id='labelPrintBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Print label</span></button>"+
-		                "<button type='button' class='btn btn-success' style='margin-left:6%' id='labelScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan label</span></button>"+
-	                    "<button type='button' class='btn btn-warning' style='margin-left:6%' id='labelCancelBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel</span></button>"+
-                "</div>"+
-			"</div>";
+            "<div class='row'>"+
+               "<div class='col-xs-12'>"+
+                	"<button type='button' class='btn btn-primary' id='labelPrintBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Print label</span></button>"+
+               		"<button type='button' class='btn btn-success' style='margin-left:6%' id='labelScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan label</span></button>"+
+                	"<button type='button' class='btn btn-warning' style='margin-left:6%' id='labelCancelBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel</span></button>"+
+      		   "</div>"+
+      		"</div>";
 	
 	$("#barcodeGenCont").html(html);
 

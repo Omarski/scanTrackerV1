@@ -13,6 +13,7 @@ function ViewBuilder(){
 ViewBuilder.prototype.init = function(){
 	
   this.addNav();
+  this.addHomePage();
 	this.addScanButtons();
 	this.addClientInput();
   this.addClientLookup();
@@ -23,26 +24,31 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = [".scanBtns","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#barcodeGenCont","#alertsCont"];
-  var navBtnColl = ["#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
+  var mainContainersColl = ["#homeCont","#scanCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#barcodeGenCont","#alertsCont"];
+  var navBtnColl = ["#navHomeBtn","#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
 
-  var html = "<div class='btn-group btn-group-justified btn-group-lg' role='group' aria-label=''>"+
+  var html = "<div class='btn-group btn-group-justified' role='group' aria-label=''>"+
+
                 "<div class='btn-group' role='group'>"+
-                "<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='navBtn'>Scan Item</span></button>"+
+                "<button type='button' class='btn btn-default' id='navHomeBtn'><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>"+
+                "</div>"+
+
+                "<div class='btn-group' role='group'>"+
+                "<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='navBtn'>Scan</span></button>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                    "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Customers</span></span></button>"+
+                    "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Cust.</span></span></button>"+
                     "<ul class='dropdown-menu'>"+
                       "<li><a href='#' id='navCustomerAddBtn' class='submenu'>Add Customer</a></li>"+
                       "<li><a href='#' id='navCustomerLookupBtn' class='submenu'>Lookup Customer</a></li>"+
-                      "<li><a href='#' id='navCheckLogsBtn' class='submenu'>All customer orders</a></li>"+
                     "</ul>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
                 "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
                  "<ul class='dropdown-menu'>"+
-                    "<li><a href='#' id='navPrintBarcodeBtn'>Process order</a></li>"+
                     "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
+                    "<li><a href='#' id='navPrintBarcodeBtn'>Process order</a></li>"+
+                    "<li><a href='#' id='navCheckLogsBtn' class='submenu'>Display all orders</a></li>"+
                     "</ul>"+
                 "</div>"+
               "</div>";
@@ -91,7 +97,20 @@ ViewBuilder.prototype.addNav = function(){
         }
     });
 
-    $("#navScanBtn").addClass("active");
+    $("#navHomeBtn").addClass("active");
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          ADD SCAN BTNS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.addHomePage = function(){
+  
+
+  var html =  "<button type='button' class='btn btn-primary btn-lg btn-block' id=''><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>"+
+              "<button type='button' class='btn btn-primary btn-lg btn-block' id=''><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>";
+
+    $("#homeCont").html(html);
+
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -101,10 +120,10 @@ ViewBuilder.prototype.addScanButtons = function(){
 	
   var html =  "<div class='row'>"+
                 "<div class='col-xs-12'>"+
-                    "<button type='button' id='scanInBtn' class='btn btn-success centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan in</span></button>"+
+                    "<button type='button' id='scanInBtn' class='btn btn-success centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan shipment</span></button>"+
                 "</div>"+
                 "<div class='col-xs-12'>"+
-                     "<button type='button' id='scanOutBtn' class='btn btn-primary centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan out</span></button>"+
+                     "<button type='button' id='scanOutBtn' class='btn btn-primary centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan delivery</span></button>"+
                 "</div>"+
             "</div>";
 
@@ -285,7 +304,8 @@ ViewBuilder.prototype.formatOrderItems = function(){
 ViewBuilder.prototype.addShipmentInput = function(orderData){
   
   if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
-  
+  $("#alertsCont").html();
+
   var html = "<div class='col-xs-12'>"+
                     "<form id='shipForm'>"+
                          "<div class='row' style='display:inline'>"+
@@ -321,7 +341,7 @@ ViewBuilder.prototype.addShipmentInput = function(orderData){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.generateShipItemList = function(orderData){
 
-   var itemsObj = _dbJSON["orderId"+orderData["orderId"]]["items"];
+   var itemsObj = orderData.items; //_dbJSON["orderId"+orderData["orderId"]]["items"];
    var counter = 0;
 
    tableHTML =    "<div class='col-xs-12 no-padding'>"+
@@ -339,10 +359,10 @@ ViewBuilder.prototype.generateShipItemList = function(orderData){
 
      counter++;
      
-     rowHTML += "<tr><td>Item: " + itemObj.itemId+"</td>"+
+     rowHTML += "<tr><td><span class='bolded'>Item:</span> " + itemObj.itemId+"</td>"+
                 "<td class=''>Shipping</td>"+
                 "<td><input class='form-control' style='min-width:60px' type='number' value=0 max='"+itemObj.totalUnits+"' min='0' id='shipItemUnits"+counter+"'></td>"+
-                "<td>Out of " + Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped)) + " units ordered</td>"+
+                "<td>Out of <span class='bolded'>" + Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped)) + "</span> units ordered</td>"+
                 "</tr>";
   });
   
@@ -364,16 +384,12 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
   $("#shipPrintLabelBtn").click(function(){
        
        //validate shipping order
-       //save all totalUnits
-       var unitsTotalColl = [];
-       for (var x in orderData.items){
-          unitsTotalColl.push(parseInt(orderData.items[x].totalUnits));
-       }
 
        var validateColl = [];
-       $("[id^='shipItemUnits']").each(function(i,unitsInput){
+
+        $("[id^='shipItemUnits']").each(function(i,unitsInput){
           validateColl.push({inputCont:$(unitsInput), message:"Enter valid number", style:null,
-                check:{valid:["", null], inputType:"number", checkType:true, range:{maxi:unitsTotalColl[i],mini:0}}});
+                check:{valid:["", null], inputType:"number", checkType:true, range:{maxi:orderData.items["item"+i]["totalUnits"],mini:0}}});
        });
 
          _validate.test({collection:validateColl,
@@ -722,37 +738,65 @@ ViewBuilder.prototype.addLogView = function(contId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.displayInvData = function(dbJSON){
 
-  if(dbJSON){
-        var tbodyHTML="";
+  _viewBuilder.ordersListingTableObj={};
+
+  if (dbJSON){
+        
+      var tbodyHTML="";
       
       if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
+      
       var counter=1;
 
-        $.each(dbJSON, function(key,orderObj){
-       
-        if (counter < jsonLength){ //skip last json item (pairs)
-            
-            counter++;
-            var itemsToText="";
+      $.each(dbJSON, function(key,orderObj){
+     
+      if (counter < jsonLength){ //skip last json item (pairs)
           
+          counter++;
+          var itemsToText="";
+        
           $.each(orderObj.items, function(itemKey,itemObj){
-            itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.totalUnits + "<br>";
+            itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
           });
 
-          tbodyHTML+= "<tr><td><button type='button' class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
-                      "</td><td>"+orderObj.orderId+
-                      "</td><td>"+orderObj.customerId+
-                      "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
-                      "</td><td>"+itemsToText+ 
-                      "</td><td>"+orderObj.instructions+
-                      "</td><td>"+orderObj.status+
-                      "<td><button type='button' class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
-                      "</td></tr>";    
-         }
+         var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
+
+         tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
+                    "</td><td>"+orderObj.orderId+
+                    "</td><td>"+orderObj.customerId+
+                    "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
+                    "</td><td>"+itemsToText+ 
+                    "</td><td>"+orderObj.instructions+
+                    "</td><td>"+orderObj.status+
+                    "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                    "</td></tr>";  
+
+          //save data in tables in array
+          if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj; 
+        }
         
       }); 
 
       $("#bodyForInvData").html(tbodyHTML);
+
+      $("#invDataCont").slideDown(1000);
+
+      $("[id^='shipOrderInvView']").click(function(){
+          
+          var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderInvView","")];
+          _viewBuilder.addShipmentInput(orderData);
+          $("#invDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
+      });
+
+      $("[id^='delOrderInvView']").click(function(){
+             
+      });
+
+      if (jsonLength > 0) {
+        $("#customerLookupFormCont").fadeOut(300);
+      }else{
+          _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
+      }
     }
 }
 
@@ -772,10 +816,11 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
       var itemsToText="";
       
       if (orderObj.items) $.each(orderObj.items, function(itemKey,itemObj){
-        itemsToText+= "Item: " + itemObj.itemId + " Units: " + itemObj.totalUnits + "<br>";
+        itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
       });
 
       var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
+
       tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderCustView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
                   "</td><td>"+orderObj.orderId+
                   "</td><td>"+orderObj.customerId+
@@ -783,19 +828,13 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
                   "</td><td>"+itemsToText+ 
                   "</td><td>"+orderObj.instructions+
                   "</td><td>"+orderObj.status+
-                  "<td><button type='button' disabled='" +disabledState+ "' class='btn btn-warning' id='delOrderCustView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                  "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderCustView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
                   "</td></tr>";  
 
                   //save data in tables in array
-                  if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = {orderId:orderObj.orderId,
-                                                                          customerId:orderObj.customerId,
-                                                                          customerName:_viewBuilder.nameFromId(orderObj.customerId),
-                                                                          items:itemsToText,
-                                                                          instructions:orderObj.instructions,
-                                                                          status:orderObj.status}; 
+                  if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj;                                          
   });
 
-  //data attrib to buttons
 
   $("#bodyForCustData").html(tbodyHTML);
   $("#custDataCont").slideDown(1000);
