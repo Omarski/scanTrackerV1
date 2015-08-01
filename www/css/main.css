@@ -216,6 +216,10 @@ span.largeBars {font-size:4vw; line-height:2}
 	display:inline;
 }
 
+.homeBtns {
+	margin-bottom: 12px;
+}
+
 /*forms*/
 /*---------------------------------------------------------------*/
 .requiredField{
@@ -283,6 +287,10 @@ span.largeBars {font-size:4vw; line-height:2}
 
 .bolded{
 	font-weight:700;
+}
+
+.floatLeft{
+	float:left;
 }
 
 select {

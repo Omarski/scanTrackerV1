@@ -48,7 +48,6 @@ var data = {type:type, key:key};
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
-        //alert(resultData.foundMatch);
         if (resultData["foundRecord"] == "empty") {returnEmpty(); return false;}
         else {_companyJSON = resultData;
         returnFunc();} 
@@ -66,14 +65,11 @@ Communicator.prototype.getInvData = function(returnFunc){
 
 $.ajax({
     type: 'GET',
-    //url: "scripts/get_inv_data.php",
     url: "http://www.bluegravitymedia.com/DBST/scripts/get_inv_data.php",
     crossDomain: true,
     contentType: "application/json",
     dataType: 'jsonp',
     success: function(resultData) {
-         // alert("idNamePairs: " + resultData['idNamePairs']);
-         // alert("noOrders: " + resultData['noOrders']);
 
         if (resultData['idNamePairs'] == "noCompanies") _idNamePairs = null;
         else _idNamePairs = resultData.idNamePairs;
@@ -81,9 +77,7 @@ $.ajax({
         if (resultData['noOrders'] == "true")  _dbJSON = null;
         else  _dbJSON=resultData;
         
-                //displayObject(resultData.scanId44,""); 
-                //displayObject(resultData.orderId45,"");               
-                if (_dbJSON) _viewBuilder.displayInvData(_dbJSON);
+                if (_dbJSON) _viewBuilder.displayOrderLogs(_dbJSON,"#invDataCont");
         
         returnFunc();
       },
@@ -186,47 +180,12 @@ $.ajax({
     return false;
 
 }
-//-------------------------------------------------------------------------------------------------------------
-//                                     			ADD USER DATA
-//-------------------------------------------------------------------------------------------------------------
-
-// Communicator.prototype.addInvData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorInvalidCustID,errorNoInScan){
-
-// var data = dataObj;
-//   //displayObject(data,"");
-// 	$.ajax({
-//       type: "GET",
-//       dataType: "jsonp",
-//       url: "http://www.bluegravitymedia.com/DBST/scripts/add_inv_data.php",
-//       data: data,
-//       crossDomain: true,
-//       contentType: "application/json",
-//       success: function(resultData) {
-//          if (resultData["foundScan"]) {errorPrescan(); return false;}
-//          else if (resultData["invalidCustId"]) {errorInvalidCustID(); return false;}
-//          else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
-
-//          else {
-//           returnFunc();
-//           if (resultData["orderId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - order #"+resultData.orderId+"."});
-//           if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
-//         }
-//       },
-//       error: function(jqXHR, textStatus, errorThrown){
-//         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
-//         errorFunction();
-//       }
-//     });
-//     return false;
-// }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                          GET ADDRESS
 //-------------------------------------------------------------------------------------------------------------
 
 Communicator.prototype.getAddress = function(customerId){
-
-//alert("check for: " + customerId);
 
 var data = {queryName:"getAddress",customerId:customerId};
 

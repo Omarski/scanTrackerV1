@@ -12,8 +12,8 @@ function ViewBuilder(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.init = function(){
 	
-  this.addNav();
   this.addHomePage();
+  this.addNav();
 	this.addScanButtons();
 	this.addClientInput();
   this.addClientLookup();
@@ -24,7 +24,7 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = ["#homeCont","#scanCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#barcodeGenCont","#alertsCont"];
+  var mainContainersColl = ["#homeCont","#scanCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#shipDataCont","#barcodeGenCont","#alertsCont"];
   var navBtnColl = ["#navHomeBtn","#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
 
   var html = "<div class='btn-group btn-group-justified' role='group' aria-label=''>"+
@@ -47,7 +47,6 @@ ViewBuilder.prototype.addNav = function(){
                 "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
                  "<ul class='dropdown-menu'>"+
                     "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
-                    "<li><a href='#' id='navPrintBarcodeBtn'>Process order</a></li>"+
                     "<li><a href='#' id='navCheckLogsBtn' class='submenu'>Display all orders</a></li>"+
                     "</ul>"+
                 "</div>"+
@@ -56,42 +55,51 @@ ViewBuilder.prototype.addNav = function(){
     $("#navBtnsCont").html(html);
 
     // listeners
-    $("#navScanBtn, #navCustomerAddBtn, #navCustomerLookupBtn, #navCheckLogsBtn, #navTakeOrderBtn, #navPrintBarcodeBtn").click(function(){ //, #navTakeOrderBtn
+    $("#navHomeBtn, #homeScanBtn, #navScanBtn, #homeCustomerAddBtn, #navCustomerAddBtn, #homeShipOrderBtn, #homeCustomerLookupBtn, #navCustomerLookupBtn, #homeCheckLogsBtn, #navCheckLogsBtn, #homeTakeOrderBtn, #navTakeOrderBtn").click(function(){ 
         
         var btnPressed = $(this);
         for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
-
         for (var b=0; b < navBtnColl.length; b++){ $(navBtnColl[b]).removeClass("active");}
 
         $(this).addClass("active");
 
         switch($(this).attr("id")){
 
-          case "navScanBtn" :
-            $(".scanBtns").slideDown(700);
+          case "navHomeBtn":
+             $("#navHomeBtn").addClass("active");
+             $("#homeCont").slideDown(600);
           break;
 
-          case "navCustomerAddBtn" :
-            $("#addClientFormCont").slideDown(1000);
+          case "homeScanBtn" : case "navScanBtn" :
+            $("#scanCont").slideDown(700);
+          break;
+
+          case "homeCustomerAddBtn" : case "navCustomerAddBtn" :
+            $("#addClientFormCont").slideDown(600);
             $("#navCustomersBtn").addClass("active");
           break;
 
-           case "navCustomerLookupBtn" :
-            $("#customerLookupFormCont").slideDown(1000);
+          case "homeCustomerLookupBtn" : case "navCustomerLookupBtn" :
+            $("#customerLookupFormCont").slideDown(600);
             $("#navCustomersBtn").addClass("active");
           break;
 
-          case "navCheckLogsBtn" :
+          case "homeCheckLogsBtn" : case "navCheckLogsBtn" :
              _viewBuilder.addLogView("#invDataCont");
-             _viewBuilder.displayInvData(_dbJSON);
+             _viewBuilder.displayOrderLogs(_dbJSON,"#invDataCont");
              $("#navCustomersBtn").addClass("active");
-             $("#invDataCont").slideDown(1000);
+             $("#invDataCont").slideDown(600);
           break;
 
-           case "navTakeOrderBtn" :
+           case "homeTakeOrderBtn" : case "navTakeOrderBtn" :
              _viewBuilder.addNewOrder();
              $("#navOrdersBtn").addClass("active");
-             $("#newOrderCont").slideDown(1000);
+             $("#newOrderCont").slideDown(600);
+          break;
+
+           case "homeShipOrderBtn":
+             _viewBuilder.fillOrder();
+             $("#navOrdersBtn").addClass("active");
           break;
 
         }
@@ -106,10 +114,14 @@ ViewBuilder.prototype.addNav = function(){
 ViewBuilder.prototype.addHomePage = function(){
   
 
-  var html =  "<button type='button' class='btn btn-primary btn-lg btn-block' id=''><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>"+
-              "<button type='button' class='btn btn-primary btn-lg btn-block' id=''><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>";
+  var html =  "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Add a customer</span></button>"+
+              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Search customers</span></button>"+
+              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Enter new order</span></button>"+
+              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Ship order</span></button>"+
+              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>View all orders</span></button>"+              
+              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Scan barcode</span></button>";
 
-    $("#homeCont").html(html);
+  $("#homeCont").html(html);
 
 }
 
@@ -279,7 +291,7 @@ ViewBuilder.prototype.newOrderListeners = function(){
 
   // delete order
   $("#cancelOrderBtn").click(function(){
-      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder()});
+      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder();$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
       $("#navOrdersBtn").removeClass("active");
   });
 }  
@@ -377,7 +389,12 @@ ViewBuilder.prototype.generateShipItemList = function(orderData){
 ViewBuilder.prototype.shipmentViewListeners = function(orderData){
 
   $("#shipCancelBtn").click(function(){
-      $("#shipFormCont").fadeOut(300,function(){_viewBuilder.addShipmentInput(orderData)});
+      //$("#shipFormCont").fadeOut(300,function(){_viewBuilder.addShipmentInput(orderData)});
+      $("#shipFormCont").fadeOut(300,function(){
+        $("#homeCont").slideDown(600);
+        $("#navHomeBtn").addClass("active");
+      });
+
       $("#navOrdersBtn").removeClass("active");
   });
 
@@ -399,7 +416,6 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
                 }
 
          });
-
   });
 
 }
@@ -556,11 +572,6 @@ ViewBuilder.prototype.addClientInput = function(){
     $("#addClientClearBtn").click(function(){
           _viewBuilder.clearForm("#clientForm");
      });
-
-     $("#cancelAddClientBtn").click(function(){
-            $("#addClientFormCont").fadeOut(300);
-            $("#navCustomersBtn").removeClass("active");
-     });
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -599,6 +610,8 @@ ViewBuilder.prototype.clientAddListeners = function(){
      // delete client add
      $("#cancelAddClientBtn").click(function(){
           _viewBuilder.addClientInput();
+          $("#addClientFormCont").fadeOut(300,function(){$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
+          $("#navCustomersBtn").removeClass("active");
      });
 }
 
@@ -642,7 +655,8 @@ ViewBuilder.prototype.addClientLookup = function(){
        //listeners
 
        $("#lookupByCustomerId, #lookupByCustomerName").focus(function(){
-          ($(this).attr("id").indexOf("Name") != -1) ? $("#byNameRadio").prop("checked",true):$("#byIdRadio").prop("checked",true)
+          ($(this).attr("id").indexOf("Name") != -1) ? $("#byNameRadio").prop("checked",true):$("#byIdRadio").prop("checked",true);
+          $(this).val("");
        });
 
        $("#clientLookupBtn").click(function(){
@@ -682,7 +696,7 @@ ViewBuilder.prototype.addClientLookup = function(){
         });
 
          $("#cancelLookupBtn").click(function(){
-            $("#customerLookupFormCont").fadeOut(300);
+            $("#customerLookupFormCont").fadeOut(300,function(){$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
             $("#navCustomersBtn").removeClass("active");
          });
 
@@ -699,7 +713,7 @@ ViewBuilder.prototype.displayCustData = function(){
   _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Found match."});
   $("#customerLookupFormCont").hide();
   this.addLogView("#custDataCont");
-  this.displayCustomerData(_companyJSON);
+  this.displayOrderLogs(_companyJSON,"#custDataCont");
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -715,44 +729,47 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addLogView = function(contId){
 
-
   if ($(contId).children()) $(contId).children().remove();
-  var tableBodyCont = (contId.indexOf("cust") == -1)? "bodyForInvData" : "bodyForCustData";
-  html = "<div class='col-xs-12 no-padding'>"+
-            "<div class='table-responsive' style='overflow:auto'>"+
-              "<table class='table table-striped table-hover'>"+
-                "<thead>"+
-                "<tr><th nowrap style='width:10%'>Ship order</th><th nowrap style='width:10%'>Order #</th><th nowrap style='width:10%'>Customer ID</th><th nowrap style='width:10%'>Business name</th><th nowrap style='width:20%'>Items list</th><th nowrap style='width:20%'>Instructions</th><th nowrap style='width:10%'>Status</th><th nowrap style='width:10%'>Delete</th></tr>"+
-                "</thead>"+
-                "<tbody id='" + tableBodyCont+ "'>"+
-                "</tbody>"+
-              "</table>"+
-            "</div>"+
-          "</div>";
+    
+  var contIdMatch = {"#custDataCont":"bodyForCustData", "#invDataCont":"bodyForInvData", "#shipDataCont":"bodyForShipData"};
+  
+  var tableBodyCont = contIdMatch[contId];
+
+  var html = "<div class='col-xs-12 no-padding'>"+
+                "<div class='table-responsive' style='overflow:auto'>"+
+                  "<table class='table table-striped table-hover'>"+
+                    "<thead>"+
+                    "<tr><th nowrap style='width:10%'>Ship order</th><th nowrap style='width:10%'>Order #</th><th nowrap style='width:10%'>Customer ID</th><th nowrap style='width:10%'>Business name</th><th nowrap style='width:20%'>Items list</th><th nowrap style='width:20%'>Instructions</th><th nowrap style='width:10%'>Status</th><th nowrap style='width:10%'>Delete</th></tr>"+
+                    "</thead>"+
+                    "<tbody id='" + tableBodyCont+ "'>"+
+                    "</tbody>"+
+                  "</table>"+
+                "</div>"+
+              "</div>";
 
     $(contId).html(html);
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                                DISPLAY TRANSACTIONS
+//                                                DISPLAY ORDERS
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.displayInvData = function(dbJSON){
+ViewBuilder.prototype.displayOrderLogs = function(JSONData,cont){
 
   _viewBuilder.ordersListingTableObj={};
 
+  var dbJSON = JSONData;
+
+  //skip last json item (pairs)
+  if (cont == "#invDataCont" && dbJSON) delete dbJSON.idNamePairs;
+  
   if (dbJSON){
         
       var tbodyHTML="";
       
       if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
-      
-      var counter=1;
 
       $.each(dbJSON, function(key,orderObj){
-     
-      if (counter < jsonLength){ //skip last json item (pairs)
           
-          counter++;
           var itemsToText="";
         
           $.each(orderObj.items, function(itemKey,itemObj){
@@ -761,38 +778,39 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
 
          var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
 
-         tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
+         tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrBtn"+cont+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
                     "</td><td>"+orderObj.orderId+
                     "</td><td>"+orderObj.customerId+
                     "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
                     "</td><td>"+itemsToText+ 
                     "</td><td>"+orderObj.instructions+
                     "</td><td>"+orderObj.status+
-                    "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                    "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrBtn"+cont+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
                     "</td></tr>";  
 
           //save data in tables in array
           if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj; 
-        }
         
       }); 
+      
+      var tableBodyCont = {"#invDataCont":"#bodyForInvData", "#custDataCont":"#bodyForCustData", "#shipDataCont":"#bodyForShipData"};
+      
+      $(tableBodyCont[cont]).html(tbodyHTML);
 
-      $("#bodyForInvData").html(tbodyHTML);
+      $(cont).slideDown(600);
 
-      $("#invDataCont").slideDown(1000);
-
-      $("[id^='shipOrderInvView']").click(function(){
+      $("[id^='shipOrBtn']").click(function(){
           
-          var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderInvView","")];
+          var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrBtn"+cont,"")];
           _viewBuilder.addShipmentInput(orderData);
-          $("#invDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
+          $(cont).fadeOut(300,function(){$("#shipFormCont").slideDown(600);});
       });
 
-      $("[id^='delOrderInvView']").click(function(){
+      $("[id^='delOrderBtn']").click(function(){
              
       });
 
-      if (jsonLength > 0) {
+      if (jsonLength > 0 && cont != "#invDataCont" && cont != "#invDataCont" ) {
         $("#customerLookupFormCont").fadeOut(300);
       }else{
           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
@@ -800,62 +818,130 @@ ViewBuilder.prototype.displayInvData = function(dbJSON){
     }
 }
 
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY TRANSACTIONS
+//-------------------------------------------------------------------------------------------------------------
+// ViewBuilder.prototype.displayInvData = function(dbJSON){
+
+//   _viewBuilder.ordersListingTableObj={};
+
+//   if (dbJSON){
+        
+//       var tbodyHTML="";
+      
+//       if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
+      
+//       var counter=1;
+
+//       $.each(dbJSON, function(key,orderObj){
+     
+//       if (counter < jsonLength){ //skip last json item (pairs)
+          
+//           counter++;
+//           var itemsToText="";
+        
+//           $.each(orderObj.items, function(itemKey,itemObj){
+//             itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
+//           });
+
+//          var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
+
+//          tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
+//                     "</td><td>"+orderObj.orderId+
+//                     "</td><td>"+orderObj.customerId+
+//                     "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
+//                     "</td><td>"+itemsToText+ 
+//                     "</td><td>"+orderObj.instructions+
+//                     "</td><td>"+orderObj.status+
+//                     "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+//                     "</td></tr>";  
+
+//           //save data in tables in array
+//           if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj; 
+//         }
+        
+//       }); 
+
+//       $("#bodyForInvData").html(tbodyHTML);
+
+//       $("#invDataCont").slideDown(1000);
+
+//       $("[id^='shipOrderInvView']").click(function(){
+          
+//           var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderInvView","")];
+//           _viewBuilder.addShipmentInput(orderData);
+//           $("#invDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
+//       });
+
+//       $("[id^='delOrderInvView']").click(function(){
+             
+//       });
+
+//       if (jsonLength > 0) {
+//         $("#customerLookupFormCont").fadeOut(300);
+//       }else{
+//           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
+//       }
+//     }
+// }
+
 //-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY Company TRANSACTIONS
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.displayCustomerData = function(dbJSON){
+// ViewBuilder.prototype.displayCustomerData = function(dbJSON){
 
-   _viewBuilder.ordersListingTableObj={};
+//    _viewBuilder.ordersListingTableObj={};
    
-   var tbodyHTML="";
+//    var tbodyHTML="";
 
-   if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
+//    if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
 
-   $.each(dbJSON, function(key,orderObj){
+//    $.each(dbJSON, function(key,orderObj){
    
-      var itemsToText="";
+//       var itemsToText="";
       
-      if (orderObj.items) $.each(orderObj.items, function(itemKey,itemObj){
-        itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
-      });
+//       if (orderObj.items) $.each(orderObj.items, function(itemKey,itemObj){
+//         itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
+//       });
 
-      var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
+//       var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
 
-      tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderCustView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
-                  "</td><td>"+orderObj.orderId+
-                  "</td><td>"+orderObj.customerId+
-                  "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
-                  "</td><td>"+itemsToText+ 
-                  "</td><td>"+orderObj.instructions+
-                  "</td><td>"+orderObj.status+
-                  "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderCustView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
-                  "</td></tr>";  
+//       tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderCustView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
+//                   "</td><td>"+orderObj.orderId+
+//                   "</td><td>"+orderObj.customerId+
+//                   "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
+//                   "</td><td>"+itemsToText+ 
+//                   "</td><td>"+orderObj.instructions+
+//                   "</td><td>"+orderObj.status+
+//                   "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderCustView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+//                   "</td></tr>";  
 
-                  //save data in tables in array
-                  if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj;                                          
-  });
+//                   //save data in tables in array
+//                   if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj;                                          
+//   });
 
 
-  $("#bodyForCustData").html(tbodyHTML);
-  $("#custDataCont").slideDown(1000);
+//   $("#bodyForCustData").html(tbodyHTML);
+//   $("#custDataCont").slideDown(1000);
 
-  $("[id^='shipOrderCustView']").click(function(){
+//   $("[id^='shipOrderCustView']").click(function(){
       
-      var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderCustView","")];
-      _viewBuilder.addShipmentInput(orderData);
-      $("#custDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
-  });
+//       var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderCustView","")];
+//       _viewBuilder.addShipmentInput(orderData);
+//       $("#custDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
+//   });
 
-  $("[id^='delOrderCustView']").click(function(){
+//   $("[id^='delOrderCustView']").click(function(){
          
-  });
+//   });
 
-   if (jsonLength > 0) {
-    $("#customerLookupFormCont").fadeOut(300);
-  }else{
-      _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
-  }
-}
+//    if (jsonLength > 0) {
+//     $("#customerLookupFormCont").fadeOut(300);
+//   }else{
+//       _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
+//   }
+// }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                                NAME FROM ID
@@ -863,6 +949,47 @@ ViewBuilder.prototype.displayCustomerData = function(dbJSON){
 ViewBuilder.prototype.nameFromId = function(id){
   //alert(id);
   return _idNamePairs[id.toString()];
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DIRECT DELIVERY FILL
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.fillOrder = function(){
+
+ if ($("#shipDataCont").children()) $("#shipDataCont").children().remove();
+
+  var dropHtml = "<div class='row'>"+
+                    "<div class='col-xs-12'>"+
+                         "<div class='form-group' id='ShipOrderCompanyListCont'>"+
+                         "</div>"+
+                         "<p><button type='button' class='btn btn-success' id='shipClientLookupBtn'><span class='allBtn'>Lookup</span></button></p>"+
+                    "</div>"+
+                  "</div>";
+
+
+  _viewBuilder.addLogView("#shipDataCont");
+  $("#shipDataCont").prepend(dropHtml);
+  this.generateCustomerDropdown("ShipOrderCompanyListCont");
+
+  $("#shipDataCont").slideDown(600);
+
+  $("#shipClientLookupBtn").click(function(){
+        
+        var value = $("#selectShipOrderCompanyListCont").val();
+        alert(value.substring(value.indexOf(" - ")+3));
+        
+        if (value !="" && value.indexOf("Select a") == -1){
+
+              _communicator.findClient("byId",value.substring(value.indexOf(" - ")+3),function(){
+
+                _viewBuilder.displayCustData();
+
+              },
+                      
+                function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+        }
+  });
+
 }
 
 //-------------------------------------------------------------------------------------------------------------
