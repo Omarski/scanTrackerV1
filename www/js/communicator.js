@@ -126,7 +126,6 @@ var data = dataObj;
 Communicator.prototype.addShipmentData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorNoInScan){
 
 var data = dataObj;
-  //displayObject(data,"");
   $.ajax({
       type: "GET",
       dataType: "jsonp",
@@ -156,7 +155,7 @@ var data = dataObj;
 //                                          GET ADDRESS
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.updateOrder = function(orderId,items,returnFunc){
+Communicator.prototype.updateOrder = function(orderId,items,returnFunc,errorFunct){
 
 //alert("check for: " + customerId);
 
@@ -170,8 +169,10 @@ $.ajax({
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData){
-  
-        returnFunc();
+        
+        if (resultData.update == "true") returnFunc();
+        else if (resultData.update == "false") errorFunct();
+        
       },
       error: function(jqXHR, textStatus, errorThrown){
         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);

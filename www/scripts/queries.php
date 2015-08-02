@@ -10,12 +10,10 @@ switch ($_GET["queryName"]){
 	case "updateOrder": updateOrder($_GET["orderId"],$_GET["items"]);
 	break;
 
-
-
 }
 
 //-------------------------------------------------------------------------------------------------------------
-//                                     			HIGHEST SLIDE
+//                                     			FUNCTIONS
 //-------------------------------------------------------------------------------------------------------------
 
 function getAddress($customerId){
@@ -28,12 +26,15 @@ function getAddress($customerId){
 
 function updateOrder($orderId,$items){
 	
-	$query = "UPDATE orders SET items = '".$items."' WHERE orderId = '".$orderId."';";
+	$query = mysql_query("UPDATE orders SET items = '".$items."' WHERE orderId = '".$orderId."';");
 	$result = mysql_fetch_array($query);
-	if (mysql_affected_rows()){
-	echo $_GET['callback'] .  '(' . "{'address' :'". $result['address'] . "'}" . ')'; 
-}else{
-	 echo $_GET['callback'] . '(' . "{'update' : 'could not update'}" . ')'; 
+	
+	if (mysql_affected_rows() > 0){
+		 echo $_GET['callback'] . '(' . "{'update' : 'true'}" . ')'; 
+	}else{
+		 echo $_GET['callback'] . '(' . "{'update' : 'false'}" . ')'; 
+	}
+
 }
 
 ?> 

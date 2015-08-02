@@ -78,7 +78,7 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
           customerId:orderData.customerId, 
           orderId:orderData.orderId,
           barCode: barcode, 
-          items:orderData.items,
+          items:JSON.stringify(orderData.items),
           scanInDate:todayFormatted(),
           scanInOut:"in"}
 
@@ -97,14 +97,24 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
                if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
 
                //update the order
-                //_communicator.updateOrder(orderData.orderId,updateOrderItems(orderData.items),function({}));
+                _communicator.updateOrder(orderData.orderId,JSON.stringify(orderData.items),
+
+                      function(){
+                        _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Scan successful - updated order."});
+                    },
+
+                      function(){
+                        _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"There was a problem updating the order."});
+                    }
+
+                );
             });
 
             databaseConnect();
         },
 
          function(){
-           _viewBuilder.alerts({icon:"glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});
+           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});
         },
 
         function(){

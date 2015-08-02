@@ -26,10 +26,10 @@ $dup = mysql_query("SELECT barcode FROM shipments WHERE barcode='".$_GET['barCod
 
             $insert_sql = "UPDATE shipments SET scanOutDate = '".$_GET['scanOutDate']."' WHERE barcode = '".$_GET['barcode']."';";
         }
-
+        
         $result = mysql_query($insert_sql);
              
-            if ($_GET['scanInOut'] == "in" && mysql_affected_rows() < 1){
+            if ($_GET['scanInOut'] == "in" && mysql_affected_rows() > 0){
 			 	$id = mysql_insert_id();
 				echo $_GET['callback'] . '(' . "{'shipmentId':'". $id . "'}" . ')'; 
 			}else if ($_GET['scanInOut'] == "out" && mysql_affected_rows() < 1){

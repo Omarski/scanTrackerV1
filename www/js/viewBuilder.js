@@ -24,7 +24,7 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = ["#homeCont","#scanCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#invDataCont","#custDataCont","#shipDataCont","#barcodeGenCont","#alertsCont"];
+  var mainContainersColl = ["#homeCont","#scanCont","#ordersDataCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#barcodeGenCont","#shipDataCont","#alertsCont"];//"#invDataCont","#custDataCont",
   var navBtnColl = ["#navHomeBtn","#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
 
   var html = "<div class='btn-group btn-group-justified' role='group' aria-label=''>"+
@@ -47,6 +47,7 @@ ViewBuilder.prototype.addNav = function(){
                 "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
                  "<ul class='dropdown-menu'>"+
                     "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
+                    "<li><a href='#' id='navShipOrderBtn'>Ship order</a></li>"+
                     "<li><a href='#' id='navCheckLogsBtn' class='submenu'>Display all orders</a></li>"+
                     "</ul>"+
                 "</div>"+
@@ -55,7 +56,7 @@ ViewBuilder.prototype.addNav = function(){
     $("#navBtnsCont").html(html);
 
     // listeners
-    $("#navHomeBtn, #homeScanBtn, #navScanBtn, #homeCustomerAddBtn, #navCustomerAddBtn, #homeShipOrderBtn, #homeCustomerLookupBtn, #navCustomerLookupBtn, #homeCheckLogsBtn, #navCheckLogsBtn, #homeTakeOrderBtn, #navTakeOrderBtn").click(function(){ 
+    $("#navHomeBtn, #homeScanBtn, #navScanBtn, #homeCustomerAddBtn, #navCustomerAddBtn, #homeShipOrderBtn, #navShipOrderBtn, #homeCustomerLookupBtn, #navCustomerLookupBtn, #homeCheckLogsBtn, #navCheckLogsBtn, #homeTakeOrderBtn, #navTakeOrderBtn").click(function(){ 
         
         var btnPressed = $(this);
         for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
@@ -97,7 +98,7 @@ ViewBuilder.prototype.addNav = function(){
              $("#newOrderCont").slideDown(600);
           break;
 
-           case "homeShipOrderBtn":
+           case "homeShipOrderBtn": case "navShipOrderBtn":
              _viewBuilder.fillOrder();
              $("#navOrdersBtn").addClass("active");
           break;
@@ -114,12 +115,12 @@ ViewBuilder.prototype.addNav = function(){
 ViewBuilder.prototype.addHomePage = function(){
   
 
-  var html =  "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Add a customer</span></button>"+
-              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Search customers</span></button>"+
-              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Enter new order</span></button>"+
-              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Ship order</span></button>"+
-              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>View all orders</span></button>"+              
-              "<button type='button' class='btn btn-primary btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Scan barcode</span></button>";
+  var html =  "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Add a customer</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Search customers</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Enter new order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Ship order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>View all orders</span></button>"+              
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Scan barcode</span></button>";
 
   $("#homeCont").html(html);
 
@@ -373,8 +374,8 @@ ViewBuilder.prototype.generateShipItemList = function(orderData){
      
      rowHTML += "<tr><td><span class='bolded'>Item:</span> " + itemObj.itemId+"</td>"+
                 "<td class=''>Shipping</td>"+
-                "<td><input class='form-control' style='min-width:60px' type='number' value=0 max='"+itemObj.totalUnits+"' min='0' id='shipItemUnits"+counter+"'></td>"+
-                "<td>Out of <span class='bolded'>" + Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped)) + "</span> units ordered</td>"+
+                "<td><input class='form-control' style='min-width:60px' type='number' value=0 max='"+Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped))+"' min='0' id='shipItemUnits"+counter+"'></td>"+
+                "<td>Out of <span class='bolded'>" + Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped)) + "</span> units remaining</td>"+
                 "</tr>";
   });
   
@@ -389,7 +390,6 @@ ViewBuilder.prototype.generateShipItemList = function(orderData){
 ViewBuilder.prototype.shipmentViewListeners = function(orderData){
 
   $("#shipCancelBtn").click(function(){
-      //$("#shipFormCont").fadeOut(300,function(){_viewBuilder.addShipmentInput(orderData)});
       $("#shipFormCont").fadeOut(300,function(){
         $("#homeCont").slideDown(600);
         $("#navHomeBtn").addClass("active");
@@ -401,18 +401,30 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
   $("#shipPrintLabelBtn").click(function(){
        
        //validate shipping order
-
        var validateColl = [];
+       var shippedUnitsColl = [];
 
         $("[id^='shipItemUnits']").each(function(i,unitsInput){
+          
           validateColl.push({inputCont:$(unitsInput), message:"Enter valid number", style:null,
-                check:{valid:["", null], inputType:"number", checkType:true, range:{maxi:orderData.items["item"+i]["totalUnits"],mini:0}}});
+                             check:{valid:["", null], inputType:"number", checkType:true, range:{maxi:orderData.items["item"+i]["totalUnits"],mini:0}}});
+          
+          shippedUnitsColl.push($(unitsInput).val());
        });
 
          _validate.test({collection:validateColl,
 
                 onPass:function(){
-                  $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(orderData); $("#barcodeGenCont").slideDown(700);});   
+                  
+                  //update shipped units 
+                  var itemsCounter = 0;
+                  $.each(orderData.items,function(ikey,itemObj){
+
+                      itemObj.unitsShipped = shippedUnitsColl[itemsCounter];
+                      itemsCounter++;
+                  });
+
+                  $("#shipFormCont").fadeOut(300,function(){_barCodeGenerator.generate(orderData); $("#barcodeGenCont").slideDown(600);});   
                 }
 
          });
@@ -433,21 +445,6 @@ ViewBuilder.prototype.formatShipmentItems = function(){
 
   return JSON.stringify(itemsColl);
 }
-
-//-------------------------------------------------------------------------------------------------------------
-//                                          FORMAT ITEMS
-//-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.updateOrderItems = function(itemsObj){
-
-  var itemsColl = {};
-  $.each(itemsObj,function(i,item){
-    itemsColl["item"+i] = {itemId:$(item).find("[id^='orderInpItem']").val(),totalUnits:$(item).find("[id^='orderItemQuan']").val(),
-                          shippedUnits:"",deliveredUnits:""};
-  });
-
-  return JSON.stringify(itemsColl);
-}
-
 
 //-------------------------------------------------------------------------------------------------------------
 //                                          NEW ITEM LISTENER
@@ -729,7 +726,8 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addLogView = function(contId){
 
-  if ($(contId).children()) $(contId).children().remove();
+  //if ($(contId).children()) $(contId).children().remove();
+  if ($("#ordersDataCont").children()) $("#ordersDataCont").children().remove();
     
   var contIdMatch = {"#custDataCont":"bodyForCustData", "#invDataCont":"bodyForInvData", "#shipDataCont":"bodyForShipData"};
   
@@ -747,7 +745,8 @@ ViewBuilder.prototype.addLogView = function(contId){
                 "</div>"+
               "</div>";
 
-    $(contId).html(html);
+    //$(contId).html(html);
+    $("#ordersDataCont").html(html);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -797,151 +796,26 @@ ViewBuilder.prototype.displayOrderLogs = function(JSONData,cont){
       
       $(tableBodyCont[cont]).html(tbodyHTML);
 
-      $(cont).slideDown(600);
-
+      $("#ordersDataCont").slideDown(600);
+      
       $("[id^='shipOrBtn']").click(function(){
           
           var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrBtn"+cont,"")];
           _viewBuilder.addShipmentInput(orderData);
-          $(cont).fadeOut(300,function(){$("#shipFormCont").slideDown(600);});
+          $("#ordersDataCont, #shipDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(600);});
       });
 
       $("[id^='delOrderBtn']").click(function(){
              
       });
 
-      if (jsonLength > 0 && cont != "#invDataCont" && cont != "#invDataCont" ) {
+      if (jsonLength > 0 && cont == "#custDataCont") {
         $("#customerLookupFormCont").fadeOut(300);
-      }else{
+      }else if (jsonLength < 1){
           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
       }
     }
 }
-
-
-//-------------------------------------------------------------------------------------------------------------
-//                                                DISPLAY TRANSACTIONS
-//-------------------------------------------------------------------------------------------------------------
-// ViewBuilder.prototype.displayInvData = function(dbJSON){
-
-//   _viewBuilder.ordersListingTableObj={};
-
-//   if (dbJSON){
-        
-//       var tbodyHTML="";
-      
-//       if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
-      
-//       var counter=1;
-
-//       $.each(dbJSON, function(key,orderObj){
-     
-//       if (counter < jsonLength){ //skip last json item (pairs)
-          
-//           counter++;
-//           var itemsToText="";
-        
-//           $.each(orderObj.items, function(itemKey,itemObj){
-//             itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
-//           });
-
-//          var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
-
-//          tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderInvView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
-//                     "</td><td>"+orderObj.orderId+
-//                     "</td><td>"+orderObj.customerId+
-//                     "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
-//                     "</td><td>"+itemsToText+ 
-//                     "</td><td>"+orderObj.instructions+
-//                     "</td><td>"+orderObj.status+
-//                     "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderInvView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
-//                     "</td></tr>";  
-
-//           //save data in tables in array
-//           if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj; 
-//         }
-        
-//       }); 
-
-//       $("#bodyForInvData").html(tbodyHTML);
-
-//       $("#invDataCont").slideDown(1000);
-
-//       $("[id^='shipOrderInvView']").click(function(){
-          
-//           var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderInvView","")];
-//           _viewBuilder.addShipmentInput(orderData);
-//           $("#invDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
-//       });
-
-//       $("[id^='delOrderInvView']").click(function(){
-             
-//       });
-
-//       if (jsonLength > 0) {
-//         $("#customerLookupFormCont").fadeOut(300);
-//       }else{
-//           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
-//       }
-//     }
-// }
-
-//-------------------------------------------------------------------------------------------------------------
-//                                                DISPLAY Company TRANSACTIONS
-//-------------------------------------------------------------------------------------------------------------
-// ViewBuilder.prototype.displayCustomerData = function(dbJSON){
-
-//    _viewBuilder.ordersListingTableObj={};
-   
-//    var tbodyHTML="";
-
-//    if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
-
-//    $.each(dbJSON, function(key,orderObj){
-   
-//       var itemsToText="";
-      
-//       if (orderObj.items) $.each(orderObj.items, function(itemKey,itemObj){
-//         itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
-//       });
-
-//       var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
-
-//       tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrderCustView"+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
-//                   "</td><td>"+orderObj.orderId+
-//                   "</td><td>"+orderObj.customerId+
-//                   "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
-//                   "</td><td>"+itemsToText+ 
-//                   "</td><td>"+orderObj.instructions+
-//                   "</td><td>"+orderObj.status+
-//                   "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrderCustView"+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
-//                   "</td></tr>";  
-
-//                   //save data in tables in array
-//                   if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj;                                          
-//   });
-
-
-//   $("#bodyForCustData").html(tbodyHTML);
-//   $("#custDataCont").slideDown(1000);
-
-//   $("[id^='shipOrderCustView']").click(function(){
-      
-//       var orderData = _viewBuilder.ordersListingTableObj[$(this).attr("id").replace("shipOrderCustView","")];
-//       _viewBuilder.addShipmentInput(orderData);
-//       $("#custDataCont").fadeOut(300,function(){$("#shipFormCont").slideDown(700);});
-//   });
-
-//   $("[id^='delOrderCustView']").click(function(){
-         
-//   });
-
-//    if (jsonLength > 0) {
-//     $("#customerLookupFormCont").fadeOut(300);
-//   }else{
-//       _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No records were found."});
-//   }
-// }
 
 //-------------------------------------------------------------------------------------------------------------
 //                                                NAME FROM ID
@@ -959,7 +833,7 @@ ViewBuilder.prototype.fillOrder = function(){
  if ($("#shipDataCont").children()) $("#shipDataCont").children().remove();
 
   var dropHtml = "<div class='row'>"+
-                    "<div class='col-xs-12'>"+
+                    "<div class='col-xs-12' style='margin:0 15px 0 15px'>"+
                          "<div class='form-group' id='ShipOrderCompanyListCont'>"+
                          "</div>"+
                          "<p><button type='button' class='btn btn-success' id='shipClientLookupBtn'><span class='allBtn'>Lookup</span></button></p>"+
@@ -967,8 +841,7 @@ ViewBuilder.prototype.fillOrder = function(){
                   "</div>";
 
 
-  _viewBuilder.addLogView("#shipDataCont");
-  $("#shipDataCont").prepend(dropHtml);
+  $("#shipDataCont").html(dropHtml);
   this.generateCustomerDropdown("ShipOrderCompanyListCont");
 
   $("#shipDataCont").slideDown(600);
@@ -976,7 +849,6 @@ ViewBuilder.prototype.fillOrder = function(){
   $("#shipClientLookupBtn").click(function(){
         
         var value = $("#selectShipOrderCompanyListCont").val();
-        alert(value.substring(value.indexOf(" - ")+3));
         
         if (value !="" && value.indexOf("Select a") == -1){
 
