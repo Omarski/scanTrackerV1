@@ -62,7 +62,7 @@ ViewBuilder.prototype.addNav = function(){
         for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
         for (var b=0; b < navBtnColl.length; b++){ $(navBtnColl[b]).removeClass("active");}
 
-        $(this).addClass("active");
+        if (btnPressed.attr("id").indexOf("home") == -1) $(this).addClass("active");
 
         switch($(this).attr("id")){
 
@@ -88,7 +88,7 @@ ViewBuilder.prototype.addNav = function(){
           case "homeCheckLogsBtn" : case "navCheckLogsBtn" :
              _viewBuilder.addLogView("#invDataCont");
              _viewBuilder.displayOrderLogs(_dbJSON,"#invDataCont");
-             $("#navCustomersBtn").addClass("active");
+             $("#navOrdersBtn").addClass("active");
              $("#invDataCont").slideDown(600);
           break;
 
@@ -115,12 +115,12 @@ ViewBuilder.prototype.addNav = function(){
 ViewBuilder.prototype.addHomePage = function(){
   
 
-  var html =  "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Add a customer</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Search customers</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Enter new order</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Ship order</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>View all orders</span></button>"+              
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Scan barcode</span></button>";
+  var html =  "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-user floatLeft'></span><span class='navBtn'>add a customer</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-user floatLeft'></span><span class='navBtn'>search customers</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft'></span><span class='navBtn'>enter new order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft'></span><span class='navBtn'>ship order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft'></span><span class='navBtn'>view all orders</span></button>"+              
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-barcode floatLeft'></span><span class='navBtn'>scan barcode</span></button>";
 
   $("#homeCont").html(html);
 
@@ -292,8 +292,8 @@ ViewBuilder.prototype.newOrderListeners = function(){
 
   // delete order
   $("#cancelOrderBtn").click(function(){
-      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder();$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
       $("#navOrdersBtn").removeClass("active");
+      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder();$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
   });
 }  
 
@@ -370,7 +370,7 @@ ViewBuilder.prototype.generateShipItemList = function(orderData){
 
    $.each(itemsObj,function(key,itemObj){
 
-     counter++;
+   counter++;
      
      rowHTML += "<tr><td><span class='bolded'>Item:</span> " + itemObj.itemId+"</td>"+
                 "<td class=''>Shipping</td>"+
@@ -607,7 +607,7 @@ ViewBuilder.prototype.clientAddListeners = function(){
      // delete client add
      $("#cancelAddClientBtn").click(function(){
           _viewBuilder.addClientInput();
-          $("#addClientFormCont").fadeOut(300,function(){$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
+          $("#addClientFormCont").fadeOut(300,function(){$("navHomeBtn").trigger("click")});
           $("#navCustomersBtn").removeClass("active");
      });
 }
@@ -693,8 +693,8 @@ ViewBuilder.prototype.addClientLookup = function(){
         });
 
          $("#cancelLookupBtn").click(function(){
-            $("#customerLookupFormCont").fadeOut(300,function(){$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
             $("#navCustomersBtn").removeClass("active");
+            $("#customerLookupFormCont").fadeOut(300,function(){$("navHomeBtn").trigger("click")});
          });
 
          $("#clientLookupClearBtn").click(function(){
@@ -772,7 +772,10 @@ ViewBuilder.prototype.displayOrderLogs = function(JSONData,cont){
           var itemsToText="";
         
           $.each(orderObj.items, function(itemKey,itemObj){
-            itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + " <span class='bolded'>Units:</span> " + itemObj.totalUnits + "<br>";
+            itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + 
+                          "<span class='bolded'> Shipped: </span>" + itemObj.unitsShipped + 
+                          "<span class='bolded'> Delivered: </span>" + itemObj.unitsDelivered + 
+                          "<span class='bolded'> Units Total:</span> " + itemObj.totalUnits + "<br>";
           });
 
          var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
@@ -781,7 +784,7 @@ ViewBuilder.prototype.displayOrderLogs = function(JSONData,cont){
                     "</td><td>"+orderObj.orderId+
                     "</td><td>"+orderObj.customerId+
                     "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
-                    "</td><td>"+itemsToText+ 
+                    "</td><td nowrap>"+itemsToText+ 
                     "</td><td>"+orderObj.instructions+
                     "</td><td>"+orderObj.status+
                     "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrBtn"+cont+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+

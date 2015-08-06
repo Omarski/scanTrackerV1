@@ -151,15 +151,18 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 4513,
+				"buffer_size": 4624,
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "\nfunction ViewBuilder(){\n	\n	this.itemCount = 1;\n  this.orderItemCount = 1;\n  this.ordersListingTableObj = {};\n	this.init();\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                     			INIT\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.init = function(){\n	\n  this.addHomePage();\n  this.addNav();\n	this.addScanButtons();\n	this.addClientInput();\n  this.addClientLookup();\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          ADD NAV\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addNav = function(){\n  \n  var mainContainersColl = [\"#homeCont\",\"#scanCont\",\"#ordersDataCont\",\"#shipFormCont\",\"#newOrderCont\",\"#addClientFormCont\",\"#customerLookupFormCont\",\"#barcodeGenCont\",\"#shipDataCont\",\"#alertsCont\"];//\"#invDataCont\",\"#custDataCont\",\n  var navBtnColl = [\"#navHomeBtn\",\"#navScanBtn\",\"#navCustomersBtn\",\"#navOrdersBtn\"];\n\n  var html = \"<div class='btn-group btn-group-justified' role='group' aria-label=''>\"+\n\n                \"<div class='btn-group' role='group'>\"+\n                \"<button type='button' class='btn btn-default' id='navHomeBtn'><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>\"+\n                \"</div>\"+\n\n                \"<div class='btn-group' role='group'>\"+\n                \"<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='navBtn'>Scan</span></button>\"+\n                \"</div>\"+\n                \"<div class='btn-group' role='group'>\"+\n                    \"<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Cust.</span></span></button>\"+\n                    \"<ul class='dropdown-menu'>\"+\n                      \"<li><a href='#' id='navCustomerAddBtn' class='submenu'>Add Customer</a></li>\"+\n                      \"<li><a href='#' id='navCustomerLookupBtn' class='submenu'>Lookup Customer</a></li>\"+\n                    \"</ul>\"+\n                \"</div>\"+\n                \"<div class='btn-group' role='group'>\"+\n                \"<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>\"+\n                 \"<ul class='dropdown-menu'>\"+\n                    \"<li><a href='#' id='navTakeOrderBtn'>New order</a></li>\"+\n                    \"<li><a href='#' id='navShipOrderBtn'>Ship order</a></li>\"+\n                    \"<li><a href='#' id='navCheckLogsBtn' class='submenu'>Display all orders</a></li>\"+\n                    \"</ul>\"+\n                \"</div>\"+\n              \"</div>\";\n\n    $(\"#navBtnsCont\").html(html);\n\n    // listeners\n    $(\"#navHomeBtn, #homeScanBtn, #navScanBtn, #homeCustomerAddBtn, #navCustomerAddBtn, #homeShipOrderBtn, #navShipOrderBtn, #homeCustomerLookupBtn, #navCustomerLookupBtn, #homeCheckLogsBtn, #navCheckLogsBtn, #homeTakeOrderBtn, #navTakeOrderBtn\").click(function(){ \n        \n        var btnPressed = $(this);\n        for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};\n        for (var b=0; b < navBtnColl.length; b++){ $(navBtnColl[b]).removeClass(\"active\");}\n\n        $(this).addClass(\"active\");\n\n        switch($(this).attr(\"id\")){\n\n          case \"navHomeBtn\":\n             $(\"#navHomeBtn\").addClass(\"active\");\n             $(\"#homeCont\").slideDown(600);\n          break;\n\n          case \"homeScanBtn\" : case \"navScanBtn\" :\n            $(\"#scanCont\").slideDown(700);\n          break;\n\n          case \"homeCustomerAddBtn\" : case \"navCustomerAddBtn\" :\n            $(\"#addClientFormCont\").slideDown(600);\n            $(\"#navCustomersBtn\").addClass(\"active\");\n          break;\n\n          case \"homeCustomerLookupBtn\" : case \"navCustomerLookupBtn\" :\n            $(\"#customerLookupFormCont\").slideDown(600);\n            $(\"#navCustomersBtn\").addClass(\"active\");\n          break;\n\n          case \"homeCheckLogsBtn\" : case \"navCheckLogsBtn\" :\n             _viewBuilder.addLogView(\"#invDataCont\");\n             _viewBuilder.displayOrderLogs(_dbJSON,\"#invDataCont\");\n             $(\"#navCustomersBtn\").addClass(\"active\");\n             $(\"#invDataCont\").slideDown(600);\n          break;\n\n           case \"homeTakeOrderBtn\" : case \"navTakeOrderBtn\" :\n             _viewBuilder.addNewOrder();\n             $(\"#navOrdersBtn\").addClass(\"active\");\n             $(\"#newOrderCont\").slideDown(600);\n          break;\n\n           case \"homeShipOrderBtn\": case \"navShipOrderBtn\":\n             _viewBuilder.fillOrder();\n             $(\"#navOrdersBtn\").addClass(\"active\");\n          break;\n\n        }\n    });\n\n    $(\"#navHomeBtn\").addClass(\"active\");\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          ADD SCAN BTNS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addHomePage = function(){\n  \n\n  var html =  \"<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Add a customer</span></button>\"+\n              \"<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Search customers</span></button>\"+\n              \"<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Enter new order</span></button>\"+\n              \"<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Ship order</span></button>\"+\n              \"<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>View all orders</span></button>\"+              \n              \"<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-home floatLeft'></span><span class='navBtn'>Scan barcode</span></button>\";\n\n  $(\"#homeCont\").html(html);\n\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                     			ADD SCAN BTNS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addScanButtons = function(){\n	\n  var html =  \"<div class='row'>\"+\n                \"<div class='col-xs-12'>\"+\n                    \"<button type='button' id='scanInBtn' class='btn btn-success centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan shipment</span></button>\"+\n                \"</div>\"+\n                \"<div class='col-xs-12'>\"+\n                     \"<button type='button' id='scanOutBtn' class='btn btn-primary centerItem lrgScanBtn'><span class='glyphicon glyphicon-barcode largeBars'></span><span class='allBtn'>Scan delivery</span></button>\"+\n                \"</div>\"+\n            \"</div>\";\n\n    $(\".scanBtns\").html(html);\n\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          ADD NEW ORDER\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addNewOrder = function(){\n  \n  if ($(\"#newOrderCont\").children()) $(\"#newOrderCont\").children().remove();\n  \n  var html = \"<div class='col-xs-12'>\"+\n                     \"<form id='newOrderForm'>\"+\n                         \"<div class='row'>\"+\n                              \"<div class='col-xs-12'>\"+\n                                   \"<div class='form-group' id='NewOrderCompanyListCont'>\"+\n                                        //\"<input type='text' class='form-control' placeholder='Customer ID' id='newOrderClientId'>\"+\n                                   \"</div>\"+\n                              \"</div>\"+\n                         \"</div>\"+\n\n                         \"<div class='row' id='orderItemsGroup'>\"+\n                            \"<div id='orderItem1'>\"+\n                              \"<div class='col-xs-7'>\"+\n                                    \"<div class='form-group'>\"+\n                                         \"<input type='text' class='form-control' placeholder='Item ID/description' name='boxItem' id='orderInpItem1'>\"+\n                                    \"</div>\"+  \n                              \"</div>\"+   \n                               \"<div class='col-xs-3'>\"+\n                                 \"<div class='form-group'>\"+\n                                      \"<input type='number' class='form-control' placeholder='Units' value=1 name='boxItemQuantity' id='orderItemQuan1'>\"+\n                                  \"</div>\"+\n                              \"</div>\"+\n                              \"<div class='col-xs-2'>\"+\n                                 \"<button type='button' class='btn btn-warning' style='float:right' name='deleteItemBtn' id='orderInpItemDel1'><span class='glyphicon glyphicon-remove'></span></button>\"+\n                              \"</div>\"+\n                            \"</div>\"+ //item1\n\n                          \"</div>\"+ //row-itemsGroup   \n                          \n                          \"<div class='row'>\"+//instructions\n                              \"<div class='col-xs-12 form-group'>\"+\n                                   \"<textarea class='form-control' rows='2' id='orderInputInstructions' placeholder='Special instructions'></textarea>\"+\n                              \"</div>\"+\n                         \"</div>\"+\n\n                         \"<p>\"+\n                              \"<button type='button' class='btn btn-primary' id='orderAddItemBtn'><span class='glyphicon glyphicon-plus'></span><span class='allBtn'>Add Item</span></button>\"+\n                         \"</p>\"+\n                         \"<p>\"+\n                              \"<button type='button' class='btn btn-success' id='executeNewOrderBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Enter order</span></button>\"+\n                              \"<button type='button' class='btn btn-warning' style='margin-left:6%' id='cancelOrderBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel Scan</span></button>\"+\n                        \"</p>\"+\n                    \"</form>\"+\n               \"</div>\";\n\n    $(\"#newOrderCont\").html(html);\n    this.generateCustomerDropdown(\"NewOrderCompanyListCont\");\n    this.newOrderListeners();\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          NEW ORDER LISTENERS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.newOrderListeners = function(){\n\n  // add item               \n  $(\"#orderAddItemBtn\").click(function(){\n\n    _viewBuilder.orderItemCount++;\n    \n    var itemHTML = \"<div id='orderItem\"+_viewBuilder.orderItemCount+\"'>\"+\n                      \"<div class='col-xs-7'>\"+\n                        \"<div class='form-group'>\"+\n                             \"<input type='text' class='form-control' placeholder='Item ID/description' name='boxItem' id='orderInpItem\"+_viewBuilder.orderItemCount+\"'>\"+\n                        \"</div>\"+  \n                      \"</div>\"+   \n                      \"<div class='col-xs-3'>\"+\n                         \"<div class='form-group'>\"+\n                              \"<input type='number' class='form-control' placeholder='Units' value=1 name='boxItemQuantity' id='orderItemQuan\"+_viewBuilder.orderItemCount+\"'>\"+\n                          \"</div>\"+\n                      \"</div>\"+\n                      \"<div class='col-xs-2'>\"+\n                         \"<button type='button' class='btn btn-warning' style='float:right' name='deleteItemBtn' id='orderInpItemDel\"+_viewBuilder.orderItemCount+\"'><span class='glyphicon glyphicon-remove'></span></button>\"+\n                      \"</div>\"+\n                  \"</div>\";\n\n    $(\"#orderItemsGroup\").append(itemHTML);\n\n    _viewBuilder.itemDeleteListener(\"#orderInpItemDel\"+_viewBuilder.orderItemCount);\n\n  });\n\n  this.itemDeleteListener(\"#orderInpItemDel1\");\n\n  //sumbit scan info\n   $(\"#executeNewOrderBtn\").click(function(){\n         \n         var coll;\n\n            coll =[{inputCont:$(\"#selectNewOrderCompanyListCont\"), message:\"Select a customer.\", style:null,\n                  check:{valid:[\"\", null], inputType:\"select\", checkType:null, range:null}}];\n                  \n          _validate.test({collection:coll,\n\n                onPass:function(){ \n                    \n                    var itemVarColl = [];\n                    $(\"#orderItemsGroup input[id^='orderInpItem']\").each(function(i,item){\n                      itemVarColl.push({inputCont:$(item), message:\"Enter item ID\", style:null,\n                      check:{valid:[\"Item ID\",\"\", null], inputType:\"text\", checkType:null, range:null}});\n                    });\n\n                       _validate.test({collection:itemVarColl, onPass:function(){ \n                          \n                          data = {\n                                    customerId:$(\"#selectNewOrderCompanyListCont option:selected\").text().substring(Number($(\"#selectNewOrderCompanyListCont option:selected\").text().indexOf(\" - \"))+3),  \n                                    items:_viewBuilder.formatOrderItems(),\n                                    instructions:$(\"#orderInputInstructions\").val(), \n                                    orderDate:todayFormatted()\n                                    }\n\n                                     _communicator.addOrder(\n\n                                      data,\n                                      \n                                      function(){\n\n                                          $(\"#newOrderCont\").fadeOut(300);\n                                         _viewBuilder.addNewOrder();//reset\n                                          $(\".scanBtns\").slideDown(700);//default screen\n                                          databaseConnect();\n                                      },\n\n                                      function(){\n                                         _viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"Couldn't save to Database.\"});\n                                      },\n                                      \n                                      function(){\n                                         _viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"Invalid customer ID.\"});\n                                      }\n\n                                 );   //add order data\n\n                      }});\n                }\n      \n                }); //validate steps\n          });\n\n  // delete order\n  $(\"#cancelOrderBtn\").click(function(){\n      $(\"#newOrderCont\").fadeOut(300,function(){_viewBuilder.addNewOrder();$(\"#homeCont\").slideDown(600); $(\"#navHomeBtn\").addClass(\"active\");});\n      $(\"#navOrdersBtn\").removeClass(\"active\");\n  });\n}  \n\n//-------------------------------------------------------------------------------------------------------------\n//                                          FORMAT ITEMS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.formatOrderItems = function(){\n\n  var itemsColl = {};\n  $(\"#orderItemsGroup div[id^='orderItem']\").each(function(i,item){\n    itemsColl[\"item\"+i] = {itemId:$(item).find(\"[id^='orderInpItem']\").val(),totalUnits:$(item).find(\"[id^='orderItemQuan']\").val(),\n                          unitsShipped:\"0\",unitsDelivered:\"0\"};\n  });\n\n  return JSON.stringify(itemsColl);\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          ADD SCAN IN INPUT\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addShipmentInput = function(orderData){\n  \n  if ($(\"#shipFormCont\").children()) $(\"#shipFormCont\").children().remove();\n  $(\"#alertsCont\").html();\n\n  var html = \"<div class='col-xs-12'>\"+\n                    \"<form id='shipForm'>\"+\n                         \"<div class='row' style='display:inline'>\"+\n                             \"<div class='fieldText'>\"+\n                                \"Order #: \"+orderData.orderId+\n                             \"</div>\"+\n                              \"<div class='fieldText'>\"+\n                                \"Customer ID: \"+orderData.customerId+\n                             \"</div>\"+\n                              \"<div class='fieldText'>\"+\n                               \"Customer Name: \"+orderData.customerName+\n                             \"</div>\"+\n                         \"</div>\"+\n\n                         \"<div class='row' id='shipItemsGroup'>\"+\n                           \n                         \"</div>\"+ //row-itemsGroup   \n                         \n                         \"<p>\"+\n                              \"<button type='button' class='btn btn-primary' id='shipPrintLabelBtn'><span class='glyphicon glyphicon-plus'></span><span class='allBtn'>Print label</span></button>\"+\n                              \"<button type='button' class='btn btn-warning' style='margin-left:6%' id='shipCancelBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel</span></button>\"+\n                         \"</p>\"+\n                    \"</form>\"+\n               \"</div>\";\n\n    $(\"#shipFormCont\").html(html);\n    this.generateShipItemList(orderData);\n    this.shipmentViewListeners(orderData);\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          GENERATE SHIP ITEM\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.generateShipItemList = function(orderData){\n\n   var itemsObj = orderData.items; //_dbJSON[\"orderId\"+orderData[\"orderId\"]][\"items\"];\n   var counter = 0;\n\n   tableHTML =    \"<div class='col-xs-12 no-padding'>\"+\n                      \"<div class='table-responsive' id='shipItemTable' style='overflow:auto'>\"+\n                        \"<table class='table table-striped table-hover'>\"+\n                          \"<tbody id='shipItemsTableCont'>\"+\n                          \"</tbody>\"+\n                        \"</table>\"+\n                      \"</div>\"+\n                  \"</div>\";\n\n   rowHTML = \"\";\n\n   $.each(itemsObj,function(key,itemObj){\n\nflight     counter++;\n     \n     rowHTML += \"<tr><td><span class='bolded'>Item:</span> \" + itemObj.itemId+\"</td>\"+\n                \"<td class=''>Shipping</td>\"+\n                \"<td><input class='form-control' style='min-width:60px' type='number' value=0 max='\"+Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped))+\"' min='0' id='shipItemUnits\"+counter+\"'></td>\"+\n                \"<td>Out of <span class='bolded'>\" + Number(parseInt(itemObj.totalUnits) - parseInt(itemObj.unitsShipped)) + \"</span> units remaining</td>\"+\n                \"</tr>\";\n  });\n  \n   $(\"#shipItemsGroup\").html(tableHTML);\n   $(\"#shipItemsTableCont\").html(rowHTML); \n  \n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          SHIPMENT LISTENERS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.shipmentViewListeners = function(orderData){\n\n  $(\"#shipCancelBtn\").click(function(){\n      $(\"#shipFormCont\").fadeOut(300,function(){\n        $(\"#homeCont\").slideDown(600);\n        $(\"#navHomeBtn\").addClass(\"active\");\n      });\n\n      $(\"#navOrdersBtn\").removeClass(\"active\");\n  });\n\n  $(\"#shipPrintLabelBtn\").click(function(){\n       \n       //validate shipping order\n       var validateColl = [];\n       var shippedUnitsColl = [];\n\n        $(\"[id^='shipItemUnits']\").each(function(i,unitsInput){\n          \n          validateColl.push({inputCont:$(unitsInput), message:\"Enter valid number\", style:null,\n                             check:{valid:[\"\", null], inputType:\"number\", checkType:true, range:{maxi:orderData.items[\"item\"+i][\"totalUnits\"],mini:0}}});\n          \n          shippedUnitsColl.push($(unitsInput).val());\n       });\n\n         _validate.test({collection:validateColl,\n\n                onPass:function(){\n                  \n                  //update shipped units \n                  var itemsCounter = 0;\n                  $.each(orderData.items,function(ikey,itemObj){\n\n                      itemObj.unitsShipped = shippedUnitsColl[itemsCounter];\n                      itemsCounter++;\n                  });\n\n                  $(\"#shipFormCont\").fadeOut(300,function(){_barCodeGenerator.generate(orderData); $(\"#barcodeGenCont\").slideDown(600);});   \n                }\n\n         });\n  });\n\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          FORMAT ITEMS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.formatShipmentItems = function(){\n\n  var itemsColl = {};\n  $(\"#orderItemsGroup div[id^='orderItem']\").each(function(i,item){\n    itemsColl[\"item\"+i] = {itemId:$(item).find(\"[id^='orderInpItem']\").val(),totalUnits:$(item).find(\"[id^='orderItemQuan']\").val(),\n                          shippedUnits:\"\",deliveredUnits:\"\"};\n  });\n\n  return JSON.stringify(itemsColl);\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          NEW ITEM LISTENER\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.itemDeleteListener = function(deleteBtnId){\n\n  // remove item\n  $(deleteBtnId).click(function(){\n    var itemNumber = deleteBtnId.substring(deleteBtnId.length -1);\n    $(\"#orderItem\"+itemNumber).fadeOut(200,function(){$(\"#item\"+itemNumber).remove();});\n    _viewBuilder.itemCount--;\n  });\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                     			ADD SCAN IN INPUT\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addClientInput = function(){\n	\n	if ($(\"#addClientFormCont\").children()) $(\"#addClientFormCont\").children().remove();\n	var html = \"<form id='clientForm' style=''>\"+\n          \n           \"<div class='col-xs-12'>\"+\n\n               \"<div class='row'>\"+\n                    \"<div class='col-xs-12 form-group'>\"+\n                         \"<label for='inputBusinessName'>Business name <span class='requiredField'> *</span></label>\"+\n                         \"<input type='text' class='form-control' placeholder='Business name' id='inputBusinessName'>\"+\n                    \"</div>\"+\n               \"</div>\"+\n\n               \"<div class='row'>\"+\n                    \"<div class='col-xs-6'>\"+\n                         \"<div class='form-group'>\"+\n                              \"<label for='inputFirstName'>Contact first name <span class='requiredField'> *</span></label>\"+\n                              \"<input type='text' class='form-control' placeholder='First name' id='inputFirstName'>\"+\n                         \"</div>\"+\n                    \"</div>\"+\n\n                    \"<div class='col-xs-6'>\"+\n                         \"<div class='form-group'>\"+\n                              \"<label for='inputLastName'>Contact last name <span class='requiredField'> *</span></label>\"+\n                              \"<input type='text' class='form-control' placeholder='Last name' id='inputLastName'>\"+\n                         \"</div>\"+\n                    \"</div>\"+\n               \"</div>\"+\n\n               \"<div class='row'>\"+\n                    \"<div class='col-xs-6'>\"+\n                         \"<div class='form-group'>\"+\n                              \"<label for='inputPhoneNum'>Phone number<span class='requiredField'> *</span></label>\"+\n                              \"<input type='text' class='form-control' placeholder='Phone number' id='inputPhoneNum'>\"+\n                         \"</div>\"+\n                    \"</div>\"+\n\n                    \"<div class='col-xs-6'>\"+\n                         \"<div class='form-group'>\"+\n                              \"<label for='inputAltPhoneNum'>Alternative number</label>\"+\n                              \"<input type='text' class='form-control' placeholder='Alternative number' id='inputAltPhoneNum'>\"+\n                         \"</div>\"+\n                    \"</div>\"+\n               \"</div>\"+\n\n               \"<div class='row'>\"+\n                    \"<div class='col-xs-12 form-group'>\"+\n                         \"<label for='inputEmail'>Email</label>\"+\n                         \"<input type='email' class='form-control' placeholder='Email' id='inputEmail'>\"+\n                    \"</div>\"+\n               \"</div>\"+\n\n               \"<div class='row'>\"+\n                    \"<div class='col-xs-12 form-group'>\"+\n                         \"<label for='inputAddress'>Address</label>\"+\n                         \"<textarea class='form-control' rows='4' id='inputAddress'></textarea>\"+\n                    \"</div>\"+\n               \"</div>\"+\n\n               \"<p id='clientAddBtns'>\"+\n                    \"<button type='button' class='btn btn-success' id='addClientBtn'><span class='allBtn'>Add client</span></button>\"+\n     			          \"<button type='button' class='btn btn-primary' style='margin-left:3%'id='addClientClearBtn'><span class='allBtn'>Clear</span></button>\"+\n                    \"<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelAddClientBtn'><span class='allBtn'>Cancel</span></button>\"+\n			         \"</p>\"+\n          \"</div>\";\n\n\n    $(\"#addClientFormCont\").html(html);\n\n    //listeners\n    $(\"#addClientBtn\").click(function(){\n         \n          _validate.test({collection:[\n                {inputCont:$(\"#inputBusinessName\"), message:\"Enter business name\", style:null,\n                check:{valid:[\"Business name\",\"\", null], inputType:\"text\", checkType:null, range:null}},\n                 {inputCont:$(\"#inputFirstName\"), message:\"Enter first name\", style:null,\n                check:{valid:[\"First name\",\"\", null], inputType:\"text\", checkType:null, range:null}},\n                 {inputCont:$(\"#inputLastName\"), message:\"Enter last name\", style:null,\n                check:{valid:[\"Last name\",\"\", null], inputType:\"text\", checkType:null, range:null}}, \n                 {inputCont:$(\"#inputPhoneNum\"), message:\"Enter phone number\", style:null,\n                check:{valid:[\"Phone number\",\"\", null], inputType:\"text\", checkType:null, range:null}}\n                ], \n\n                onPass:function(){ \n                    _communicator.addClient({businessName:$(\"#inputBusinessName\").val(), \n                      firstName:$(\"#inputFirstName\").val(), lastName:$(\"#inputLastName\").val(),\n                      phone1:$(\"#inputPhoneNum\").val(), phone2:$(\"#inputAltPhoneNum\").val(), \n                      email:$(\"#inputEmail\").val(), address:$(\"#inputAddress\").val()},\n                      \n                      function(){\n                         _viewBuilder.alerts({icon:\"glyphicon glyphicon-ok green\", message:\"New customer successfully added.\"});\n                         $(\"#addClientFormCont\").fadeOut(300);\n                    },\n                       function(){\n                         _viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"Company name already exists.\"});\n                    }\n\n                    );//add client\n                }\n      \n          }); //validate steps\n     });//click\n\n    $(\"#addClientClearBtn\").click(function(){\n          _viewBuilder.clearForm(\"#clientForm\");\n     });\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                NEW CLIENT LISTENERS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.clientAddListeners = function(){\n\n     var requiredFieldIds = [\"#inputBusinessName\",\"#inputFirstName\",\"#inputLastName\",\"#inputPhoneNum\"];\n\n     // add item               \n     $(\"#addClientBtn\").click(function(){\n          var missingFields = false;\n          for (var i=0; i < requiredFieldIds.length; i++){\n               if ($(requiredFieldIds).val() == \"\" || $(requiredFieldIds).val() == undefined) missingFields = true;\n          }\n\n          if (missingFields) {\n               $(\"#clientAddBtns\").append(\"<p class='formWarning'>* PLease fill out all required fields.</p>\");\n          }else{\n               var data = {businessName:$(\"#inputBusinessName\").val(),\n                           firstName:$(\"#inputFirstName\").val(),\n                           lastName:$(\"#inputFirstName\").val(),\n                           phone1:$(\"#inputPhoneNum\").val(),\n                           phone2:$(\"#inputAltPhoneNum\").val(),\n                           email:$(\"#inputEmail\").val(),\n                           address:$(\"#inputAddress\").val()\n                         };\n\n               _communicator.addClient(data,function(){\n                    _viewBuilder.alerts(\"customerAdded\");\n                    _viewBuilder.addClientInput();\n               });\n          } \n     });\n\n     // delete client add\n     $(\"#cancelAddClientBtn\").click(function(){\n          _viewBuilder.addClientInput();\n          $(\"#addClientFormCont\").fadeOut(300,function(){$(\"#homeCont\").slideDown(600); $(\"#navHomeBtn\").addClass(\"active\");});\n          $(\"#navCustomersBtn\").removeClass(\"active\");\n     });\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                          ADD SCAN IN INPUT\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addClientLookup = function(){\n  \n  //if ($(\"#customerLookupFormCont\").children()) $(\"#customerLookupFormCont\").children().remove();\n  var html = \"<form id='clientLookupForm'>\"+\n          \n           \"<div class='col-xs-12'>\"+\n               \"<div class='row'>\"+\n                    \"<div class='col-xs-12 col-sm-6'>\"+\n                      \"<form class='form-inline'>\"+\n                        \"<div class='radio'><label><input type='radio' value='byId' id='byIdRadio' name='companyLookupRad' checked='checked'><span class='formLabels'>Lookup by ID</span></label></div>\"+\n                         \"<div class='form-group'>\"+\n                              \"<input type='text' class='form-control' placeholder='Company ID' id='lookupByCustomerId'>\"+\n                         \"</div>\"+\n                    \"</div>\"+\n\n                    \"<div class='col-xs-12 col-sm-6'>\"+\n                       \"<form class='form-inline'>\"+\n                         \"<div class='form-group'>\"+\n                               \"<div class='radio'><label><input type='radio' value='byName' id='byNameRadio' name='companyLookupRad'><span class='formLabels'>Lookup by company name</span></label></div>\"+\n                              \"<input type='text' class='form-control' placeholder='Company name' id='lookupByCustomerName'>\"+\n                         \"</div>\"+\n                    \"</div>\"+\n               \"</div>\"+\n\n               \"<p id='clientLookupBtns'>\"+\n                    \"<button type='button' class='btn btn-success' id='clientLookupBtn'><span class='allBtn'>Lookup</span></button>\"+\n                    \"<button type='button' class='btn btn-primary' style='margin-left:3%' id='clientLookupClearBtn'><span class='allBtn'>Clear</span></button>\"+\n                    \"<button type='button' class='btn btn-warning' style='margin-left:3%' id='cancelLookupBtn'><span class='allBtn'>Cancel</span></button>\"+\n               \"</p>\"+\n          \"</div>\";\n\n\n    $(\"#customerLookupFormCont\").html(html);\n\n       //listeners\n\n       $(\"#lookupByCustomerId, #lookupByCustomerName\").focus(function(){\n          ($(this).attr(\"id\").indexOf(\"Name\") != -1) ? $(\"#byNameRadio\").prop(\"checked\",true):$(\"#byIdRadio\").prop(\"checked\",true);\n          $(this).val(\"\");\n       });\n\n       $(\"#clientLookupBtn\").click(function(){\n\n            var selected = $(\"input[type='radio'][name='companyLookupRad']:checked\");\n            \n            if (selected.length > 0) {\n                var selectedVal = selected.val();\n            }\n\n            if (selectedVal == \"byId\") {\n                _validate.test({collection:[\n                {inputCont:$(\"#lookupByCustomerId\"), message:\"Enter company ID\", style:null,\n                check:{valid:[\"Company ID\",\"\", null], inputType:\"text\", checkType:null, range:null}}\n                ], \n\n                onPass:function(){\n                    _communicator.findClient(\"byId\",$(\"#lookupByCustomerId\").val(),function(){_viewBuilder.displayCustData()},\n                    function(){_viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"No match was found.\"})});\n                }\n      \n                }); //validate steps\n            \n            }else {\n                 _validate.test({collection:[\n                 {inputCont:$(\"#lookupByCustomerName\"), message:\"Enter company name\", style:null,\n                 check:{valid:[\"Company name\",\"\",null], inputType:\"text\", checkType:null, range:null}}\n                 ], \n\n                  onPass:function(){ \n                     _communicator.findClient(\"byName\",$(\"#lookupByCustomerName\").val(),function(){_viewBuilder.displayCustData()},\n                     function(){_viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"No match was found.\"})});\n                  }\n      \n                }); //validate steps\n            }\n        });\n\n         $(\"#cancelLookupBtn\").click(function(){\n            $(\"#customerLookupFormCont\").fadeOut(300,function(){$(\"#homeCont\").slideDown(600); $(\"#navHomeBtn\").addClass(\"active\");});\n            $(\"#navCustomersBtn\").removeClass(\"active\");\n         });\n\n         $(\"#clientLookupClearBtn\").click(function(){\n           _viewBuilder.clearForm(\"#clientLookupForm\");\n         });\n  }\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                DISPLAY CUSTOMER DATA\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.displayCustData = function(){\n\n  _viewBuilder.alerts({icon:\"glyphicon glyphicon-ok green\", message:\"Found match.\"});\n  $(\"#customerLookupFormCont\").hide();\n  this.addLogView(\"#custDataCont\");\n  this.displayOrderLogs(_companyJSON,\"#custDataCont\");\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                CLEAR FORM\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.clearForm = function(formId){\n  $(formId + \" input[type='text']\").val(\"\");\n  if ($(formId + \" input[type='number']\").length > 0) $(formId + \" input[type='text']\").val(1);\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                ADD LOG VIEW\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.addLogView = function(contId){\n\n  //if ($(contId).children()) $(contId).children().remove();\n  if ($(\"#ordersDataCont\").children()) $(\"#ordersDataCont\").children().remove();\n    \n  var contIdMatch = {\"#custDataCont\":\"bodyForCustData\", \"#invDataCont\":\"bodyForInvData\", \"#shipDataCont\":\"bodyForShipData\"};\n  \n  var tableBodyCont = contIdMatch[contId];\n\n  var html = \"<div class='col-xs-12 no-padding'>\"+\n                \"<div class='table-responsive' style='overflow:auto'>\"+\n                  \"<table class='table table-striped table-hover'>\"+\n                    \"<thead>\"+\n                    \"<tr><th nowrap style='width:10%'>Ship order</th><th nowrap style='width:10%'>Order #</th><th nowrap style='width:10%'>Customer ID</th><th nowrap style='width:10%'>Business name</th><th nowrap style='width:20%'>Items list</th><th nowrap style='width:20%'>Instructions</th><th nowrap style='width:10%'>Status</th><th nowrap style='width:10%'>Delete</th></tr>\"+\n                    \"</thead>\"+\n                    \"<tbody id='\" + tableBodyCont+ \"'>\"+\n                    \"</tbody>\"+\n                  \"</table>\"+\n                \"</div>\"+\n              \"</div>\";\n\n    //$(contId).html(html);\n    $(\"#ordersDataCont\").html(html);\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                DISPLAY ORDERS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.displayOrderLogs = function(JSONData,cont){\n\n  _viewBuilder.ordersListingTableObj={};\n\n  var dbJSON = JSONData;\n\n  //skip last json item (pairs)\n  if (cont == \"#invDataCont\" && dbJSON) delete dbJSON.idNamePairs;\n  \n  if (dbJSON){\n        \n      var tbodyHTML=\"\";\n      \n      if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;\n\n      $.each(dbJSON, function(key,orderObj){\n          \n          var itemsToText=\"\";\n        \n          $.each(orderObj.items, function(itemKey,itemObj){\n            itemsToText+= \"<span class='bolded'>Item: </span>\" + itemObj.itemId + \" <span class='bolded'>Units:</span> \" + itemObj.totalUnits + \"<br>\";\n          });\n\n         var disabledState = (orderObj.orderId) ? \"\":\"disabled='disabled'\";\n\n         tbodyHTML+= \"<tr><td><button type='button' \" +disabledState+ \" class='btn btn-success' id='shipOrBtn\"+cont+orderObj.orderId+\"'><span class='allBtn'>Ship order</span></button>\"+\n                    \"</td><td>\"+orderObj.orderId+\n                    \"</td><td>\"+orderObj.customerId+\n                    \"</td><td>\"+_viewBuilder.nameFromId(orderObj.customerId)+ \n                    \"</td><td>\"+itemsToText+ \n                    \"</td><td>\"+orderObj.instructions+\n                    \"</td><td>\"+orderObj.status+\n                    \"<td><button type='button' \" +disabledState+ \" class='btn btn-warning' id='delOrBtn\"+cont+orderObj.orderId+\"'><span class='glyphicon glyphicon-remove'></span></button>\"+\n                    \"</td></tr>\";  \n\n          //save data in tables in array\n          if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj; \n        \n      }); \n      \n      var tableBodyCont = {\"#invDataCont\":\"#bodyForInvData\", \"#custDataCont\":\"#bodyForCustData\", \"#shipDataCont\":\"#bodyForShipData\"};\n      \n      $(tableBodyCont[cont]).html(tbodyHTML);\n\n      $(\"#ordersDataCont\").slideDown(600);\n      \n      $(\"[id^='shipOrBtn']\").click(function(){\n          \n          var orderData = _viewBuilder.ordersListingTableObj[$(this).attr(\"id\").replace(\"shipOrBtn\"+cont,\"\")];\n          _viewBuilder.addShipmentInput(orderData);\n          $(\"#ordersDataCont, #shipDataCont\").fadeOut(300,function(){$(\"#shipFormCont\").slideDown(600);});\n      });\n\n      $(\"[id^='delOrderBtn']\").click(function(){\n             \n      });\n\n      if (jsonLength > 0 && cont == \"#custDataCont\") {\n        $(\"#customerLookupFormCont\").fadeOut(300);\n      }else if (jsonLength < 1){\n          _viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"No records were found.\"});\n      }\n    }\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                NAME FROM ID\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.nameFromId = function(id){\n  //alert(id);\n  return _idNamePairs[id.toString()];\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                DIRECT DELIVERY FILL\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.fillOrder = function(){\n\n if ($(\"#shipDataCont\").children()) $(\"#shipDataCont\").children().remove();\n\n  var dropHtml = \"<div class='row'>\"+\n                    \"<div class='col-xs-12' style='margin:0 15px 0 15px'>\"+\n                         \"<div class='form-group' id='ShipOrderCompanyListCont'>\"+\n                         \"</div>\"+\n                         \"<p><button type='button' class='btn btn-success' id='shipClientLookupBtn'><span class='allBtn'>Lookup</span></button></p>\"+\n                    \"</div>\"+\n                  \"</div>\";\n\n\n  $(\"#shipDataCont\").html(dropHtml);\n  this.generateCustomerDropdown(\"ShipOrderCompanyListCont\");\n\n  $(\"#shipDataCont\").slideDown(600);\n\n  $(\"#shipClientLookupBtn\").click(function(){\n        \n        var value = $(\"#selectShipOrderCompanyListCont\").val();\n        \n        if (value !=\"\" && value.indexOf(\"Select a\") == -1){\n\n              _communicator.findClient(\"byId\",value.substring(value.indexOf(\" - \")+3),function(){\n\n                _viewBuilder.displayCustData();\n\n              },\n                      \n                function(){_viewBuilder.alerts({icon:\"glyphicon glyphicon-warning-sign orange\", message:\"No match was found.\"})});\n        }\n  });\n\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                CUSTOMER LIST\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.generateCustomerDropdown = function(contId){\n\n  dropHTML = \"<div class='input-group'>\"+\n  \"<span class='input-group-addon'>Select a customer: </span>\"+\n  \"<select class='form-control' style='border-left:none' id='select\"+contId+\"'>\"+\n  \"<option></option>\";\n  \n  if (_idNamePairs) {\n\n    $.each(_idNamePairs,function(customerId,customerName){\n    dropHTML+= \"<option>\"+customerName +\" - \" + customerId + \"</option>\";\n    });\n\n  }\n\n   dropHTML+=\"</div></select>\";\n\n   $(\"#\"+contId).html(dropHTML);\n\n}\n\n//-------------------------------------------------------------------------------------------------------------\n//                                                DISPLAY ALERTS\n//-------------------------------------------------------------------------------------------------------------\nViewBuilder.prototype.alerts = function(alertObj){\n  alertHTML = \"<div class='alerts'><span class='\" + alertObj.icon + \"'></span>&nbsp;&nbsp;<p class='alertText'>\"+alertObj.message+\"</p></div>\";\n  if ($(\"#alertsCont\").children()) $(\"#alertsCont\").children().remove();\n  $(\"#alertsCont\").html(alertHTML).show();\n\n}",
 			"file": "js/viewBuilder.js",
+			"file_size": 44209,
+			"file_write_time": 130829946380000000,
 			"settings":
 			{
-				"buffer_size": 44880,
+				"buffer_size": 44215,
 				"line_ending": "Unix"
 			}
 		},
@@ -172,30 +175,6 @@
 			}
 		},
 		{
-			"file": "js/scanner.js",
-			"settings":
-			{
-				"buffer_size": 4261,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "scripts/queries.php",
-			"settings":
-			{
-				"buffer_size": 1114,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/scanTracker/config.xml",
-			"settings":
-			{
-				"buffer_size": 3567,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "scripts/get_inv_data.php",
 			"settings":
 			{
@@ -204,10 +183,10 @@
 			}
 		},
 		{
-			"file": "css/main.css",
+			"file": "js/communicator.js",
 			"settings":
 			{
-				"buffer_size": 4437,
+				"buffer_size": 7780,
 				"line_ending": "Unix"
 			}
 		},
@@ -215,15 +194,23 @@
 			"file": "scripts/add_shipment_data.php",
 			"settings":
 			{
-				"buffer_size": 1513,
+				"buffer_size": 1521,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "js/communicator.js",
+			"file": "css/main.css",
 			"settings":
 			{
-				"buffer_size": 9616,
+				"buffer_size": 4452,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/main.js",
+			"settings":
+			{
+				"buffer_size": 4085,
 				"line_ending": "Unix"
 			}
 		},
@@ -232,6 +219,22 @@
 			"settings":
 			{
 				"buffer_size": 791,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/scanner.js",
+			"settings":
+			{
+				"buffer_size": 4678,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/queries.php",
+			"settings":
+			{
+				"buffer_size": 1102,
 				"line_ending": "Unix"
 			}
 		}
@@ -307,6 +310,11 @@
 	],
 	"file_history":
 	[
+		"/Applications/MAMP/htdocs/scanTracker/www/scripts/queries.php",
+		"/Applications/MAMP/htdocs/scanTracker/www/css/main.css",
+		"/Applications/MAMP/htdocs/scanTracker/www/index.html",
+		"/Applications/MAMP/htdocs/scanTracker/www/scripts/add_shipment_data.php",
+		"/Applications/MAMP/htdocs/scanTracker/config.xml",
 		"/Applications/MAMP/htdocs/scanTracker/www/js/validate.js",
 		"/Applications/MAMP/htdocs/scanTracker/www/js/main.js",
 		"/Applications/MAMP/htdocs/scanTracker/www/scripts/add_inv_data.php",
@@ -317,13 +325,11 @@
 		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Applications/MAMP/htdocs/scanTracker/www/scripts/add_customer.php",
 		"/Applications/MAMP/htdocs/scanTracker/www/css/index.css",
-		"/Applications/MAMP/htdocs/scanTracker/www/css/main.css",
 		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/scripts/get_user_data.php",
 		"/Applications/MAMP/htdocs/scanTracker/www/scripts/app_config.php",
 		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
 		"/Users/omaramer/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Applications/MAMP/htdocs/scanTracker/www/scripts/get_customer_data.php",
-		"/Applications/MAMP/htdocs/scanTracker/config.xml",
 		"/Applications/MAMP/htdocs/sony-rickyandtheflash-wall-site/path-settings.php",
 		"/Applications/MAMP/htdocs/scanTracker/platforms/ios/ScanTracker/ScanTracker-Info.plist",
 		"/Applications/MAMP/htdocs/hello/www/index.html",
@@ -428,11 +434,11 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 			""
@@ -443,6 +449,23 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"displayOrderLogs",
+			"displayCustData",
+			"displayOrderLogs",
+			"no records were found",
+			"updateOrderItems",
+			"alerts",
+			"updateOrderItems",
+			"primary",
+			"displayCustData",
+			"substring",
+			"subString",
+			"displayOrderData",
+			"displayInvData",
+			"displayCustData",
+			"displayInvData",
+			"displayCustomerData",
+			"invDataCont",
 			"all",
 			"units ordered",
 			"form",
@@ -553,31 +576,15 @@
 			"copy",
 			"intro",
 			"video",
-			"usa",
-			"intro",
-			"trailer",
-			"headerWatchTrailer",
-			"font-family: haettenschweiler;",
-			"watch trailer",
-			"click",
-			"videoPop",
-			"slide-content",
-			"tilesCont",
-			"mainImageView",
-			"rating",
-			"52",
-			"headerIcons",
-			"audioIcon",
-			"audioDemo",
-			"wallItem",
-			"sliderContainer"
+			"usa"
 		],
-		"highlight": true,
+		"highlight": false,
 		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
 		[
+			"default",
 			"$_GET",
 			"itemQuan",
 			"inpItemQuan",
@@ -628,15 +635,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4513,
+						"buffer_size": 4624,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3721,
-								3729
+								4026,
+								4026
 							]
 						],
 						"settings":
@@ -738,10 +745,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 979.0,
+						"translation.y": 989.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -750,15 +757,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 44880,
+						"buffer_size": 44215,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								37869,
-								37869
+								19473,
+								19473
 							]
 						],
 						"settings":
@@ -859,7 +866,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 10740.0,
+						"translation.y": 5252.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -890,281 +897,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "js/scanner.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4261,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3606,
-								3606
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"auto_complete": false,
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"devel": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": "load-save",
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": true,
-							"sublimelinter_gutter_marks_theme": "simple",
-							"sublimelinter_mark_style": "none",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "scripts/queries.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1114,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								902,
-								902
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/Applications/MAMP/htdocs/scanTracker/config.xml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3567,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"devel": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": "load-save",
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": true,
-							"sublimelinter_gutter_marks_theme": "simple",
-							"sublimelinter_mark_style": "none",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/XML/XML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
 					"file": "scripts/get_inv_data.php",
 					"semi_transient": false,
 					"settings":
@@ -1176,8 +913,8 @@
 						"selection":
 						[
 							[
-								1300,
-								1300
+								1546,
+								1557
 							]
 						],
 						"settings":
@@ -1276,174 +1013,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "css/main.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4437,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3525,
-								3525
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"devel": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": "load-save",
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": true,
-							"sublimelinter_gutter_marks_theme": "simple",
-							"sublimelinter_mark_style": "none",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 64.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "scripts/add_shipment_data.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1513,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9,
-								10
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 304.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 4,
 					"file": "js/communicator.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9616,
+						"buffer_size": 7780,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6578,
-								6588
+								3117,
+								3117
 							]
 						],
 						"settings":
@@ -1544,149 +1134,55 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2149.0,
+						"translation.y": 830.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 0,
-					"file": "index.html",
+					"buffer": 5,
+					"file": "scripts/add_shipment_data.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4513,
+						"buffer_size": 1521,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								981,
+								981
 							]
 						],
 						"settings":
 						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"auto_complete": false,
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"history_list_is_closing": true,
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"devel": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": "load-save",
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": true,
-							"sublimelinter_gutter_marks_theme": "simple",
-							"sublimelinter_mark_style": "none",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1264.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 6,
 					"file": "css/main.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4437,
+						"buffer_size": 4452,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2934,
-								2934
+								2891,
+								2891
 							]
 						],
 						"settings":
@@ -1785,14 +1281,44 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2394.0,
+						"translation.y": 2823.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "js/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4085,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 926.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 8,
 					"file": "scripts/add_order.php",
 					"semi_transient": false,
 					"settings":
@@ -1817,7 +1343,163 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 10,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 9,
+					"file": "js/scanner.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4678,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3314,
+								3314
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"auto_complete": false,
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"devel": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": "load-save",
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1304.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "scripts/queries.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								961,
+								961
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -1840,11 +1522,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -1874,7 +1563,7 @@
 	"project": "scanTracker.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1940,7 +1629,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 303.0,
+	"side_bar_width": 191.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

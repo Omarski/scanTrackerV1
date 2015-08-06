@@ -77,7 +77,7 @@ $.ajax({
         if (resultData['noOrders'] == "true")  _dbJSON = null;
         else  _dbJSON=resultData;
         
-                if (_dbJSON) _viewBuilder.displayOrderLogs(_dbJSON,"#invDataCont");
+                //if (_dbJSON) _viewBuilder.displayOrderLogs(_dbJSON,"#invDataCont");
         
         returnFunc();
       },

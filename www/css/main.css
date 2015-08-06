@@ -79,6 +79,10 @@ body {
 	letter-spacing:.1em; 
 }
 
+.navBtn{
+	font-size: 2.7vw;
+}
+
 .fieldText {
 	font-family:'love_of_thunder';
 	font-size: 12px;
@@ -167,10 +171,10 @@ span.largeBars {font-size:4vw; line-height:2}
 
 /*Main*/
 /*---------------------------------------------------------------*/
-.formsContBlock, #addClientFormCont, #invDataCont, #customerLookupFormCont, #shipDataCont {
+.formsContBlock, #addClientFormCont, #invDataCont, #customerLookupFormCont, #shipDataCont{
 	display: none;
 	background: #dedede;
-	padding: 2% 0 2% 0;
+	padding: 3% 0 2% 0;
 	margin-top: 3%;
 }
 
@@ -188,9 +192,12 @@ span.largeBars {font-size:4vw; line-height:2}
  }
 
  #barcodeGenCont{
- 	padding: 5% 0 5% 5%;
+ 	padding: 3% 0 5% 5%;
  }
 
+#ordersDataCont{
+	margin-top: 3%;
+}
  .barCodeImage{
  	display: block;
  	min-width:400px;
