@@ -75,12 +75,16 @@ body {
 .navBtn, .allBtn {
 	padding-left: 4%;
 	font-family:'love_of_thunder';
+	/*font-family: 'Squada One';*/
 	font-size: 3vw;
-	letter-spacing:.1em; 
+	letter-spacing:.05em; 
+	-webkit-font-smoothing: antialiased;
+	font-weight: 200;
 }
 
 .navBtn{
 	font-size: 2.7vw;
+	color:#a4a4a4;
 }
 
 .fieldText {
@@ -252,19 +256,23 @@ span.largeBars {font-size:4vw; line-height:2}
 }
 
 .green {
-	color:#379d50;
+	color:#89b181;
 }
 
 .blue {
-	color:#2e7bb3;
+	color:#677ba3;
 }
 
 .orange {
-	color:#f3ac5d;
+	color:#dd763a;
 }
 
-.gray{
+.gray {
 	color:#9e9e9e;
+}
+
+.black {
+	color:#000;
 }
 
 .fixed {position: fixed;}

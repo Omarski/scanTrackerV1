@@ -30,21 +30,21 @@ ViewBuilder.prototype.addNav = function(){
   var html = "<div class='btn-group btn-group-justified' role='group' aria-label=''>"+
 
                 "<div class='btn-group' role='group'>"+
-                "<button type='button' class='btn btn-default' id='navHomeBtn'><span class='glyphicon glyphicon-home'></span><span class='navBtn'>Home</span></button>"+
+                "<button type='button' class='btn btn-default' id='navHomeBtn'><span class='glyphicon glyphicon-home gray'></span><span class='navBtn black'>Home</span></button>"+
                 "</div>"+
 
                 "<div class='btn-group' role='group'>"+
-                "<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode'></span><span class='navBtn'>Scan</span></button>"+
+                "<button type='button' class='btn btn-default' id='navScanBtn'><span class='glyphicon glyphicon-barcode orange'></span><span class='navBtn black'>Scan</span></button>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                    "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user'></span><span class='navBtn'>Cust.</span></span></button>"+
+                    "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user green'></span><span class='navBtn black'>Cust.</span></span></button>"+
                     "<ul class='dropdown-menu'>"+
                       "<li><a href='#' id='navCustomerAddBtn' class='submenu'>Add Customer</a></li>"+
                       "<li><a href='#' id='navCustomerLookupBtn' class='submenu'>Lookup Customer</a></li>"+
                     "</ul>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
-                "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart'></span><span class='navBtn'>Orders</span></button>"+
+                "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navOrdersBtn'><span class='glyphicon glyphicon-shopping-cart blue'></span><span class='navBtn black'>Orders</span></button>"+
                  "<ul class='dropdown-menu'>"+
                     "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
                     "<li><a href='#' id='navShipOrderBtn'>Ship order</a></li>"+
@@ -115,12 +115,12 @@ ViewBuilder.prototype.addNav = function(){
 ViewBuilder.prototype.addHomePage = function(){
   
 
-  var html =  "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-user floatLeft'></span><span class='navBtn'>add a customer</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-user floatLeft'></span><span class='navBtn'>search customers</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft'></span><span class='navBtn'>enter new order</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft'></span><span class='navBtn'>ship order</span></button>"+
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft'></span><span class='navBtn'>view all orders</span></button>"+              
-              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-barcode floatLeft'></span><span class='navBtn'>scan barcode</span></button>";
+  var html =  "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerAddBtn'><span class='glyphicon glyphicon-user floatLeft green'></span><span class='navBtn'>add a customer</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-user floatLeft green'></span><span class='navBtn'>search customers</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>enter new order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>ship order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>view all orders</span></button>"+              
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-barcode floatLeft orange'></span><span class='navBtn'>scan barcode</span></button>";
 
   $("#homeCont").html(html);
 

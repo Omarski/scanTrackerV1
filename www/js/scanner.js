@@ -9,7 +9,10 @@ function Scanner(){
 Scanner.prototype.scanListener = function(){
 	
 	$("#scanInBtn").click(function(){
-    _viewBuilder.fillOrder();
+    $("#scanCont").fadeOut(300,function(){
+      _viewBuilder.fillOrder();
+    });
+    
     $("#navOrdersBtn").addClass("active");
   });
 
