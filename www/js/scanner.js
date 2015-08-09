@@ -67,7 +67,10 @@ Scanner.prototype.scan = function(mode,orderData){
       }
    );
   }else{ //not mobile
-      _scanner.sendScanData(mode,$("#inputShipBarcode").val(),orderData);
+      if (mode=="in") _scanner.sendScanData(mode,$("#inputShipBarcode").val(),orderData);
+      else {
+         _viewBulder.addScanOutView(orderData);
+      }
   }
 }
 

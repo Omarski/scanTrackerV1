@@ -19,7 +19,7 @@ $dup = mysql_query("SELECT barcode FROM shipments WHERE barcode='".$_GET['barCod
 
 				$insert_sql = "INSERT INTO shipments (orderId,barcode,items,scanInDate)" .
 											
-				                   "VALUES ('{$_GET['orderId']}','{$_GET['barcode']}','{$_GET['items']}',".
+				                   "VALUES ('{$_GET['orderId']}','{$_GET['barCode']}','{$_GET['items']}',".
 				                   "'{$_GET['scanInDate']}');";
 
 			 } else if ($_GET['scanInOut'] == "out"){

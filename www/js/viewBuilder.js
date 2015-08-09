@@ -24,7 +24,7 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = ["#homeCont","#scanCont","#ordersDataCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#barcodeGenCont","#shipDataCont","#alertsCont"];//"#invDataCont","#custDataCont",
+  var mainContainersColl = ["#homeCont","#scanCont","#scanOutCont","#ordersDataCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#barcodeGenCont","#shipDataCont","#alertsCont"];
   var navBtnColl = ["#navHomeBtn","#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
 
   var html = "<div class='btn-group btn-group-justified' role='group' aria-label=''>"+
@@ -141,6 +141,34 @@ ViewBuilder.prototype.addScanButtons = function(){
             "</div>";
 
     $(".scanBtns").html(html);
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          ADD SCAN BTNS
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.addScanOutView = function(orderData){
+  
+  if ($("#scanOutCont").children()).$("#scanOutCont").children().remove();
+  var html =  "<div class='row'>"+
+                  "<div class='col-xs-12 form-group'>"+
+                       "<input class='form-control' id='inputOutBarcode' placeholder='Barcode'>"+
+                  "</div>"+
+                  "<p>"+
+                      "<button type='button' class='btn btn-success' id='processScanOutBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan delivery</span></button>"+
+                      "<button type='button' class='btn btn-warning' style='margin-left:6%' id='cancelScanOutBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel Scan</span></button>"+
+                  "</p>"+
+             "</div>"+
+
+    $("#scanOutCont").html(html);
+
+    $("#processScanOutBtn").click(function(){
+        _scanner.sendScanData("out",$("#inputOutBarcode").val(),orderData);
+    });
+
+     $("#cancelScanOutBtn").click(function(){
+        $("#scanOutCont").fadeOut(300,$("#homeCont").slideDown(600));
+    });
 
 }
 
@@ -293,7 +321,7 @@ ViewBuilder.prototype.newOrderListeners = function(){
   // delete order
   $("#cancelOrderBtn").click(function(){
       $("#navOrdersBtn").removeClass("active");
-      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder();$("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
+      $("#newOrderCont").fadeOut(300,function(){_viewBuilder.addNewOrder(); $("#homeCont").slideDown(600); $("#navHomeBtn").addClass("active");});
   });
 }  
 
