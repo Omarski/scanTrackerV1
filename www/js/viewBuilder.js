@@ -15,8 +15,6 @@ ViewBuilder.prototype.init = function(){
   this.addHomePage();
   this.addNav();
 	this.addScanButtons();
-	this.addClientInput();
-  this.addClientLookup();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -24,7 +22,7 @@ ViewBuilder.prototype.init = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addNav = function(){
   
-  var mainContainersColl = ["#homeCont","#scanCont","#scanOutCont","#ordersDataCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#barcodeGenCont","#shipDataCont","#alertsCont"];
+  var mainContainersColl = ["#homeCont","#scanCont","#scanOutCont","#clientProfCont","#ordersDataCont","#shipFormCont","#newOrderCont","#addClientFormCont","#customerLookupFormCont","#barcodeGenCont","#shipDataCont","#alertsCont"];
   var navBtnColl = ["#navHomeBtn","#navScanBtn","#navCustomersBtn","#navOrdersBtn"];
 
   var html = "<div class='btn-group btn-group-justified' role='group' aria-label=''>"+
@@ -76,11 +74,13 @@ ViewBuilder.prototype.addNav = function(){
           break;
 
           case "homeCustomerAddBtn" : case "navCustomerAddBtn" :
+             _viewBuilder.addClientInput();
             $("#addClientFormCont").slideDown(600);
             $("#navCustomersBtn").addClass("active");
           break;
 
           case "homeCustomerLookupBtn" : case "navCustomerLookupBtn" :
+            _viewBuilder.addClientLookup();
             $("#customerLookupFormCont").slideDown(600);
             $("#navCustomersBtn").addClass("active");
           break;
@@ -149,7 +149,7 @@ ViewBuilder.prototype.addScanButtons = function(){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addScanOutView = function(orderData){
   
-  if ($("#scanOutCont").children()).$("#scanOutCont").children().remove();
+  if ($("#scanOutCont").children()) $("#scanOutCont").children().remove();
   var html =  "<div class='row'>"+
                   "<div class='col-xs-12 form-group'>"+
                        "<input class='form-control' id='inputOutBarcode' placeholder='Barcode'>"+
@@ -297,8 +297,6 @@ ViewBuilder.prototype.newOrderListeners = function(){
                                       function(){
 
                                           $("#newOrderCont").fadeOut(300);
-                                         _viewBuilder.addNewOrder();//reset
-                                          $(".scanBtns").slideDown(700);//default screen
                                           databaseConnect();
                                       },
 
@@ -563,6 +561,14 @@ ViewBuilder.prototype.addClientInput = function(){
     //listeners
     $("#addClientBtn").click(function(){
          
+          var data =  removeReturns({businessName:$("#inputBusinessName").val(), 
+                            firstName:$("#inputFirstName").val(), 
+                            lastName:$("#inputLastName").val(),
+                            phone1:$("#inputPhoneNum").val(), 
+                            phone2:$("#inputAltPhoneNum").val(), 
+                            email:$("#inputEmail").val(),
+                            address:$("#inputAddress").val()});
+
           _validate.test({collection:[
                 {inputCont:$("#inputBusinessName"), message:"Enter business name", style:null,
                 check:{valid:["Business name","", null], inputType:"text", checkType:null, range:null}},
@@ -575,10 +581,7 @@ ViewBuilder.prototype.addClientInput = function(){
                 ], 
 
                 onPass:function(){ 
-                    _communicator.addClient({businessName:$("#inputBusinessName").val(), 
-                      firstName:$("#inputFirstName").val(), lastName:$("#inputLastName").val(),
-                      phone1:$("#inputPhoneNum").val(), phone2:$("#inputAltPhoneNum").val(), 
-                      email:$("#inputEmail").val(), address:$("#inputAddress").val()},
+                    _communicator.addClient(data,
                       
                       function(){
                          _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"New customer successfully added."});
@@ -699,7 +702,9 @@ ViewBuilder.prototype.addClientLookup = function(){
                 ], 
 
                 onPass:function(){
-                    _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()},
+                    // _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()},
+                    // function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                     _communicator.findClientProf("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustProf()},
                     function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
                 }
       
@@ -712,7 +717,9 @@ ViewBuilder.prototype.addClientLookup = function(){
                  ], 
 
                   onPass:function(){ 
-                     _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()},
+                     // _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()},
+                     // function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                     _communicator.findClientProf("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustProf()},
                      function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
                   }
       
@@ -729,6 +736,55 @@ ViewBuilder.prototype.addClientLookup = function(){
            _viewBuilder.clearForm("#clientLookupForm");
          });
   }
+
+//-------------------------------------------------------------------------------------------------------------
+//                                                DISPLAY CUSTOMER PROF
+//-------------------------------------------------------------------------------------------------------------
+ViewBuilder.prototype.displayCustProf = function(){
+
+  if ($(clientProfCont).children()) $(clientProfCont).children().remove();
+
+   var html = "<div class='col-xs-12 no-padding'>"+
+                "<div class='table-responsive' style='overflow:auto'>"+
+                  "<table class='table table-striped table-hover'>"+
+                    "<thead>"+
+                    "<tr><th nowrap>Customer ID</th><th nowrap>Customer Name</th><th nowrap>Address</th><th nowrap>Phone number</th><th nowrap>Alt number</th><th nowrap>Contact name</th><th nowrap>Email</th><th nowrap>Edit</th></tr>"+
+                    "</thead>"+
+                    "<tbody id='tableProfBodyCont'>"+
+                    "</tbody>"+
+                  "</table>"+
+                "</div>"+
+              "</div>";
+
+    $("#clientProfCont").html(html);
+
+    if (_companyProfJSON){
+        
+      var tbodyHTML="";
+      
+      if (Object.keys(_companyProfJSON)) var jsonLength = Object.keys(_companyProfJSON).length;
+
+            var disabledState = (_adminAccess) ? "":"disabled='disabled'";
+
+            $.each(_companyProfJSON, function(companyName,companyObj){
+
+               tbodyHTML += "<tr><td nowrap>"+companyObj.customerId+
+                            "</td><td nowrap>"+companyObj.businessName+
+                            "</td><td nowrap>"+companyObj.address+
+                            "</td><td nowrap>"+companyObj.phone1+
+                            "</td><td nowrap>"+companyObj.phone2+
+                            "</td><td nowrap>"+companyObj.firstName+" "+companyObj.lastName+
+                            "</td><td nowrap>"+companyObj.email+
+                            "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='editProfBtn"+companyObj.customerId+"'>Edit</button>"+
+                            "</td></tr>";  
+            });
+
+            $("#tableProfBodyCont").html(tbodyHTML);
+
+            $("#clientProfCont").slideDown(600);
+
+      }
+}
 
 //-------------------------------------------------------------------------------------------------------------
 //                                                DISPLAY CUSTOMER DATA
@@ -795,31 +851,31 @@ ViewBuilder.prototype.displayOrderLogs = function(JSONData,cont){
       
       if (Object.keys(dbJSON)) var jsonLength = Object.keys(dbJSON).length;
 
-      $.each(dbJSON, function(key,orderObj){
+      $.each(dbJSON, function(key,companyObj){
           
           var itemsToText="";
         
-          $.each(orderObj.items, function(itemKey,itemObj){
+          $.each(companyObj.items, function(itemKey,itemObj){
             itemsToText+= "<span class='bolded'>Item: </span>" + itemObj.itemId + 
                           "<span class='bolded'> Shipped: </span>" + itemObj.unitsShipped + 
                           "<span class='bolded'> Delivered: </span>" + itemObj.unitsDelivered + 
                           "<span class='bolded'> Units Total:</span> " + itemObj.totalUnits + "<br>";
           });
 
-         var disabledState = (orderObj.orderId) ? "":"disabled='disabled'";
+         var disabledState = (companyObj.orderId) ? "":"disabled='disabled'";
 
-         tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrBtn"+cont+orderObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
-                    "</td><td>"+orderObj.orderId+
-                    "</td><td>"+orderObj.customerId+
-                    "</td><td>"+_viewBuilder.nameFromId(orderObj.customerId)+ 
+         tbodyHTML+= "<tr><td><button type='button' " +disabledState+ " class='btn btn-success' id='shipOrBtn"+cont+companyObj.orderId+"'><span class='allBtn'>Ship order</span></button>"+
+                    "</td><td>"+companyObj.orderId+
+                    "</td><td>"+companyObj.customerId+
+                    "</td><td>"+_viewBuilder.nameFromId(companyObj.customerId)+ 
                     "</td><td nowrap>"+itemsToText+ 
-                    "</td><td>"+orderObj.instructions+
-                    "</td><td>"+orderObj.status+
-                    "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrBtn"+cont+orderObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
+                    "</td><td>"+companyObj.instructions+
+                    "</td><td>"+companyObj.status+
+                    "<td><button type='button' " +disabledState+ " class='btn btn-warning' id='delOrBtn"+cont+companyObj.orderId+"'><span class='glyphicon glyphicon-remove'></span></button>"+
                     "</td></tr>";  
 
           //save data in tables in array
-          if (orderObj.orderId > 0) _viewBuilder.ordersListingTableObj[orderObj.orderId] = orderObj; 
+          if (companyObj.orderId > 0) _viewBuilder.ordersListingTableObj[companyObj.orderId] = companyObj; 
         
       }); 
       

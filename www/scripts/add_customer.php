@@ -12,7 +12,8 @@ $dup = mysql_query("SELECT customerId FROM customer WHERE businessName='".$_GET[
             echo $_GET['callback'] . '(' . "{'duplicate' : 'true'}" . ')';  
         }else{
 			 
-			 $customerId = rand ( 100000 , 999999 );
+			 $customerId = time();
+			 
 			 $insert_sql = "INSERT INTO customer (customerId,businessName,firstName,lastName,email,phone1,phone2,address)" .
 							
                    "VALUES ('{$customerId}','{$_REQUEST['businessName']}','{$_REQUEST['firstName']}','{$_REQUEST['lastName']}','{$_REQUEST['email']}', " .

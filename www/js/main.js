@@ -4,9 +4,11 @@ var _scanner;
 var _dbJSON;
 var _idNamePairs;
 var _companyJSON;
+var _companyProfJSON
 var _validate;
 var _platform="desktop";
 var _barCodeGenerator;
+var _adminAccess = true;
 
 var PATH="";
 
@@ -89,6 +91,18 @@ function displayObject(obj,intro) {
         }
         //console.log(obj);
         alert(info);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                              REMOVE RETURNS
+//-------------------------------------------------------------------------------------------------------------
+function removeReturns(obj) {
+    
+    for (var s in obj){
+        if (typeof obj[s] === "string") obj[s] = obj[s].replace(/(\r\n|\n|\r)/gm,"<br>");
+    }
+
+    return obj;
 }
 
 //-------------------------------------------------------------------------------------------------------------

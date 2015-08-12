@@ -22,7 +22,7 @@ var data = dataObj;
     contentType: "application/json",
     dataType: 'jsonp',
     success: function(resultData) {
-        alert("Add client return: " + resultData["customerId"]);
+        //alert("Add client return: " + resultData["customerId"]);
         
         if (resultData["duplicate"]) {errorFunction(); return false;}
         else  {returnFunc(); $(".alerts").append("<p class='alertText green'>&nbsp;Customer ID: "+resultData["customerId"]+"</p>");}
@@ -50,6 +50,32 @@ var data = {type:type, key:key};
       success: function(resultData) {
         if (resultData["foundRecord"] == "empty") {returnEmpty(); return false;}
         else {_companyJSON = resultData;
+        returnFunc();} 
+      },
+      error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
+    });
+    return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          GET USER DATA
+//-------------------------------------------------------------------------------------------------------------
+
+Communicator.prototype.findClientProf = function(type,key,returnFunc,returnEmpty){
+
+var data = {type:type, key:key};
+  
+  $.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/find_customer_prof.php",
+      data: data,
+      crossDomain: true,
+      contentType: "application/json",
+      success: function(resultData) {
+        //alert(resultData.foundRecord);
+        if (resultData["foundRecord"] == "empty") {returnEmpty(); return false;}
+        else {_companyProfJSON = resultData;
         returnFunc();} 
       },
       error: function(jqXHR, textStatus, errorThrown){alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);}
@@ -94,7 +120,7 @@ $.ajax({
 Communicator.prototype.addOrder = function(dataObj,returnFunc,errorFunction,errorInvalidCustID){
 
 var data = dataObj;
-  displayObject(data,"");
+  //displayObject(data,"");
   $.ajax({
       type: "GET",
       dataType: "jsonp",

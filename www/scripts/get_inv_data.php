@@ -21,26 +21,22 @@ require_once('connect.php');
 		$pairs = substr_replace($pairs, '', -1);
 		$pairs.='}';
 	}else{
-		$pairs = "noCompanies";
+		$pairs = '"noCompanies"';
 	}
 	$get_data_sql = "SELECT * FROM orders ORDER BY orderId ASC;";
 	$result = mysql_query($get_data_sql);
 	
-	 //if ($result){
 	 	
 	 	$json = '{';
 	 	
-	 	//$rowCounter = 0;
-	 	
 	 	while($row = mysql_fetch_assoc($result)){
-	 		//$rowCounter++;
+	 		
 	 		$json.= '"orderId'.$row['orderId'].'":{';
 	 		$json.= '"orderId":' . '"' . $row['orderId'] . '",';
 	 		$json.= '"customerId":' . '"' . $row['customerId'] . '",';
 	 		$json.= '"items":' . $row['items'] . ',';
 	 		$json.= '"instructions":' . '"' . $row['instructions'] . '",';
 			$json.= '"status":' . '"' . $row['status'] . '"},';
-	 		//$json.= ($rowCounter < $total) ? '},' : '}';
 		};
 
 			if (mysql_num_rows($result) < 1){
@@ -50,13 +46,6 @@ require_once('connect.php');
      		$json.= ',"idNamePairs":' . $pairs;
      		$json.= '}';
 
-    	//if ($rowCounter < 1) echo $_GET['callback'] . '(' . "{'noRecords' : 'true'}" . ')';
-     	//if (mysql_num_rows($result) < 1) echo $_GET['callback'] . '(' . "{'noRecords' : 'true'}" . ')'; 
     	echo $_GET['callback'] . '(' . $json . ')'; 
-	 
-	 //} 
-	 // else {
-	 // 	echo $_GET['callback'] . '(' . "{'foundRecord' : 'empty'}" . ')'; 
-	 // }
 
 ?> 
