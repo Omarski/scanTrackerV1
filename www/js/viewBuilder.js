@@ -38,7 +38,7 @@ ViewBuilder.prototype.addNav = function(){
                     "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' id='navCustomersBtn'><span class='glyphicon glyphicon-user green'></span><span class='navBtn black'>Cust.</span></span></button>"+
                     "<ul class='dropdown-menu'>"+
                       "<li><a href='#' id='navCustomerAddBtn' class='submenu'>Add Customer</a></li>"+
-                      "<li><a href='#' id='navCustomerLookupBtn' class='submenu'>Lookup Customer</a></li>"+
+                      "<li><a href='#' id='navCustomerLookupBtn' class='submenu'>Lookup customer</a></li>"+
                     "</ul>"+
                 "</div>"+
                 "<div class='btn-group' role='group'>"+
@@ -46,6 +46,7 @@ ViewBuilder.prototype.addNav = function(){
                  "<ul class='dropdown-menu'>"+
                     "<li><a href='#' id='navTakeOrderBtn'>New order</a></li>"+
                     "<li><a href='#' id='navShipOrderBtn'>Ship order</a></li>"+
+                    "<li><a href='#' id='navCustomerOrderLookupBtn' class='submenu'>Lookup customer order</a></li>"+
                     "<li><a href='#' id='navCheckLogsBtn' class='submenu'>Display all orders</a></li>"+
                     "</ul>"+
                 "</div>"+
@@ -54,7 +55,7 @@ ViewBuilder.prototype.addNav = function(){
     $("#navBtnsCont").html(html);
 
     // listeners
-    $("#navHomeBtn, #homeScanBtn, #navScanBtn, #homeCustomerAddBtn, #navCustomerAddBtn, #homeShipOrderBtn, #navShipOrderBtn, #homeCustomerLookupBtn, #navCustomerLookupBtn, #homeCheckLogsBtn, #navCheckLogsBtn, #homeTakeOrderBtn, #navTakeOrderBtn").click(function(){ 
+    $("#navHomeBtn, #homeScanBtn, #navScanBtn, #homeCustomerAddBtn, #homeCustomerOrderLookupBtn, #navCustomerOrderLookupBtn, #navCustomerAddBtn, #homeShipOrderBtn, #navShipOrderBtn, #homeCustomerLookupBtn, #navCustomerLookupBtn, #homeCheckLogsBtn, #navCheckLogsBtn, #homeTakeOrderBtn, #navTakeOrderBtn").click(function(){ 
         
         var btnPressed = $(this);
         for (var i=0; i < mainContainersColl.length; i++){ $(mainContainersColl[i]).hide();};
@@ -80,7 +81,13 @@ ViewBuilder.prototype.addNav = function(){
           break;
 
           case "homeCustomerLookupBtn" : case "navCustomerLookupBtn" :
-            _viewBuilder.addClientLookup();
+            _viewBuilder.addClientLookup("cust");
+            $("#customerLookupFormCont").slideDown(600);
+            $("#navCustomersBtn").addClass("active");
+          break;
+
+          case "homeCustomerOrderLookupBtn" : case "navCustomerOrderLookupBtn" :
+             _viewBuilder.addClientLookup("order");
             $("#customerLookupFormCont").slideDown(600);
             $("#navCustomersBtn").addClass("active");
           break;
@@ -89,7 +96,7 @@ ViewBuilder.prototype.addNav = function(){
              _viewBuilder.addLogView("#invDataCont");
              _viewBuilder.displayOrderLogs(_dbJSON,"#invDataCont");
              $("#navOrdersBtn").addClass("active");
-             $("#invDataCont").slideDown(600);
+             $("#ordersDataCont").slideDown(600);
           break;
 
            case "homeTakeOrderBtn" : case "navTakeOrderBtn" :
@@ -119,6 +126,7 @@ ViewBuilder.prototype.addHomePage = function(){
               "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerLookupBtn'><span class='glyphicon glyphicon-user floatLeft green'></span><span class='navBtn'>search customers</span></button>"+
               "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeTakeOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>enter new order</span></button>"+
               "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeShipOrderBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>ship order</span></button>"+
+              "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCustomerOrderLookupBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>view customer orders</span></button>"+  
               "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeCheckLogsBtn'><span class='glyphicon glyphicon-shopping-cart floatLeft blue'></span><span class='navBtn'>view all orders</span></button>"+              
               "<button type='button' class='btn btn-default btn-sm btn-block homeBtns' id='homeScanBtn'><span class='glyphicon glyphicon-barcode floatLeft orange'></span><span class='navBtn'>scan barcode</span></button>";
 
@@ -446,7 +454,8 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
                   var itemsCounter = 0;
                   $.each(orderData.items,function(ikey,itemObj){
 
-                      itemObj.unitsShipped = shippedUnitsColl[itemsCounter];
+                      //itemObj.unitsShipped = shippedUnitsColl[itemsCounter];
+                      itemObj.unitsShipped = Number(parseInt(itemObj.unitsShipped) + parseInt(shippedUnitsColl[itemsCounter]));
                       itemsCounter++;
                   });
 
@@ -561,13 +570,13 @@ ViewBuilder.prototype.addClientInput = function(){
     //listeners
     $("#addClientBtn").click(function(){
          
-          var data =  removeReturns({businessName:$("#inputBusinessName").val(), 
+          var data = {businessName:$("#inputBusinessName").val(), 
                             firstName:$("#inputFirstName").val(), 
                             lastName:$("#inputLastName").val(),
                             phone1:$("#inputPhoneNum").val(), 
                             phone2:$("#inputAltPhoneNum").val(), 
                             email:$("#inputEmail").val(),
-                            address:$("#inputAddress").val()});
+                            address:$("#inputAddress").val()};
 
           _validate.test({collection:[
                 {inputCont:$("#inputBusinessName"), message:"Enter business name", style:null,
@@ -585,6 +594,7 @@ ViewBuilder.prototype.addClientInput = function(){
                       
                       function(){
                          _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"New customer successfully added."});
+                         databaseConnect();
                          $("#addClientFormCont").fadeOut(300);
                     },
                        function(){
@@ -646,9 +656,9 @@ ViewBuilder.prototype.clientAddListeners = function(){
 //-------------------------------------------------------------------------------------------------------------
 //                                          ADD SCAN IN INPUT
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.addClientLookup = function(){
+ViewBuilder.prototype.addClientLookup = function(mode){
   
-  //if ($("#customerLookupFormCont").children()) $("#customerLookupFormCont").children().remove();
+  if ($("#customerLookupFormCont").children()) $("#customerLookupFormCont").children().remove();
   var html = "<form id='clientLookupForm'>"+
           
            "<div class='col-xs-12'>"+
@@ -702,10 +712,13 @@ ViewBuilder.prototype.addClientLookup = function(){
                 ], 
 
                 onPass:function(){
-                    // _communicator.findClient("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()},
-                    // function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                    if (mode == "order"){
+                    _communicator.findClientOrders("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustData()},
+                    function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                }else {
                      _communicator.findClientProf("byId",$("#lookupByCustomerId").val(),function(){_viewBuilder.displayCustProf()},
                     function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                   }
                 }
       
                 }); //validate steps
@@ -716,11 +729,14 @@ ViewBuilder.prototype.addClientLookup = function(){
                  check:{valid:["Company name","",null], inputType:"text", checkType:null, range:null}}
                  ], 
 
-                  onPass:function(){ 
-                     // _communicator.findClient("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()},
-                     // function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                  onPass:function(){
+                     if (mode == "order"){
+                     _communicator.findClientOrders("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustData()},
+                     function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                   }else{
                      _communicator.findClientProf("byName",$("#lookupByCustomerName").val(),function(){_viewBuilder.displayCustProf()},
                      function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+                     }
                   }
       
                 }); //validate steps
@@ -729,7 +745,7 @@ ViewBuilder.prototype.addClientLookup = function(){
 
          $("#cancelLookupBtn").click(function(){
             $("#navCustomersBtn").removeClass("active");
-            $("#customerLookupFormCont").fadeOut(300,function(){$("navHomeBtn").trigger("click")});
+            $("#customerLookupFormCont").fadeOut(300,function(){$("#navHomeBtn").trigger("click")});
          });
 
          $("#clientLookupClearBtn").click(function(){
@@ -810,7 +826,6 @@ ViewBuilder.prototype.clearForm = function(formId){
 //-------------------------------------------------------------------------------------------------------------
 ViewBuilder.prototype.addLogView = function(contId){
 
-  //if ($(contId).children()) $(contId).children().remove();
   if ($("#ordersDataCont").children()) $("#ordersDataCont").children().remove();
     
   var contIdMatch = {"#custDataCont":"bodyForCustData", "#invDataCont":"bodyForInvData", "#shipDataCont":"bodyForShipData"};
@@ -939,7 +954,7 @@ ViewBuilder.prototype.fillOrder = function(){
         
         if (value !="" && value.indexOf("Select a") == -1){
 
-              _communicator.findClient("byId",value.substring(value.indexOf(" - ")+3),function(){
+              _communicator.findClientOrders("byId",value.substring(value.indexOf(" - ")+3),function(){
 
                 _viewBuilder.displayCustData();
 

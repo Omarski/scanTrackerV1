@@ -96,13 +96,16 @@ function displayObject(obj,intro) {
 //-------------------------------------------------------------------------------------------------------------
 //                                              REMOVE RETURNS
 //-------------------------------------------------------------------------------------------------------------
-function removeReturns(obj) {
+function removeReturns(obj,type) {
     
-    for (var s in obj){
-        if (typeof obj[s] === "string") obj[s] = obj[s].replace(/(\r\n|\n|\r)/gm,"<br>");
-    }
+    if (type="obj") {
+            for (var s in obj){
+            if (typeof obj[s] === "string") obj[s] = obj[s].replace(/(\r\n|\n|\r)/gm,"<br>");
+        } 
 
-    return obj;
+        return obj;
+
+    } else return obj.replace(/(\r\n|\n|\r)/gm,"<br>");
 }
 
 //-------------------------------------------------------------------------------------------------------------

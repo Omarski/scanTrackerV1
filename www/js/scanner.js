@@ -108,6 +108,7 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
 
                       function(){
                         _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Scan successful - updated order."});
+                        databaseConnect();
                     },
 
                       function(){
@@ -117,7 +118,7 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
                 );
             });
 
-            databaseConnect();
+            //databaseConnect();
         },
 
          function(){

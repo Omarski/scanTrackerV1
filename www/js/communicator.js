@@ -12,7 +12,7 @@ function Communicator(){
 
 Communicator.prototype.addClient = function(dataObj,returnFunc,errorFunction){
 
-var data = dataObj;
+var data = removeReturns(dataObj,"obj");
   
   $.ajax({
     type: 'GET',
@@ -36,14 +36,14 @@ var data = dataObj;
 //                                          ADD USER DATA
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.findClient = function(type,key,returnFunc,returnEmpty){
+Communicator.prototype.findClientOrders = function(type,key,returnFunc,returnEmpty){
 
-var data = {type:type, key:key};
+var data = {type:type, key:removeReturns(key,"str")};
   
   $.ajax({
       type: "GET",
       dataType: "jsonp",
-      url: "http://www.bluegravitymedia.com/DBST/scripts/find_customer.php",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/find_customer_orders.php",
       data: data,
       crossDomain: true,
       contentType: "application/json",
@@ -63,7 +63,7 @@ var data = {type:type, key:key};
 
 Communicator.prototype.findClientProf = function(type,key,returnFunc,returnEmpty){
 
-var data = {type:type, key:key};
+var data = {type:type, key:removeReturns(key,"str")};
   
   $.ajax({
       type: "GET",
@@ -119,7 +119,7 @@ $.ajax({
 
 Communicator.prototype.addOrder = function(dataObj,returnFunc,errorFunction,errorInvalidCustID){
 
-var data = dataObj;
+var data = removeReturns(dataObj,"obj");
   //displayObject(data,"");
   $.ajax({
       type: "GET",
@@ -151,7 +151,7 @@ var data = dataObj;
 
 Communicator.prototype.addShipmentData = function(dataObj,returnFunc,errorPrescan,errorFunction,errorNoInScan){
 
-var data = dataObj;
+var data = removeReturns(dataObj,"obj");
   $.ajax({
       type: "GET",
       dataType: "jsonp",
@@ -165,8 +165,8 @@ var data = dataObj;
 
          else {
           returnFunc();
-          if (resultData["shipmentId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - shipment #"+resultData.shipmentId+"."});
-          if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
+          //if (resultData["shipmentId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - shipment #"+resultData.shipmentId+"."});
+          //if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
         }
       },
       error: function(jqXHR, textStatus, errorThrown){
