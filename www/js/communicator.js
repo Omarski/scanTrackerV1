@@ -181,7 +181,7 @@ var data = removeReturns(dataObj,"obj");
 //                                          GET ADDRESS
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.updateOrder = function(orderId,items,returnFunc,errorFunct){
+Communicator.prototype.updateOrder = function(orderId,items,status,returnFunc,errorFunct){
 
 //alert("check for: " + customerId);
 
@@ -226,6 +226,33 @@ $.ajax({
       success: function(resultData){
   
         $("#labelAddress").html("Address:\n"+resultData.address);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);
+      }
+    });
+    return false;
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//                                          GET ADDRESS
+//-------------------------------------------------------------------------------------------------------------
+
+Communicator.prototype.getShipmentData = function(barcode){
+
+var data = {queryName:"getShipmentData",barcode:barcode};
+
+$.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      url: "http://www.bluegravitymedia.com/DBST/scripts/queries.php",
+      data: data,
+      crossDomain: true,
+      contentType: "application/json",
+      success: function(resultData){
+  
+        //$("#labelAddress").html("Address:\n"+resultData.address);
       },
       error: function(jqXHR, textStatus, errorThrown){
         alert(jqXHR+ "\n" + textStatus + "\n" + errorThrown);

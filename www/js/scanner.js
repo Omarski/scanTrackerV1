@@ -34,7 +34,7 @@ Scanner.prototype.scanIn = function(orderData){
 //-------------------------------------------------------------------------------------------------------------
 Scanner.prototype.scanOut = function(){
   
-  this.scan("out");
+  this.scan("out",null);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ Scanner.prototype.scan = function(mode,orderData){
   }else{ //not mobile
       if (mode=="in") _scanner.sendScanData(mode,$("#inputShipBarcode").val(),orderData);
       else {
-         _viewBulder.addScanOutView(orderData);
+         _viewBuilder.addScanOutView();
       }
   }
 }
@@ -89,51 +89,54 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
           scanInDate:todayFormatted(),
           scanInOut:"in"}
 
-   else data = {barCode:barcode,scanOutDate:todayFormatted(),scanInOut:"out"};
+   else {
+            //update items obj as delivered
 
-    displayObject(data, "Data to PHP\n");
-    
-    _communicator.addShipmentData(
+            data = {barCode:barcode,scanOutDate:todayFormatted(),scanInOut:"out"};
+  }
 
-        data,
-        
-        function(){
-            
-            $("#barcodeGenCont").fadeOut(300,function(){
-               if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
-               if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
+    //displayObject(data, "Data to PHP\n");
+    var status = ""; //_viewBuilder.calcStatus(orderData.items);
 
-               //update the order
-                _communicator.updateOrder(orderData.orderId,JSON.stringify(orderData.items),
+           _communicator.addShipmentData(
 
-                      function(){
-                        _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Scan successful - updated order."});
-                        databaseConnect();
-                    },
+              data,
+              
+              function(){
+                  
+                  $("#barcodeGenCont").fadeOut(300,function(){
+                     if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
+                     if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
 
-                      function(){
-                        _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"There was a problem updating the order."});
-                    }
+                     //update the order
+                      _communicator.updateOrder(orderData.orderId, JSON.stringify(orderData.items), status,
 
-                );
-            });
+                            function(){
+                              _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Scan successful - updated order."});
+                              databaseConnect();
+                          },
 
-            //databaseConnect();
-        },
+                            function(){
+                              _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"There was a problem updating the order."});
+                          }
 
-         function(){
-           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});
-        },
+                      );
+                  });
+              },
 
-        function(){
-           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't save to Database."});
-        },
-        
-        function(){
-           _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"This barcode wasn't scanned in."});
-        }
+               function(){
+                 _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});
+              },
 
-   );   //add inventory data
-}
+              function(){
+                 _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Couldn't save to Database."});
+              },
+              
+              function(){
+                 _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"This barcode wasn't scanned in."});
+              }
+
+         );   //add inventory data
+  }
 
 

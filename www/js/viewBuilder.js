@@ -155,27 +155,29 @@ ViewBuilder.prototype.addScanButtons = function(){
 //-------------------------------------------------------------------------------------------------------------
 //                                          ADD SCAN BTNS
 //-------------------------------------------------------------------------------------------------------------
-ViewBuilder.prototype.addScanOutView = function(orderData){
+ViewBuilder.prototype.addScanOutView = function(){
   
   if ($("#scanOutCont").children()) $("#scanOutCont").children().remove();
+  
   var html =  "<div class='row'>"+
-                  "<div class='col-xs-12 form-group'>"+
-                       "<input class='form-control' id='inputOutBarcode' placeholder='Barcode'>"+
-                  "</div>"+
+                  "<div class='col-xs-12 form-group' style='margin:0 15px 0 15px'>"+
+                       "<input class='form-control' id='inputOutBarcode' placeholder='Barcode' style='margin-bottom:15px'>"+
                   "<p>"+
                       "<button type='button' class='btn btn-success' id='processScanOutBtn'><span class='glyphicon glyphicon-barcode'></span><span class='allBtn'>Scan delivery</span></button>"+
                       "<button type='button' class='btn btn-warning' style='margin-left:6%' id='cancelScanOutBtn'><span class='glyphicon glyphicon-remove'></span><span class='allBtn'>Cancel Scan</span></button>"+
                   "</p>"+
-             "</div>"+
+                "</div>"+
+             "</div>";
 
     $("#scanOutCont").html(html);
+    $("#scanCont").fadeOut(300,function(){$("#scanOutCont").slideDown(600);});
 
     $("#processScanOutBtn").click(function(){
-        _scanner.sendScanData("out",$("#inputOutBarcode").val(),orderData);
+        _scanner.sendScanData("out",$("#inputOutBarcode").val(),null);
     });
 
      $("#cancelScanOutBtn").click(function(){
-        $("#scanOutCont").fadeOut(300,$("#homeCont").slideDown(600));
+        $("#scanOutCont").fadeOut(300,$("#navHomeBtn").trigger("click"));
     });
 
 }
@@ -192,7 +194,6 @@ ViewBuilder.prototype.addNewOrder = function(){
                          "<div class='row'>"+
                               "<div class='col-xs-12'>"+
                                    "<div class='form-group' id='NewOrderCompanyListCont'>"+
-                                        //"<input type='text' class='form-control' placeholder='Customer ID' id='newOrderClientId'>"+
                                    "</div>"+
                               "</div>"+
                          "</div>"+
@@ -454,7 +455,6 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
                   var itemsCounter = 0;
                   $.each(orderData.items,function(ikey,itemObj){
 
-                      //itemObj.unitsShipped = shippedUnitsColl[itemsCounter];
                       itemObj.unitsShipped = Number(parseInt(itemObj.unitsShipped) + parseInt(shippedUnitsColl[itemsCounter]));
                       itemsCounter++;
                   });
@@ -659,8 +659,16 @@ ViewBuilder.prototype.clientAddListeners = function(){
 ViewBuilder.prototype.addClientLookup = function(mode){
   
   if ($("#customerLookupFormCont").children()) $("#customerLookupFormCont").children().remove();
+  
+  var selected;
   var html = "<form id='clientLookupForm'>"+
-          
+
+            "<div class='col-xs-12'>"+
+                 "<div class='form-group' id='LookupCompanyListCont'>"+
+                 "</div>"+
+                 "<p><button type='button' class='btn btn-success' id='clientListLookupBtn'><span class='allBtn'>Lookup</span></button></p>"+
+            "</div>"+
+
            "<div class='col-xs-12'>"+
                "<div class='row'>"+
                     "<div class='col-xs-12 col-sm-6'>"+
@@ -689,12 +697,25 @@ ViewBuilder.prototype.addClientLookup = function(mode){
 
 
     $("#customerLookupFormCont").html(html);
+    _viewBuilder.generateCustomerDropdown("LookupCompanyListCont");
 
        //listeners
+       $("#lookupByCustomerId, #lookupByCustomerName, #selectLookupCompanyListCont").focus(function(){
+          
+          $("#lookupByCustomerId, #lookupByCustomerName").val("");
+          if ($(this).attr("id") == "lookupByCustomerId") {$("#byIdRadio").prop("checked",true);}
+          else if ($(this).attr("id") == "lookupByCustomerName") {$("#byNameRadio").prop("checked",true);};
+       });
 
-       $("#lookupByCustomerId, #lookupByCustomerName").focus(function(){
-          ($(this).attr("id").indexOf("Name") != -1) ? $("#byNameRadio").prop("checked",true):$("#byIdRadio").prop("checked",true);
-          $(this).val("");
+       $("#clientListLookupBtn").click(function(){
+          var dropVal = $("#selectLookupCompanyListCont option:selected").val();
+          if (mode == "order" && $("#selectLookupCompanyListCont option:selected").val().length > 1){
+                    _communicator.findClientOrders("byId",dropVal.substring(dropVal.indexOf(" - ")+3),function(){_viewBuilder.displayCustData()},
+                    function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+          }else {
+                    _communicator.findClientProf("byId",dropVal.substring(dropVal.indexOf(" - ")+3),function(){_viewBuilder.displayCustProf()},
+                    function(){_viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"No match was found."})});
+          }
        });
 
        $("#clientLookupBtn").click(function(){
