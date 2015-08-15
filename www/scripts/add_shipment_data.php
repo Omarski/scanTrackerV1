@@ -44,42 +44,31 @@ $dup = mysql_query("SELECT barcode FROM shipments WHERE barcode='".$_GET['barCod
 				 
 				 if (mysql_num_rows($shipmentItems) > 0){
 					 
-					 $row = mysql_fetch_assoc($shipmentItems);
-				 	 $orderId=$row["orderId"];
-				 	 $shipItemsJSON = json_decode($row["items"]);
+					$row = mysql_fetch_assoc($shipmentItems);
+				 	$orderId=$row['orderId'];
+				 	$shipItemsJSON = json_decode($row['items'],true);
+				 	 
 				 	 foreach($shipItemsJSON as $obj){
-				 	 	$itemsTotals[] = $obj["totalUnits"];
+				 	 	$itemsTotals[] = $obj['totalUnits'];
 				 	 }
-
+				 
 				 	$orderItems = mysql_query("SELECT items from orders WHERE orderId = '".$orderId."';");
 				    $row = mysql_fetch_assoc($orderItems);
-				 	$orderItemsJSON = json_decode($row["items"]);
+				 	$orderItemsJSON = json_decode($row["items"],true);
 				 	$counter=0;
+				 	
 				 	foreach($orderItemsJSON as $obj){
 				 	 	$obj["unitsDelivered"] = $itemsTotals[$counter];
 				 	 	$counter++;
 				 	 }
 
 					 $updatedItems = json_encode($orderItemsJSON);
-					 $updateOrderItems = mysql_query("UPDATE orders SET items = '".$updatedItems."' WHERE orderId = '".$_GET['orderId']."';");
+					 $updateOrderItems = mysql_query("UPDATE orders SET items = '"."------"."' WHERE orderId = '".intval($_GET['orderId'])."';");
+					 //$updateOrderItems = mysql_query("UPDATE orders SET items = ".$orderItemsJSON." WHERE orderId = '".$_GET['orderId']."';");
 					 
 					 if (mysql_affected_rows() > 0) echo $_GET['callback'] . '(' . "{'scannedOut' : 'scannedOut'}" . ')';
-					 else $_GET['callback'] . '(' . "{'deliveryUpdate' : 'failed'}" . ')';
-
-				// $json = "{";
-				// $fetchShipmentData = mysql_query("SELECT * from shipments WHERE barcode = '".$_GET['barCode']."';");
-				
-				// if (mysql_num_rows($fetchShipmentData) > 0)){
-
-				// 	$json.= '"'.$row['barcode'].'":{"orderId":"'.$row['orderId'].'",'.
-				// 	 									 '"barcode":"'.$row['barcode'] .'",'.
-				// 	 									 '"items":"'.$row['items'] . '",'.
-				// 	 									 '"scanInDate":"'.$row['scanInDate'] . '",'.
-				// 	 									 '"scanOutDate":"'.$row['scanOutDate'].'"}';
-
-				// }
-
-				// echo $_GET['callback'] . '(' . "{'scannedOut' : 'scannedOut'}" . ')';
+					 else echo $_GET['callback'] . '(' . "{'deliveryUpdate' : 'failed'}" . ')';
+					 //echo $_GET['callback'] . '(' . "{'deliveryUpdate' : '". $itemsTotals[0] . "'}" . ')';//remove			
 			} 
          }
     }

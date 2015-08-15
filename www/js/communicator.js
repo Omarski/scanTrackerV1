@@ -160,6 +160,7 @@ var data = removeReturns(dataObj,"obj");
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
+         if (resultData["deliveryUpdate"]) alert("responce: " + resultData["deliveryUpdate"]);
          if (resultData["foundScan"]) {errorPrescan(); return false;}
          else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
 
