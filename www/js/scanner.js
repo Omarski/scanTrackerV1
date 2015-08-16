@@ -103,26 +103,29 @@ Scanner.prototype.sendScanData = function(mode,barcode,orderData){
               data,
               
               function(){
-                  
+
                   $("#barcodeGenCont").fadeOut(300,function(){
                      if ($("#barcodeGenCont").children()) $("#barcodeGenCont").children().remove();
                      if ($("#shipFormCont").children()) $("#shipFormCont").children().remove();
 
-                     //update the order
-                      _communicator.updateOrder(orderData.orderId, JSON.stringify(orderData.items), status,
+                     //update the order - if out no need for order data - done serverside
 
-                            function(){
-                              _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Scan successful - updated order."});
-                              databaseConnect();
-                          },
+                     if (mode=="in") {
+                            _communicator.updateOrderIn(orderData.orderId, JSON.stringify(orderData.items), status,
 
-                            function(){
-                              _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"There was a problem updating the order."});
+                                  function(){
+                                    _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Scan successful - updated order."});
+                                    databaseConnect();
+                                },
+
+                                  function(){
+                                    _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"There was a problem updating the order."});
+                                }
+                            );
                           }
 
-                      );
-                  });
-              },
+                        }); 
+              },//add shipment success
 
                function(){
                  _viewBuilder.alerts({icon:"glyphicon glyphicon-warning-sign orange", message:"Barcode already scanned to Database."});

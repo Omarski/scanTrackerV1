@@ -160,6 +160,7 @@ var data = removeReturns(dataObj,"obj");
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
+         alert("responce: " + resultData["deliveryUpdate"]);
          if (resultData["deliveryUpdate"]) alert("responce: " + resultData["deliveryUpdate"]);
          if (resultData["foundScan"]) {errorPrescan(); return false;}
          else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
@@ -182,7 +183,7 @@ var data = removeReturns(dataObj,"obj");
 //                                          GET ADDRESS
 //-------------------------------------------------------------------------------------------------------------
 
-Communicator.prototype.updateOrder = function(orderId,items,status,returnFunc,errorFunct){
+Communicator.prototype.updateOrderIn = function(orderId,items,status,returnFunc,errorFunct){
 
 //alert("check for: " + customerId);
 

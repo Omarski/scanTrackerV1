@@ -39,38 +39,45 @@ $dup = mysql_query("SELECT barcode FROM shipments WHERE barcode='".$_GET['barCod
 			}else if ($_GET['scanInOut'] == "out" && mysql_affected_rows() > 0){
 				
 				$orderId;
+				$test=0;
 				$itemsTotals = array();
+				//get sipment data
 				$shipmentItems = mysql_query("SELECT items, orderId from shipments WHERE barcode = '".$_GET['barCode']."';");
 				 
 				 if (mysql_num_rows($shipmentItems) > 0){
 					 
 					$row = mysql_fetch_assoc($shipmentItems);
+				 	//get order id from shipment
 				 	$orderId=$row['orderId'];
+		
+				 	//items obj from shipment
 				 	$shipItemsJSON = json_decode($row['items'],true);
 				 	 
+				 	 //save shipped units 
 				 	 foreach($shipItemsJSON as $obj){
-				 	 	$itemsTotals[] = $obj['totalUnits'];
+				 	 	$itemsTotals[] = $obj['unitsShipped'];
 				 	 }
-				 
+
+				 	//get order items
 				 	$orderItems = mysql_query("SELECT items from orders WHERE orderId = '".$orderId."';");
 				    $row = mysql_fetch_assoc($orderItems);
 				 	$orderItemsJSON = json_decode($row["items"],true);
 				 	$counter=0;
 				 	
 				 	foreach($orderItemsJSON as $obj){
-				 	 	$obj["unitsDelivered"] = $itemsTotals[$counter];
+				 	 	$obj["unitsDelivered"] = intval($obj["unitsDelivered"]) + intval($itemsTotals[$counter]);
 				 	 	$counter++;
 				 	 }
 
 					 $updatedItems = json_encode($orderItemsJSON);
-					 $updateOrderItems = mysql_query("UPDATE orders SET items = '"."------"."' WHERE orderId = '".intval($_GET['orderId'])."';");
-					 //$updateOrderItems = mysql_query("UPDATE orders SET items = ".$orderItemsJSON." WHERE orderId = '".$_GET['orderId']."';");
+					 $updateOrderItems = mysql_query("UPDATE orders SET items = '".$orderItemsJSON."' WHERE orderId = '".intval($orderId)."';");
 					 
-					 if (mysql_affected_rows() > 0) echo $_GET['callback'] . '(' . "{'scannedOut' : 'scannedOut'}" . ')';
+					 //if (mysql_affected_rows() > 0) echo $_GET['callback'] . '(' . "{'scannedOut' : 'scannedOut'}" . ')';//keep
+					 if (mysql_affected_rows() > 0) echo $_GET['callback'] . '(' . "{'deliveryUpdate' : '". $test . "'}" . ')';//remove	
 					 else echo $_GET['callback'] . '(' . "{'deliveryUpdate' : 'failed'}" . ')';
-					 //echo $_GET['callback'] . '(' . "{'deliveryUpdate' : '". $itemsTotals[0] . "'}" . ')';//remove			
-			} 
-         }
+					 //else echo $_GET['callback'] . '(' . "{'deliveryUpdate' : '". $orderId . "'}" . ')';//remove			
+			}else echo $_GET['callback'] . '(' . "{'deliveryUpdate' : 'noShipmentData'}" . ')';
+         } 	
     }
 
 // require_once('connect.php');

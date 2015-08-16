@@ -7,7 +7,7 @@ switch ($_GET["queryName"]){
 	case "getAddress": getAddress($_GET["customerId"]);
 	break;
 
-	case "updateOrder": updateOrder($_GET["orderId"],$_GET["items"]);
+	case "updateOrder": updateOrderIn($_GET["orderId"],$_GET["items"]);
 	break;
 
 }
@@ -24,7 +24,7 @@ function getAddress($customerId){
 	echo $_GET['callback'] .  '(' . "{'address' :'". $result['address'] . "'}" . ')'; 
 }
 
-function updateOrder($orderId,$items){
+function updateOrderIn($orderId,$items){
 	
 	$query = mysql_query("UPDATE orders SET items = '".$items."' WHERE orderId = '".$orderId."';");
 	$result = mysql_fetch_array($query);
@@ -34,7 +34,6 @@ function updateOrder($orderId,$items){
 	}else{
 		 echo $_GET['callback'] . '(' . "{'update' : 'false'}" . ')'; 
 	}
-
 }
 
 ?> 
