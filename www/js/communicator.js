@@ -160,15 +160,14 @@ var data = removeReturns(dataObj,"obj");
       crossDomain: true,
       contentType: "application/json",
       success: function(resultData) {
-         alert("responce: " + resultData["deliveryUpdate"]);
+         alert("comm. success");
          if (resultData["deliveryUpdate"]) alert("responce: " + resultData["deliveryUpdate"]);
-         if (resultData["foundScan"]) {errorPrescan(); return false;}
+         if (resultData["deliveryUpdate"] == "failed"){errorPrescan(); return false;}
          else if (resultData["noInScanFound"]) {errorNoInScan(); return false;}
 
          else {
           returnFunc();
-          //if (resultData["shipmentId"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned - shipment #"+resultData.shipmentId+"."});
-          //if (resultData["scannedOut"]) _viewBuilder.alerts({icon:"glyphicon glyphicon-ok green", message:"Barcode successfully scanned out."});
+          
         }
       },
       error: function(jqXHR, textStatus, errorThrown){

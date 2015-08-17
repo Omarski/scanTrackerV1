@@ -364,7 +364,7 @@ ViewBuilder.prototype.addShipmentInput = function(orderData){
                                 "Customer ID: "+orderData.customerId+
                              "</div>"+
                               "<div class='fieldText'>"+
-                               "Customer Name: "+orderData.customerName+
+                               "Customer Name: "+_viewBuilder.nameFromId(orderData.customerId)+
                              "</div>"+
                          "</div>"+
 
@@ -455,7 +455,7 @@ ViewBuilder.prototype.shipmentViewListeners = function(orderData){
                   var itemsCounter = 0;
                   $.each(orderData.items,function(ikey,itemObj){
 
-                      itemObj.unitsShipped = Number(parseInt(itemObj.unitsShipped) + parseInt(shippedUnitsColl[itemsCounter]));
+                      itemObj.unitsShipped = Number(parseInt(itemObj.unitsShipped) + parseInt(shippedUnitsColl[itemsCounter])).toString();
                       itemsCounter++;
                   });
 
